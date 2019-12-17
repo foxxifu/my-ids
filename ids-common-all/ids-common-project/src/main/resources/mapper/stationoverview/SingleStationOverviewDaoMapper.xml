@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.interest.ids.commoninterface.dao.stationoverview.SingleStationOverviewDaoMapper">
+	
+	<!-- 查询传入时间及类型查询发电量及收益 -->
+	<select id="getSingleStationPowerAndIncome" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT dataT.collect_time collectTime,dataT.product_power producePower,
+		dataT.power_profit powerProfit FROM ids_station_info_t station
+		<choose>
+			<when test="queryType == 'month'">
+				,ids_kpi_day_station_t 
+			</when>
+			<when test="queryType == 'year'">
+				,ids_kpi_month_station_t 
+			</when>
+			<otherwise>
+				,ids_kpi_year_station_t 
+			</otherwise>
+		</choose>
+		dataT WHERE dataT.station_code = station.station_code AND station.station_code = #{stationCode}
+		AND dataT.collect_time BETWEEN #{startTime} AND #{endTime}
+		<!-- 只有查询当月每天的发电量的时候才需要计算当天数据 -->
+		<if test="queryType == 'month'">
+			UNION ALL
+			SELECT 
+			UNIX_TIMESTAMP(FROM_UNIXTIME(realtime.collect_time/1000, '%Y-%m-%d'))*1000 collectTime,
+			realtime.day_cap producePower,realtime.day_income powerProfit 
+			FROM ids_station_realtime_data_t realtime 
+			WHERE realtime.station_code = #{stationCode} AND realtime.collect_time > #{currentDayTime}
+		</if>
+		ORDER BY collectTime ASC
+	</select>
+
+	<!-- 根据电站编号查询电站的告警分类统计 -->
+	<select id="getSingleStationAlarmStatistics" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT alarm.level_id levelId,COUNT(1) alarmCount FROM ids_alarm_t alarm
+		WHERE alarm.station_code = #{value}
+		GROUP BY alarm.level_id
+	</select>
+	
+	<!-- 查询单电站总览实时数据 -->
+	<select id="getSingleStationRealtimeKPI" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT realtime.active_power activePower,station.installed_capacity capacity,
+		realtime.day_cap dayCapacity,realtime.day_income dayIncome,
+		realtime.product_power totalCapacity,yearT.ongrid_power yearCap,yearT.power_profit yearIncome
+		FROM ids_station_info_t station
+		LEFT JOIN ids_station_realtime_data_t realtime 
+		ON station.station_code = realtime.station_code AND realtime.collect_time > #{currentDay}
+		LEFT JOIN ids_kpi_year_station_t yearT 
+		ON station.station_code = yearT.station_code AND yearT.collect_time = #{currentYear}
+		WHERE station.is_delete = '0' AND station.station_code = #{stationCode}
+	</select>
+	
+	<!-- 查询单电站总览电站概况 -->
+	<select id="getSingleStationInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT station.station_name stationName,station.station_addr stationAddr,
+		station.installed_capacity,station.produce_date onlineTime,
+		CONCAT(station.contact_people , ' ' , station.phone) AS contactPeople,
+		yearT.product_power yearCap,monthT.product_power monthCap,
+		realtime.day_cap dayCapacity,param.param_value safeRunTime,station.station_file_id stationFileId,
+		station.station_desc stationDesc,station.latitude,station.longitude
+		FROM ids_station_info_t station 
+		LEFT JOIN ids_kpi_year_station_t yearT 
+		ON station.station_code = yearT.station_code AND yearT.collect_time = #{currentYear}
+		LEFT JOIN ids_kpi_month_station_t monthT 
+		ON station.station_code = monthT.station_code AND monthT.collect_time = #{currentMonth}
+		LEFT JOIN ids_station_realtime_data_t realtime 
+		ON station.station_code = realtime.station_code AND realtime.collect_time > #{currentDay}
+		LEFT JOIN ids_sm_station_param_t param ON station.station_code = param.station_code 
+		AND param.param_key = 'SAFEOPRDATE'
+		WHERE station.station_code = #{stationCode} AND station.is_delete = '0'
+	</select>
+	
+	<!-- 查询单电站总览电站日负荷曲线 -->
+	<select id="getSingleStationActivePower" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT realtimeh.collect_time collectTime,ifnull(realtimeh.active_power,0) activePower 
+		FROM ids_station_realtime_data_h realtimeh 
+		WHERE realtimeh.collect_time BETWEEN #{startTime} AND #{endTime} AND realtimeh.station_code = #{stationCode}
+		UNION ALL
+		SELECT realtime.collect_time collectTime,ifnull(realtime.active_power,0) activePower 
+		FROM ids_station_realtime_data_t realtime 
+		WHERE realtime.station_code = #{stationCode}
+	</select>
+	
+	<!-- 单站社会贡献（年和累计） -->
+	<select id="getContribution" resultType="java.util.Map">
+		SELECT SUM(montht.product_power/1000)*0.997 carbonEmissionsMonth,
+		SUM(montht.product_power/1000)*0.4 savedCoalMonth,
+		SUM(montht.product_power)/18.3 deforestationMonth,
+		SUM(yeart.product_power/1000)*0.997 carbonEmissionsYear,
+		SUM(yeart.product_power/1000)*0.4 savedCoalYear,
+		SUM(yeart.product_power)/18.3 deforestationYear,
+		SUM(realtime.product_power/1000)*0.997 carbonEmissionsTotal,
+		SUM(realtime.product_power/1000)*0.4 savedCoalTotal,
+		SUM(realtime.product_power)/18.3 deforestationTotal
+		FROM ids_station_info_t station LEFT JOIN ids_kpi_year_station_t yeart 
+		ON station.station_code = yeart.station_code AND yeart.collect_time = #{year}
+		LEFT JOIN ids_station_realtime_data_t realtime ON station.station_code = realtime.station_code
+		LEFT JOIN ids_kpi_month_station_t montht ON realtime.station_code = montht.station_code AND montht.collect_time = #{month}
+		WHERE station.station_code = #{stationCode}
+	</select>
+</mapper>

@@ -1,0 +1,97 @@
+.station-list {
+  i.status-cirle {
+    display: block;
+    background: #999;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+    // 绿色状态
+    &.status-green {
+      background: #0f0;
+    }
+    // 红色状态
+    &.status-red {
+      background: #f00;
+    }
+  }
+  i.s {
+    display: inline-block;
+    width: 40px;
+    height: 37px;
+    margin: 0 5px;
+    &.s_1{
+      background: url("~/assets/images/io/table/inventer.png") 0 5px no-repeat;
+      // background-position-y: 5px;
+      position: relative;
+      &::after{
+        content: '';
+        display: inline-block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #aaa;
+        border-radius: 50%;
+        right: -3px;
+      }
+      &.s1_1 {
+        &::after{
+          background: #f00;
+        }
+      }
+      &.s1_3 {
+        &::after{
+          background: #0f0;
+        }
+      }
+    }
+    &.s_8{
+      background: url("~/assets/images/io/table/transfor.png") 0 5px no-repeat;
+      position: relative;
+      &::after{
+        content: '';
+        display: inline-block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #aaa;
+        border-radius: 50%;
+        right: -3px;
+      }
+      &.s8_1 {
+        &::after{
+          background: #f00;
+        }
+      }
+      &.s8_3 {
+        &::after{
+          background: #0f0;
+        }
+      }
+    }
+    &.s_15{
+      background: url("~/assets/images/io/table/hlx.png") 0 5px no-repeat;
+      position: relative;
+      &::after{
+        content: '';
+        display: inline-block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #aaa;
+        border-radius: 50%;
+        right: -3px;
+      }
+      &.s15_1 {
+        &::after{
+          background: #f00;
+        }
+      }
+      &.s15_3 {
+        &::after{
+          background: #0f0;
+        }
+      }
+    }
+  }
+}

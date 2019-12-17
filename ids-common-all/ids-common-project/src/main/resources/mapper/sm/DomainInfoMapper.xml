@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.DomainInfoMapper">
+    <resultMap id="BaseResultMap"
+        type="com.interest.ids.common.project.bean.sm.DomainInfo">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="enterprise_id" jdbcType="BIGINT"
+            property="enterpriseId" />
+        <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+        <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+        <result column="radius" jdbcType="DECIMAL" property="radius" />
+        <result column="domain_price" jdbcType="DECIMAL"
+            property="domainPrice" />
+        <result column="currency" jdbcType="VARCHAR" property="currency" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="create_user_id" jdbcType="BIGINT"
+            property="createUserId" />
+        <result column="create_date" jdbcType="TIMESTAMP"
+            property="createDate" />
+        <result column="modify_user_id" jdbcType="BIGINT"
+            property="modifyUserId" />
+        <result column="modify_date" jdbcType="TIMESTAMP"
+            property="modifyDate" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, description, parent_id, enterprise_id, longitude, latitude,
+        radius, domain_price,
+        currency, create_user_id, create_date, modify_user_id, modify_date,path
+    </sql>
+
+    <!-- 插入 -->
+    <insert id="insertDomain" parameterType="com.interest.ids.common.project.bean.sm.DomainInfo">
+        insert into ids_sm_domain_info_t (name, description, parent_id, enterprise_id,
+        longitude, latitude, radius, domain_price,
+        currency, create_user_id, create_date, modify_user_id, modify_date,path)
+        values(#{name},#{description},#{parentId},#{enterpriseId},#{longitude},
+        #{latitude},#{radius},#{domainPrice},#{currency},#{createUserId},
+        #{createDate},#{modifyUserId},#{modifyDate},#{path})
+    </insert>
+
+    <!-- 更新区域 -->
+    <update id="updateDomain" parameterType="com.interest.ids.common.project.bean.sm.DomainInfo">
+        update ids_sm_domain_info_t
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="enterpriseId != null">
+                enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="radius != null">
+                radius = #{radius,jdbcType=DECIMAL},
+            </if>
+            <if test="domainPrice != null">
+                domain_price = #{domainPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="currency != null">
+                currency = #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="path != null and path != '' ">
+                path = #{path}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 删除区域 -->
+    <delete id="deleteDomainById" parameterType="java.lang.Long">
+        delete from ids_sm_domain_info_t where id = #{value}
+    </delete>
+
+    <!-- -->
+    <select id="selectDomainById" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_domain_info_t
+        where id = #{value}
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="selectAllDomain" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_domain_info_t
+        order by path
+    </select>
+
+    <!-- 根据parentid查询下级子区域 -->
+    <select id="selectDomainsByParentId" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_domain_info_t 
+        where parent_id = #{domainId}
+        order by path
+    </select>
+    
+    <!-- 根据企业id查询直接子区域-->
+    <select id="selectDomainsByEnter" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_domain_info_t 
+        where 
+        	enterprise_id = #{value}
+        	and parent_id = 0
+        order by path
+    </select>
+    
+    <!-- 根据企业id查询所有的区域 -->
+    <select id="selectAllDomainsByEnter" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    	select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_domain_info_t 
+        where 
+        	enterprise_id = #{value}
+    </select>
+
+    <!--根据电站stationCode查询区域 -->
+    <select id="selectDomainByStationCode" parameterType="java.lang.String"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_domain_info_t where id = ( select domain_id from
+        ids_station_info_t where station_code = #{value})
+    </select>
+    
+    <!--根据用户查询区域和企业树-->
+    <resultMap id="TreeResultMap" type="com.interest.ids.common.project.bean.TreeModel">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="pid" jdbcType="BIGINT" property="pid" />
+    </resultMap>
+    <!-- 根据用户查询区域树 -->
+    <select id="getUserDomainTree" parameterType="java.util.Map" resultMap="TreeResultMap">
+	    <choose>
+	    	<when test="type_ == 'system'">
+		        SELECT CONCAT('D',domain.id) id,domain.`name`,'D' AS model,
+				IF (domain.parent_id IS NULL OR domain.parent_id = 0, CONCAT('E',enterP.id), CONCAT('D',domain.parent_id)) pid
+				FROM ids_sm_domain_info_t domain,ids_sm_enterprise_info_t enterP
+				WHERE domain.enterprise_id = enterP.id
+				UNION ALL
+				SELECT distinct CONCAT('E',enterP.id) id,enterP.`name`,'E' AS model,enterP.parent_id pid
+				FROM ids_sm_domain_info_t domain,ids_sm_enterprise_info_t enterP
+				WHERE domain.enterprise_id = enterP.id
+	    	</when>
+	    	<otherwise>
+	    		SELECT CONCAT('D',domain.id) id,domain.`name`,'D' AS model,
+				IF (domain.parent_id IS NULL OR domain.parent_id = 0, CONCAT('E',enterP.id), CONCAT('D',domain.parent_id)) pid
+				FROM ids_sm_user_info_t userT,ids_sm_domain_info_t domain,ids_sm_enterprise_info_t enterP
+				WHERE domain.enterprise_id = userT.enterprise_id AND userT.id = #{id} AND userT.enterprise_id = enterP.id
+				UNION ALL
+				SELECT distinct CONCAT('E',enterP.id) id,enterP.`name`,'E' AS model,enterP.parent_id pid
+				FROM ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterP
+				WHERE userT.enterprise_id = enterP.id AND userT.id = #{id}
+	    	</otherwise>
+	    </choose>
+    </select>
+    <!-- 统计父区域下面的子区域个数 -->
+    <select id="countDomainByParentId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    	select count(id) from ids_sm_domain_info_t where parent_id = #{value}
+    </select>
+    
+    <select id="selectDomainByIds" resultMap="BaseResultMap">
+    	select * from ids_sm_domain_info_t
+    	where id in 
+    		<foreach collection="collection" item="id" open="(" separator="," close=")">
+    			#{id}
+    		</foreach>
+    </select>
+    
+    <!--  -->
+    <select id="countStationByDomainId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    	select count(*) from ids_station_info_t where domain_id = #{value} and is_delete = '0'
+    </select>
+    <select id="getDomainPathByIds" resultType="java.lang.String">
+    	select path from ids_sm_domain_info_t where id in
+    	<foreach collection="collection" item="item" open="(" close=")" separator=",">
+		    #{item}
+		</foreach>
+    </select>
+    <select id="getDomainByIds" resultType="com.interest.ids.common.project.dto.DomainTreeDto">
+    	select DISTINCT id, name, parent_id parentId, path from ids_sm_domain_info_t where
+    	id in
+		<foreach collection="collection" item="id" open="(" close=")" separator=",">
+		    #{id}
+		</foreach>
+    </select>
+</mapper>

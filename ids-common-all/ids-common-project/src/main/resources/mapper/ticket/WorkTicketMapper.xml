@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.common.project.mapper.ticket.WorkTicketMapper">
+	<resultMap type="com.interest.ids.common.project.bean.ticket.WorkTicket" id="workTicketMap">
+		<result column="id" property="id"/>
+		<result column="charge_id" property="chargeId"/>
+		<result column="group_id" property="groupId"/>
+		<result column="work_content" property="workContent"/>
+		<result column="alarm_ids" property="alarmIds"/>
+		<result column="alarm_type" property="alarmType"/>
+		<result column="work_address" property="workAddress"/>
+		<result column="start_work_time" property="startWorkTime"/>
+		<result column="end_work_time" property="endWorkTime"/>
+		<result column="safety_technical" property="safetyTechnical"/>
+		<result column="personal_safety_technical" property="personalSafetyTechnical"/>
+		<result column="ground_wire" property="groundWire"/>
+		<result column="safety_warning_signs" property="safetyWarningSigns"/>
+		<result column="live_electrified_equipment" property="liveElectrifiedEquipment"/>
+		<result column="issuer_id" property="issueId"/>
+		<result column="dev_id" property="devId"/>
+		<result column="dev_alias" property="devAlias"/>
+		<result column="station_code" property="stationCode"/>
+		<result column="create_time" property="createTime"/>
+		<result column="act_state" property="actState"/>
+	</resultMap>
+
+	<!-- 保存第一种工作票的业务数据 -->
+	<insert id="insertFirstTicket" useGeneratedKeys="true" keyProperty="id"  parameterType="com.interest.ids.common.project.bean.ticket.WorkTicket">
+		insert into ids_first_workticket_business 
+		(charge_id,group_id,work_content,alarm_ids,alarm_type,
+		work_address,start_work_time,end_work_time,safety_technical,
+		personal_safety_technical,ground_wire,safety_warning_signs,live_electrified_equipment,issuer_id,dev_id,create_time,act_state)
+		values 
+		(#{chargeId},#{groupId},#{workContent},#{alarmIds},#{alarmType},#{workAddress},#{startWorkTime},
+		#{endWorkTime},#{safetyTechnical},#{personalSafetyTechnical},#{groundWire},
+		#{safetyWarningSigns},#{liveElectrifiedEquipment},#{issueId},${devId},#{createTime},#{actState})
+	</insert>
+	
+	<!-- 根据id查询业务数据 -->
+	<select id="getWorkTicketById" parameterType="java.lang.Long" resultMap="workTicketMap">
+		select 
+			business.*,
+			dev.dev_alias dev_alias,
+			dev.station_code station_code
+		from 
+			ids_first_workticket_business business,
+			ids_dev_info_t dev
+		where 
+			business.dev_id = dev.id
+			and business.id = #{value}
+	</select>
+	<!-- 更新业务数据 -->
+	<update id="updateWorkTicket" parameterType="com.interest.ids.common.project.bean.ticket.WorkTicket">
+		update ids_first_workticket_business 
+		<set>
+			<if test="null != chargeId">
+				charge_id = #{chargeId},
+			</if>
+			<if test="null != actState and actState != ''">
+				act_state = #{actState},
+			</if>
+			<if test="null != groupId">
+				group_id = #{groupId},
+			</if>
+			<if test="null != workContent and workContent != ''">
+				work_content = #{workContent},
+			</if>
+			<if test="null != alarmIds and alarmIds != ''">
+				alarm_ids = #{alarmIds},
+			</if>
+			<if test="null != alarmType and alarmType != ''">
+				alarm_type = #{alarmType},
+			</if>
+			<if test="null != workAddress and workAddress != ''">
+				work_address = #{workAddress},
+			</if>
+			<if test="null != startWorkTime">
+				start_work_time = #{startWorkTime},
+			</if>
+			<if test="null != endWorkTime">
+				end_work_time = #{endWorkTime},
+			</if>
+			<if test="null != safetyTechnical and safetyTechnical != ''">
+				safety_technical = #{safetyTechnical},
+			</if>
+			<if test="null != personalSafetyTechnical and personalSafetyTechnical != ''">
+				personal_safety_technical = #{safetyTechnical},
+			</if>
+			<if test="null != groundWire and groundWire != ''">
+				ground_wire = #{groundWire},
+			</if>
+			<if test="null != safetyWarningSigns and safetyWarningSigns != ''">
+				safety_warning_signs = #{safetyWarningSigns},
+			</if>
+			<if test="null != liveElectrifiedEquipment and liveElectrifiedEquipment != ''">
+				live_electrified_equipment = #{liveElectrifiedEquipment},
+			</if>
+			<if test="null != issueId and issueId != ''">
+				issuer_id = #{issueId}
+			</if>
+		</set>
+		where id = #{businessKey}
+	</update>
+	
+	<!-- 统计流程实例的记录数 -->
+	<select id="countWorkTicket" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select 
+			count(distinct(process_hi.PROC_INST_ID_))
+		from 
+			act_hi_procinst process_hi,
+			ids_first_workticket_business business
+		where
+			process_hi.BUSINESS_KEY_ = business.id
+		<if test="null != chargeId">
+			and business.charge_id in (${chargeId})
+		</if>
+		<if test="null != startWorkTime">
+			and UNIX_TIMESTAMP(process_hi.START_TIME_) <![CDATA[>=]]> (#{startWorkTime}/1000)
+		</if>
+		<if test="null != endWorkTime">
+			and UNIX_TIMESTAMP(process_hi.START_TIME_) <![CDATA[<=]]> (#{endWorkTime}/1000)
+		</if>
+		<if test="null != actState and actState != ''">
+			and business.act_state = #{actState}
+		</if>
+		<!-- 查询未结束的流程 -->
+		<if test="null != isActive">
+				and business.act_state <![CDATA[!=]]> 'processEnd' and business.act_state <![CDATA[!=]]> 'giveup'
+		</if>
+	</select>
+	<!-- 分页查询数据 -->
+	<resultMap type="java.util.Map" id="conditionMap">
+		<result column="id" property="serialNum"/>
+		<result column="charge_id" property="chargeId"/>
+		<result column="chargeName" property="chargeName"/>
+		<result column="work_content" property="workContent"/>
+		<result column="start_work_time" property="startWorkTime"/>
+		<result column="end_work_time" property="endWorkTime"/>
+		<result column="create_time" property="createDate"/>
+		<result column="alarm_ids" property="alarmIds"/>
+		<result column="alarm_type" property="alarmType"/>
+		<result column="act_state" property="processStatus"/>
+		<result column="PROC_INST_ID_" property="definitionId"/>
+	</resultMap>
+	<select id="queryWorkTicketList" parameterType="java.util.Map" resultMap="conditionMap">
+		select 
+			business.id,
+			business.charge_id,
+			(select login_name from ids_sm_user_info_t where id = business.charge_id) chargeName,
+			business.work_content,
+			business.start_work_time,
+			business.end_work_time,
+			business.create_time,
+			business.alarm_ids,
+			business.alarm_type,
+			business.act_state,
+			process_hi.PROC_INST_ID_
+		from 
+			act_hi_procinst process_hi,
+			ids_first_workticket_business business
+		where
+			process_hi.BUSINESS_KEY_ = business.id
+		<if test="null != chargeId">
+			and business.charge_id in (${chargeId})
+		</if>
+		<if test="null != startWorkTime">
+			and UNIX_TIMESTAMP(process_hi.START_TIME_) <![CDATA[>=]]> (#{startWorkTime}/1000)
+		</if>
+		<if test="null != endWorkTime">
+			and UNIX_TIMESTAMP(process_hi.START_TIME_) <![CDATA[<=]]> (#{endWorkTime}/1000)
+		</if>
+		<if test="null != processStatus and processStatus != ''">
+			and business.act_state = #{processStatus}
+		</if>
+		<!-- 查询未结束的流程 -->
+		<if test="null != isActive">
+				and business.act_state <![CDATA[!=]]> 'processEnd' and business.act_state <![CDATA[!=]]> 'giveup'
+		</if>
+		order by business.create_time desc
+		<if test="null != start and null != pageSize">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!--  -->
+	<resultMap type="java.util.Map" id="stationInfoMap">
+		<result column="station_name" property="stationName"/>
+		<result column="dev_alias" property="devAlias"/>
+	</resultMap>
+	<select id="selectStationAndDevInfo" parameterType="java.lang.Long" resultMap="stationInfoMap">
+		select 
+			distinct(station.station_name),
+			dev.dev_alias
+		from 
+			ids_first_workticket_business bussiness,
+			ids_dev_info_t dev,
+			ids_station_info_t station
+		where 
+			bussiness.dev_id = dev.id
+			and dev.station_code = station.station_code
+			and bussiness.dev_id = #{value}
+			
+	</select>
+</mapper>

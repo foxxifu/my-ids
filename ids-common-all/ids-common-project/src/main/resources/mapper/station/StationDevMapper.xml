@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.station.StationDevMapper">
+    
+    <resultMap type="com.interest.ids.common.project.bean.signal.DeviceInfo" id="stationDevResultMap">
+        <result column="signal_version" property="signalVersion"/>
+        <result column="dev_alias" property="devAlias"/>
+        <result column="sn_code" property="snCode"/>
+        <result column="enterprise_id" property="enterpriseId"/>
+        <result column="dev_name" property="devName"/>
+        <result column="dev_type_id" property="devTypeId"/>
+    </resultMap>
+    
+    <resultMap type="com.interest.ids.common.project.bean.device.StationPvModule" id="stationPvModuleResultMap">
+        <result column="id" property="id"/>
+        <result column="manufacturer" property="manufacturer"/>
+        <result column="module_version" property="moduleVersion"/>
+        <result column="standard_power" property="standardPower"/>
+        <result column="abbreviation" property="abbreviation"/>
+        <result column="module_type" property="moduleType"/>
+        <result column="module_ratio" property="moduleRatio"/>
+        <result column="components_nominal_voltage" property="componentsNominalVoltage"/>
+        <result column="nominal_current_component" property="nominalCurrentComponent"/>
+        <result column="max_power_point_voltage" property="maxPowerPointVoltage"/>
+        <result column="max_power_point_current" property="maxPowerPointCurrent"/>
+        <result column="fill_factor" property="fillFactor"/>
+        <result column="max_power_temp_coef" property="maxPowerTempCoef"/>
+        <result column="voltage_temp_coef" property="voltageTempCoef"/>
+        <result column="current_temp_coef" property="currentTempCoef"/>
+        <result column="first_degradation_drate" property="firstDegradationDrate"/>
+        <result column="second_degradation_drate" property="secondDegradationDrate"/>
+        <result column="cells_num_per_module" property="cellsNumPerModule"/>
+        <result column="min_work_temp" property="minWorkTemp"/>
+        <result column="max_work_temp" property="maxWorkTemp"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <resultMap type="HashMap" id="deviceModuleDetailResultMap">
+        <result column="fixed_power" property="fixedPower"/>
+        <result column="pv_index" property="pvIndex"/>
+        <result column="dev_id" property="devId"/>
+        <result column="dev_alias" property="devAlias"/>
+        <result column="dev_type_id" property="devTypeId"/>
+        <result column="signal_version" property="signalVersion"/>
+        <result column="sn_code" property="snCode"/>
+    </resultMap>
+    <resultMap type="com.interest.ids.common.project.bean.device.StationDevicePvModule" id="stationDevicePvModuleResultMap">
+        <result column="dev_id" property="devId"/>
+        <result column="station_code" property="stationCode"/>
+        <result column="fixed_power" property="fixedPower"/>
+        <result column="sn_code" property="snCode"/>
+        <result column="pv_index" property="pvIndex"/>
+        <result column="pv_model_id" property="pvModuleId"/>
+        <result column="modules_num_per_string" property="modulesNumPerString"/>
+        <result column="module_production_date" property="moduleProductionDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_default" property="isDefault"/>
+    </resultMap>
+    <!-- 查询所有设备的版本号 (根据企业号去查询) -->
+    <select id="selectDevModelVersion" parameterType="java.lang.Long" resultType="java.lang.String">
+        select signal_version from ids_signal_version_t
+        where enterprise_id = #{value} or enterprise_id is null
+    </select>
+    
+    <!-- 设备接入保持 -->
+    <insert id="insetStationDev" parameterType="com.interest.ids.common.project.bean.signal.DeviceInfo">
+        insert into ids_dev_info_t (station_code,enterprise_id,signal_version,dev_type_id,parent_id,parent_esn_code
+        ,related_device_id,area_id,matrix_id,dev_alias,dev_name,sn_code,pn,assembly_type,kks_code,power_code,ne_version,software_version,
+        device_ip,dev_port,linked_host,second_address,baud_rate,endian,longitude,latitude,is_logic_delete,old_esn,have_opt_child,
+        loc_id,recv_addr,create_date,modified_date,protocol_code) 
+        values(#{stationCode},#{enterpriseId},#{signalVersion},#{devTypeId},#{parentId},#{parentEsnCode},
+        #{relatedDeviceId},#{areaId},#{matrixId},#{devAlias},#{devName},#{snCode},#{pn},#{assemblyType},#{kksCode},#{powerCode},#{neVersion},#{softwareVersion},
+        #{hostAddress},#{devPort},#{linkHost},#{secondAddress},#{baudRate},#{endian},#{longitude},#{latitude},#{isLogicDelete},#{oldEsn},#{haveOptChild},
+        #{locId},#{recvAddr},#{createDate},#{modifiedDate},#{protocolCode})
+    </insert>
+    
+    <!-- 查看电站下关联的设备 -->
+    <select id="selectStationDevsByStationCode" parameterType="java.lang.String" resultMap="stationDevResultMap">
+        select signal_version,dev_alias,sn_code 
+        from ids_dev_info_t 
+        where station_code = #{value}
+    </select>
+    
+    <!-- 根据id查询设备信息-非全部信息 -->
+    <select id="selectStationDevsByStationId" parameterType="java.lang.Long" resultMap="stationDevResultMap">
+        select enterprise_id,dev_name,dev_type_id from ids_dev_info_t
+        where id = #{value}
+    </select>
+    
+    <!-- 查询所有的厂家名称信息 -->
+    <select id="selectStationPvModel" resultMap="stationPvModuleResultMap">
+        select id,manufacturer,module_version,standard_power from ids_pv_module_t
+    </select>
+    
+    <!-- 根据厂家的id查询某一个厂家的详细信息 -->
+    <select id="selectStationPvModuleDetail" parameterType="java.lang.Long" resultMap="stationPvModuleResultMap">
+        select * from ids_pv_module_t where id = #{value}
+    </select>
+    
+    <!-- 给设备添加组串 -->
+    <insert id="insertStationPvModule" parameterType="com.interest.ids.common.project.bean.device.StationDevicePvModule">
+        insert into ids_device_pv_module_t (dev_id,station_code,fixed_power,sn_code,pv_index,pv_model_id,
+        modules_num_per_string,module_production_date,create_time,update_time,is_default)
+        values 
+            (#{devId},#{stationCode},#{fixedPower},#{snCode},#{pvIndex},#{pvModuleId},#{modulesNumPerString},#{moduleProductionDate},#{createTime},#{updateTime},#{isDefault})
+    </insert>
+    
+    <!-- 给设备添加容量 -->
+    <insert id="insertStationPvCapacity" parameterType="java.util.List">
+        insert into ids_pv_capacity_t (dev_id,station_code,enterprise_id,dev_name,dev_type_id
+        <foreach collection="list" index="index" separator="," close=")">
+            pv${index}
+        </foreach>
+        values
+    </insert>
+    
+    <!-- 添加设备容量到容量表中 -->
+    <insert id="insertDeviceCapacity" parameterType="com.interest.ids.common.project.bean.device.DevicePvCapacity">
+        insert into ids_pv_capacity_t (dev_id,station_code,enterprise_id,dev_name,dev_type_id,
+        <foreach collection="pv" separator="," close=")" index="index">
+            pv#{index}
+        </foreach>
+        values (devId,stationCode,enterpriseId,devName,devTypeId,
+        <foreach collection="pv" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </insert>
+    
+    <!-- 查询设备下的组串详情 -->
+    <select id="selectModulesByEsn" parameterType="com.interest.ids.common.project.bean.device.DeviceModuleQuery" resultMap="deviceModuleDetailResultMap">
+        select pv.fixed_power fixed_power,pv.pv_index pv_index,pv.dev_id,dev.dev_alias dev_alias,dev.dev_type_id dev_type_id,
+        dev.signal_version signal_version,dev.sn_code sn_code from ids_dev_info_t dev,ids_device_pv_module_t pv
+        where pv.dev_id = dev.id and dev.sn_code = #{esn}
+        <if test="null != devTypeId">
+            and dev.dev_type_id = #{devTypeId}
+        </if>
+        limit #{start},#{pageSize}
+    </select>
+    
+    <!--查询设备关联的组件  -->
+    <select id="selectStationDevicePvModules" parameterType="java.lang.String" resultMap="stationDevicePvModuleResultMap">
+        select * from ids_device_pv_module_t where dev_id = 
+        (
+            select dev_id from ids_dev_info_t where sn_code = #{value}
+        )
+    </select>
+    
+    <!--查询设备关联的组件  -->
+    <!-- <select id="selectPvByStationCodeAndDevType" resultMap="stationDevicePvModuleResultMap">
+        select * from ids_device_pv_module_t where dev_id in 
+        (
+            select dev_id from ids_dev_info_t where station_code = #{stationCode} AND dev_type_id = #{devTypeId}
+        )
+    </select> -->
+    <!-- 更新设备组件关联关系 -->
+    <update id="updateDeviceModule" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update ids_device_pv_module_t
+            <if test="null != pvModuleId">
+                set pv_model_id = #{pvModuleId}
+            </if>
+            <if test="null != modulesNumPerString">
+                set modules_num_per_string = #{modulesNumPerString}
+            </if>
+            <if test="null != update_time">
+                set update_time = #{updateTime}
+            </if>
+            where dev_id = #{devId} and pv_index = #{pvIndex}
+        </foreach>
+    </update>
+    
+    <!-- 同步数据到容量表 -->
+    <update id="updateDeviceModuleCapacity" parameterType="com.interest.ids.common.project.bean.device.DevicePvCapacity">
+        update ids_pv_capacity_t 
+        <foreach collection="pv" item="item" index="index" separator=",">
+            set pv#{index} = #{item}
+        </foreach>
+        where dev_id = #{devId}
+    </update>
+    
+    <!-- 删除原来的组串容量详情配置 -->
+    <delete id="deleteStationPvModule" parameterType="java.lang.Long">
+        delete from ids_device_pv_module_t where dev_id = #{value};
+    </delete>
+
+    <select id="selectPvByStationCodeAndDevType" resultMap="stationDevicePvModuleResultMap">
+    	SELECT
+	        pv.*
+	      FROM
+	        ids_device_pv_module_t pv
+	      INNER JOIN ids_dev_info_t dev ON pv.station_code = dev.station_code
+	      AND dev.id = pv.dev_id
+	      WHERE pv.station_code = #{stationCode} AND dev.dev_type_id = #{devType} AND dev.is_logic_delete = 0
+    </select>
+
+    <!--  删除ids_pv_capacity_t的数据  -->
+    <delete id="deleteStationPvCapacity" parameterType="java.lang.Long">
+        delete from ids_pv_capacity_t where device_id = #{value}
+    </delete>
+
+</mapper>

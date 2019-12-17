@@ -1,0 +1,3 @@
+module.exports = {
+  "queryDevPVCapacity": {"success":true,"data":{"id":55,"devId":-193178984086899,"devTypeId":1,"stationCode":"2F2EABE15DD746BEB4087CC22B1B28B0","busiCode":"11test82","pv1":1000,"pv2":1000,"pv3":1000,"pv4":1000,"pv5":1000,"pv6":1000,"pv7":1000,"pv8":1000,"pv9":1000,"pv10":1000,"pv11":1000,"pv12":1000,"pv13":1000,"pv14":1000,"pv15":0,"pv16":0,"pv17":0,"pv18":0,"pv19":0,"pv20":0},"failCode":0,"params":null,"message":null}
+}

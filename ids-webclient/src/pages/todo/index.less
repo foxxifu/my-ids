@@ -1,0 +1,253 @@
+@import (reference) '~@/assets/css/variables';
+
+.currentDirection {
+  width: 100%;
+  height: 188px;
+  outline: 1px solid red;
+  margin-bottom: 20px;
+}
+
+.direction {
+  border: 1px solid gray;
+  height: 188px;
+  width: 100%;
+  display: inline-block;
+}
+
+.kpiName {
+  height: 50px;
+}
+
+.legends_1 {
+  margin-top: 150px;
+}
+
+.legend1 {
+  width: 68px;
+  height: 58px;
+  border: 1px solid red;
+  position: relative;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 10px;
+  line-height: 98px;
+}
+
+.status {
+  border: 1px solid red;
+  border-radius: 12px;
+  background: red;
+  position: absolute;
+  right: -5px;
+  top: -7px;
+  width: 15px;
+  height: 15px;
+}
+
+.legends_2 {
+  margin-top: 86px;
+}
+
+.legend2 {
+  //width: 68px;
+  //height: 58px;
+  //border: 1px solid red;
+  //position: relative;
+  text-align: center;
+  //font-size: 12px;
+  //margin-top: 10px;
+  //line-height: 98px;
+  margin-top: 12px;
+}
+
+.normal {
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background: #5eaf6e;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.fault {
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background: red;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.disconnection {
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background: gray;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.devStatus {
+  border-radius: 15px;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-right: 15px;
+}
+
+td.devName {
+  height: 50px;
+}
+
+.el-radio__input.is-checked + .el-radio__label {
+  color: white !important;
+}
+
+.el-radio.is-bordered.is-checked {
+  border-color: #08A8D8;
+  background: #08A8D8;
+}
+
+.el-radio__input {
+  display: none;
+}
+
+.el-radio__inner {
+  display: none;
+}
+
+i.dev-power-state {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 192px;
+  height: 130px;
+  &.dev-power-modules {
+    background: url('~/assets/images/station/modules.png') no-repeat;
+    z-index: 4;
+  }
+  &.dev-power-inverter {
+    background: url('~/assets/images/station/inverter.png') no-repeat 55px 0;
+    z-index: 6;
+    left: 52%;
+  }
+  &.dev-power-electricMeter {
+    background: url('~/assets/images/station/electricMeter.png') no-repeat 55px 0;
+    z-index: 6;
+    left: 55%;
+  }
+  &.dev-power-grid {
+    background: url('~/assets/images/station/grid.png') no-repeat;
+    height: 160px;
+    top: -30px;
+    z-index: 4;
+    left: 89%;
+  }
+  .dev-power-inner-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-style: normal;
+    left: 0;
+    bottom: -30px;
+    font-size: 16px;
+    color: #333;
+  }
+}
+
+i.dev-power-arraw {
+  position: absolute;
+  display: block;
+  z-index: 5;
+  width: ~'calc(100% - 360px)';
+  height: 26px;
+  left: 180px;
+  top: 57px;
+  background: url('~/assets/images/station/arraw.png') repeat-x;
+  &.arraw-running { // 进行动画
+    animation: bgRound-data-v-0b11b8e3 30s infinite linear;
+  }
+}
+
+/*背景图片的动画*/
+@keyframes bgRound-data-v-0b11b8e3 {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: calc(100%);
+  }
+}
+
+div.dev-power-div {
+  position: absolute;
+  top: 20px;
+  &.dev-power-in {
+    left: 18%;
+  }
+  &.dev-power-out {
+    left: 45%;
+  }
+  &.dev-power-inline {
+    left: 72%;
+  }
+}
+
+.el-tabs--right {
+  overflow: visible;
+  &.el-tabs--border-card {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    /deep/ .el-tabs__header {
+      background-color: transparent;
+      &.is-right {
+        width: 40px;
+        margin-left: 0px;
+        border-bottom: none;
+      }
+      .el-tabs__item {
+        &.is-right {
+          width: 40px;
+          min-height: 120px;
+          line-height: 20px;
+          padding: 10px;
+          margin: 0 -1px 15px;
+          color: #202e33;
+          border-radius: 0 15px 15px 0;
+          border: 1px solid #08A8D8;
+          writing-mode: tb-rl;
+          text-align: center;
+          vertical-align: middle;
+          text-transform: capitalize;
+          letter-spacing: 0.1em;
+          box-sizing: border-box;
+          &.is-active {
+            color: white;
+            background: #08A8D8;
+          }
+        }
+      }
+    }
+  }
+  /deep/ .el-tabs__content {
+    height: 100%;
+    overflow: auto;
+    border: 1px solid #21b1dc;
+  }
+
+  /deep/ .el-tabs__header {
+    border-bottom: none;
+    &.is-right {
+      /deep/ .el-tabs__nav {
+        white-space: pre-wrap;
+        /deep/ .el-tabs__item {
+          height: auto;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}

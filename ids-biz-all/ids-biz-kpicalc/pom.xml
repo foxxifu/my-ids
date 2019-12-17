@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ids-biz-all</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ids-biz-kpicalc</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-common-project</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-common-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-redis-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-biz-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- dependency third packages-->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>b9</version>
+        </dependency>
+    </dependencies>
+</project>

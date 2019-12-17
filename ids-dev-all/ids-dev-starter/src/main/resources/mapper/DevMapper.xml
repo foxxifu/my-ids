@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.dev.starter.dao.DevConfigDao">
+    <resultMap id="DevDcResultMap" type="com.interest.ids.dev.starter.vo.DevConfigVO">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="id" property="devId" jdbcType="BIGINT"/>
+        <result column="dev_alias" property="devAlias" jdbcType="VARCHAR"/>
+        <result column="signal_version" property="devVersion" jdbcType="VARCHAR"/>
+        <result column="channel_type" property="channelType" jdbcType="INTEGER"/>
+        <result column="ip" property="ip" jdbcType="VARCHAR"/>
+        <result column="port" property="port" jdbcType="INTEGER"/>
+        <result column="logical_addres" property="logicalAddres" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="listDcConfig" resultMap="DevDcResultMap">
+        SELECT d.id, d.dev_alias, d.signal_version, c.channel_type, c.ip, c.port, c.logical_addres
+        FROM ids_dev_info_t d left join ids_dc_config_t c on d.id=c.dev_id
+        WHERE d.is_logic_delete = 0 AND d.is_monitor_dev = '0'
+        <if test="params.userType == 'normal'">
+            AND d.station_code IN 
+            (SELECT users.station_code FROM ids_sm_user_station_t users 
+            WHERE users.user_id = #{params.userId})
+        </if>
+        <if test="params.userType == 'enterprise'">
+            AND d.station_code IN 
+			(SELECT station.station_code from ids_station_info_t station,ids_sm_user_info_t usert 
+			WHERE station.enterprise_id = usert.enterprise_id AND usert.id = #{params.userId})
+        </if>
+        <if test="params.devAlias != null and params.devAlias != ''">
+            <bind name="devAlias" value="'%' + params.devAlias + '%'"/>
+            AND d.dev_alias like #{devAlias}
+        </if>
+        <if test="params.port != null and params.port > 0">
+            AND c.port = #{params.port}
+        </if>
+        <choose>
+            <when test="params.devTypeId == -1 or params.devTypeId == null">
+                AND d.dev_type_id = 13
+            </when>
+            <otherwise>
+                AND d.dev_type_id = #{params.devTypeId}
+            </otherwise>
+        </choose>
+        <if test="params.channelType != null and params.channelType != -1">
+            AND c.channel_type = #{params.channelType}
+        </if>
+    </select>
+
+    <select id="getByDevId" parameterType="java.lang.Long" resultMap="DevDcResultMap">
+        SELECT d.id, d.dev_alias, d.signal_version, c.channel_type, c.ip, c.port, c.logical_addres
+        FROM ids_dev_info_t d left join ids_dc_config_t c on d.id=c.dev_id
+        WHERE d.id = #{deviceId}
+    </select>
+    
+    <select id="deviceComparisonTable" parameterType="Object[]" resultType="java.util.Map">
+    	SELECT devPv.*,pvinfo.manufacturer,pvinfo.module_type,pvinfo.module_ratio,pvinfo.max_power_temp_coef,
+		version.vender_name,pvcap.num
+		FROM ids_pv_module_t pvinfo,(SELECT dev_id,pv_model_id,module_production_date
+		,MAX(CASE WHEN pv_index = 1 THEN fixed_power END) AS pv1_capacity
+		,MAX(CASE WHEN pv_index = 2 THEN fixed_power END) AS pv2_capacity
+		,MAX(CASE WHEN pv_index = 3 THEN fixed_power END) AS pv3_capacity
+		,MAX(CASE WHEN pv_index = 4 THEN fixed_power END) AS pv4_capacity
+		,MAX(CASE WHEN pv_index = 5 THEN fixed_power END) AS pv5_capacity
+		,MAX(CASE WHEN pv_index = 6 THEN fixed_power END) AS pv6_capacity
+		,MAX(CASE WHEN pv_index = 7 THEN fixed_power END) AS pv7_capacity
+		,MAX(CASE WHEN pv_index = 8 THEN fixed_power END) AS pv8_capacity
+		,MAX(CASE WHEN pv_index = 9 THEN fixed_power END) AS pv9_capacity
+		,MAX(CASE WHEN pv_index = 10 THEN fixed_power END) AS pv10_capacity
+		,MAX(CASE WHEN pv_index = 11 THEN fixed_power END) AS pv11_capacity
+		,MAX(CASE WHEN pv_index = 12 THEN fixed_power END) AS pv12_capacity
+		,MAX(CASE WHEN pv_index = 13 THEN fixed_power END) AS pv13_capacity
+		,MAX(CASE WHEN pv_index = 14 THEN fixed_power END) AS pv14_capacity
+		FROM ids_device_pv_module_t GROUP BY dev_id,pv_model_id,module_production_date) devPv,
+		ids_signal_version_t version,ids_dev_info_t dev,ids_pv_capacity_t pvcap
+		WHERE version.signal_version = dev.signal_version AND dev.id = devPv.dev_id
+		AND devPv.pv_model_id = pvinfo.id
+		AND pvcap.device_id = dev.id AND devPv.dev_id IN
+		<foreach collection="array" item="devId" open="(" close=")" separator=",">
+            #{devId}
+        </foreach>
+    </select>
+    
+    <select id="deviceComparisonChart"  parameterType="java.util.Map" resultType="java.util.Map">
+    	SELECT inverter.dev_name,inverter.collect_time,IFNULL(${queryColumn},0) AS ${queryColumn} FROM ids_inverter_string_data_t inverter 
+    	WHERE inverter.collect_time BETWEEN ${startTime} AND ${endTime}
+		AND inverter.dev_id IN 
+		<foreach collection="devArray" item="devId" open="(" close=")" separator=",">
+            #{devId}
+        </foreach>
+    </select>
+    
+    <select id="getDeviceSignal" parameterType="java.lang.Integer" resultType="java.util.Map">
+    	SELECT model.column_name,model.display_name FROM ids_normalized_model_t model 
+    	WHERE model.dev_type = ${value}
+    </select>
+    
+</mapper>

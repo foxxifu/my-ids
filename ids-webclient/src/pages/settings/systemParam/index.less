@@ -1,0 +1,30 @@
+@import (once) '~@/assets/css/variables';
+
+.systemParam {
+  /deep/ .systemForm{
+    /deep/ .systemTable{
+      overflow: visible;
+      /deep/ .el-table__body-wrapper{
+        overflow: visible;
+      }
+    }
+    /deep/ .el-form-item{
+      margin-bottom: 0px;
+    }
+    /deep/ .el-table .cell{
+      overflow: visible;
+    }
+
+    /deep/ .self-is-required:after{
+      content: '*';
+      color: #f56c6c;
+      margin-right: 4px;
+    }
+  }
+}
+
+
+
+
+
+

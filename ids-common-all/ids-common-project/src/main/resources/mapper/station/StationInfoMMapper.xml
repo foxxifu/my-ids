@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.station.StationInfoMMapper">
+    <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.sm.StationInfoM">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+        <result column="station_name" jdbcType="VARCHAR" property="stationName" />
+        <result column="installed_capacity" jdbcType="DECIMAL" property="installedCapacity" />
+        <result column="install_angle" jdbcType="DECIMAL" property="installAngle" />
+        <result column="assembly_layout" jdbcType="VARCHAR" property="assemblyLayout" />
+        <result column="floor_space" jdbcType="DECIMAL" property="floorSpace" />
+        <result column="amsl" jdbcType="DECIMAL" property="amsl" />
+        <result column="produce_date" jdbcType="DATE" property="produceDate" />
+        <result column="life_cycle" jdbcType="TINYINT" property="lifeCycle" />
+        <result column="safe_run_datetime" jdbcType="BIGINT" property="safeRunDatetime" />
+        <result column="online_type" jdbcType="TINYINT" property="onlineType" />
+        <result column="station_type" jdbcType="TINYINT" property="stationType" />
+        <result column="station_build_status" jdbcType="TINYINT" property="stationBuildStatus" />
+        <result column="inverter_type" jdbcType="TINYINT" property="inverterType" />
+        <result column="is_poverty_relief" jdbcType="TINYINT" property="isPovertyRelief" />
+        <result column="station_file_id" jdbcType="VARCHAR" property="stationFileId" />
+        <result column="station_addr" jdbcType="VARCHAR" property="stationAddr" />
+        <result column="station_desc" jdbcType="VARCHAR" property="stationDesc" />
+        <result column="contact_people" jdbcType="VARCHAR" property="contactPeople" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="station_price" jdbcType="DECIMAL" property="stationPrice" />
+        <result column="latitude" jdbcType="DECIMAL" property="latitude"/>
+        <result column="longitude" jdbcType="DECIMAL" property="longitude"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="time_zone" jdbcType="INTEGER" property="timeZone" />
+        <result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId" />
+        <result column="domain_id" jdbcType="BIGINT" property="domainId" />
+        <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="domainName" jdbcType="VARCHAR" property="domainName" />
+        <result column="safeOprDate" jdbcType="VARCHAR" property="safeOprDate" />
+        <result column="active_power" jdbcType="DECIMAL" property="activePower"/>
+        <result column="day_cap" jdbcType="DECIMAL" property="dayCapacity"/>
+        <result column="is_monitor" jdbcType="VARCHAR" property="isMonitor"/>
+        <!-- <association property="stationParam" column="station_code"
+            javaType="com.interest.ids.common.project.bean.sm.StationParam"
+            select="com.interest.ids.commoninterface.dao.station.StationParamMapper.selectStationParamByStationCode"></association>
+        <association property="domain" column="domain_id"
+            javaType="com.interest.ids.common.project.bean.sm.DomainMInfo"
+            select="com.interest.ids.commoninterface.dao.sm.DomainMMapper.selectDomainById"></association>
+        <association property="enterprise" column="enterprise_id"
+            javaType="com.interest.ids.common.project.bean.sm.EnterpriseInfo"
+            select="com.interest.ids.commoninterface.dao.sm.EnterpriseMMapper.selectEnterpriseMById"></association> -->
+    </resultMap>
+    
+    <resultMap id="PriceResultMap" type="com.interest.ids.common.project.bean.analysis.PowerPriceM">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="start_date" jdbcType="BIGINT" property="startDate" />
+        <result column="end_date" jdbcType="BIGINT" property="endDate" />
+        <result column="start_time" jdbcType="INTEGER" property="startTime" />
+        <result column="end_time" jdbcType="INTEGER" property="endTime" />
+        <result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId" />
+        <result column="domain_id" jdbcType="BIGINT" property="domainId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, station_code, station_name, installed_capacity, install_angle, assembly_layout,
+        floor_space, amsl,
+        produce_date, life_cycle, safe_run_datetime, online_type, station_type,
+        station_build_status,
+        inverter_type, is_poverty_relief, station_file_id, station_addr, station_desc, contact_people,
+        phone, station_price, latitude, longitude, time_zone, area_code,enterprise_id, domain_id,
+        is_delete,create_user_id, create_date,update_user_id, update_date, is_monitor
+    </sql>
+
+    <!-- 新建一个电站信息 -->
+    <insert id="insertstation" parameterType="com.interest.ids.common.project.bean.sm.StationInfoM"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into ids_station_info_t (station_code, station_name, installed_capacity,
+        install_angle, assembly_layout, floor_space, amsl,
+        produce_date, life_cycle, safe_run_datetime, online_type, station_type,
+        station_build_status,
+        inverter_type, is_poverty_relief, station_file_id, station_addr, station_desc, contact_people,
+        phone, station_price, latitude, longitude, time_zone, enterprise_id, domain_id,
+        create_user_id, create_date,
+        update_user_id, update_date,area_code, is_monitor)
+        values
+        (#{stationCode},#{stationName},#{installedCapacity},#{installAngle},#{assemblyLayout},#{floorSpace},#{amsl},#{produceDate},#{lifeCycle},
+        #{safeRunDatetime},#{onlineType},#{stationType},#{stationBuildStatus},#{inverterType},#{isPovertyRelief},#{stationFileId},
+        #{stationAddr},#{stationDesc},#{contactPeople},#{phone},#{stationPrice}, #{latitude}, #{longitude},#{timeZone},#{enterpriseId},#{domainId},
+        #{createUserId},#{createDate},#{updateUserId},#{updateDate},#{areaCode}, '0')
+    </insert>
+
+    <!-- 根据id查询电站信息 -->
+    <select id="selectStationInfoMById" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        where id = #{id}
+    </select>
+
+    <!-- 根据任意条件查询 -->
+    <select id="selcetStationInfoMsByCondition"
+        parameterType="com.interest.ids.common.project.bean.sm.QueryStationInfo"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        <where>
+            <if test="station.stationCode != null and station.stationCode != '' ">
+                and station_code = #{station.stationCode,jdbcType=VARCHAR}
+            </if>
+            <if test="station.stationName != null and station.stationName != '' ">
+                and station_name = #{station.stationName,jdbcType=VARCHAR}
+            </if>
+            <if test="station.installedCapacity != null">
+                and installed_capacity = #{station.installedCapacity,jdbcType=DECIMAL}
+            </if>
+            <if test="station.installAngle != null">
+                and install_angle = #{station.installAngle,jdbcType=DECIMAL}
+            </if>
+            <if test="station.assemblyLayout != null and station.assemblyLayout != '' ">
+                and assembly_layout = #{station.assemblyLayout,jdbcType=VARCHAR}
+            </if>
+            <if test="station.floorSpace != null">
+                and floor_space = #{station.floorSpace,jdbcType=DECIMAL}
+            </if>
+            <if test="station.amsl != null">
+                and amsl = #{station.amsl,jdbcType=DECIMAL}
+            </if>
+            <if test="station.produceDate != null">
+                and produce_date = #{station.produceDate,jdbcType=DATE}
+            </if>
+            <if test="station.lifeCycle != null">
+                and life_cycle = #{station.lifeCycle,jdbcType=TINYINT}
+            </if>
+            <if test="station.safeRunDatetime != null">
+                and safe_run_datetime = #{station.safeRunDatetime,jdbcType=BIGINT}
+            </if>
+            <if test="station.onlineType != null">
+                and online_type = #{station.onlineType,jdbcType=TINYINT}
+            </if>
+            <if test="station.stationType != null">
+                and station_type = #{station.stationType,jdbcType=TINYINT}
+            </if>
+            <if test="station.stationBuildStatus != null">
+                and station_build_status = #{station.stationBuildStatus,jdbcType=TINYINT}
+            </if>
+            <if test="station.inverterType != null">
+                and inverter_type = #{station.inverterType,jdbcType=TINYINT}
+            </if>
+            <if test="station.isPovertyRelief != null">
+                and is_poverty_relief = #{station.isPovertyRelief,jdbcType=TINYINT}
+            </if>
+            <if test="station.stationFileId != null and station.stationFileId != '' ">
+                and station_file_id = #{station.stationFileId,jdbcType=VARCHAR}
+            </if>
+            <if test="station.stationAddr != null and station.stationAddr != '' ">
+                and station_addr = #{station.stationAddr,jdbcType=VARCHAR}
+            </if>
+            <if test="station.stationDesc != null and station.stationDesc != '' ">
+                and station_desc = #{station.stationDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="station.contactPeople != null and station.contactPeople != '' ">
+                and contact_people = #{station.contactPeople,jdbcType=VARCHAR}
+            </if>
+            <if test="station.phone != null and station.phone != '' ">
+                and phone = #{station.phone,jdbcType=VARCHAR}
+            </if>
+            <if test="station.stationPrice != null">
+                and station_price = #{station.stationPrice,jdbcType=DECIMAL}
+            </if>
+            <if test="station.timeZone != null">
+                and time_zone = #{station.timeZone,jdbcType=INTEGER}
+            </if>
+            <if test="station.enterpriseId != null">
+                and enterprise_id = #{station.enterpriseId,jdbcType=BIGINT}
+            </if>
+            <if test="station.domainId != null">
+                and domain_id = #{station.domainId,jdbcType=BIGINT}
+            </if>
+            <if test="station.createUserId != null">
+                and create_user_id = #{station.createUserId,jdbcType=BIGINT}
+            </if>
+            <if test="station.createDate != null">
+                and create_date = #{station.createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="station.updateUserId != null">
+                and update_user_id = #{station.updateUserId,jdbcType=BIGINT}
+            </if>
+            <if test="station.updateDate != null">
+                and update_date = #{station.updateDate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        limit #{page.start},#{page.pageSize}
+    </select>
+
+    <!-- 根据id更新 -->
+    <update id="updateStationInfoMById" parameterType="com.interest.ids.common.project.bean.sm.StationInfoM">
+        update ids_station_info_t
+        <set>
+            <if test="stationName != null and stationName != '' ">
+                station_name = #{stationName,jdbcType=VARCHAR},
+            </if>
+            <if test="installedCapacity != null">
+                installed_capacity = #{installedCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="installAngle != null">
+                install_angle = #{installAngle,jdbcType=DECIMAL},
+            </if>
+            <if test="assemblyLayout != null and assemblyLayout != '' ">
+                assembly_layout = #{assemblyLayout,jdbcType=VARCHAR},
+            </if>
+            <if test="floorSpace != null">
+                floor_space = #{floorSpace,jdbcType=DECIMAL},
+            </if>
+            <if test="amsl != null">
+                amsl = #{amsl,jdbcType=DECIMAL},
+            </if>
+            <if test="produceDate != null">
+                produce_date = #{produceDate,jdbcType=DATE},
+            </if>
+            <if test="lifeCycle != null">
+                life_cycle = #{lifeCycle,jdbcType=TINYINT},
+            </if>
+            <if test="safeRunDatetime != null">
+                safe_run_datetime = #{safeRunDatetime,jdbcType=BIGINT},
+            </if>
+            <if test="onlineType != null">
+                online_type = #{onlineType,jdbcType=TINYINT},
+            </if>
+            <if test="stationType != null">
+                station_type = #{stationType,jdbcType=TINYINT},
+            </if>
+            <if test="stationBuildStatus != null">
+                station_build_status = #{stationBuildStatus,jdbcType=TINYINT},
+            </if>
+            <if test="inverterType != null">
+                inverter_type = #{inverterType,jdbcType=TINYINT},
+            </if>
+            <if test="isPovertyRelief != null">
+                is_poverty_relief = #{isPovertyRelief,jdbcType=TINYINT},
+            </if>
+            <if test="stationFileId != null and stationFileId != '' ">
+                station_file_id = #{stationFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="stationAddr != null and stationAddr != '' ">
+                station_addr = #{stationAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="stationDesc != null and stationDesc != '' ">
+                station_desc = #{stationDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPeople != null and contactPeople != '' ">
+                contact_people = #{contactPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != '' ">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="stationPrice != null">
+                station_price = #{stationPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="timeZone != null">
+                time_zone = #{timeZone,jdbcType=INTEGER},
+            </if>
+            <if test="enterpriseId != null">
+                enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+            </if>
+            <if test="domainId != null">
+                domain_id = #{domainId,jdbcType=BIGINT},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null">
+                update_user_id = #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="areaCode != null and areaCode != '' ">
+                area_code = #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null and latitude != '' ">
+                latitude = #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="longitude != null and longitude != '' ">
+                longitude = #{longitude,jdbcType=DECIMAL},
+            </if>
+            station_code = station_code
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteStationInfoMById" parameterType="java.lang.Long">
+        delete from ids_station_info_t
+        where id = #{value}
+    </delete>
+
+    <!-- 根据id批量删除 -->
+    <delete id="deleteStationInfosByCodes" parameterType="java.lang.String">
+        UPDATE ids_station_info_t SET is_delete = '1' where station_code in
+        <foreach collection="array" item="code" close=")" open="("
+            separator=",">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!-- 查询站点总条数 -->
+    <select id="selectAllCount" parameterType="com.interest.ids.common.project.bean.sm.StationInfoM" resultType="java.lang.Integer">
+        select count(id) from ids_station_info_t
+        <where>
+            <if test="stationCode != null and stationCode != '' ">
+                and station_code = #{stationCode,jdbcType=VARCHAR}
+            </if>
+            <if test="stationName != null and stationName != '' ">
+                and station_name = #{stationName,jdbcType=VARCHAR}
+            </if>
+            <if test="installedCapacity != null">
+                and installed_capacity = #{installedCapacity,jdbcType=DECIMAL}
+            </if>
+            <if test="installAngle != null">
+                and install_angle = #{installAngle,jdbcType=DECIMAL}
+            </if>
+            <if test="assemblyLayout != null and assemblyLayout != '' ">
+                and assembly_layout = #{assemblyLayout,jdbcType=VARCHAR}
+            </if>
+            <if test="floorSpace != null">
+                and floor_space = #{floorSpace,jdbcType=DECIMAL}
+            </if>
+            <if test="amsl != null">
+                and amsl = #{amsl,jdbcType=DECIMAL}
+            </if>
+            <if test="produceDate != null">
+                and produce_date = #{produceDate,jdbcType=DATE}
+            </if>
+            <if test="lifeCycle != null">
+                life_cycle = #{lifeCycle,jdbcType=TINYINT}
+            </if>
+            <if test="safeRunDatetime != null">
+                and safe_run_datetime = #{safeRunDatetime,jdbcType=BIGINT}
+            </if>
+            <if test="onlineType != null">
+                and online_type = #{onlineType,jdbcType=TINYINT}
+            </if>
+            <if test="stationType != null">
+                and station_type = #{stationType,jdbcType=TINYINT}
+            </if>
+            <if test="stationBuildStatus != null">
+                and station_build_status = #{stationBuildStatus,jdbcType=TINYINT}
+            </if>
+            <if test="inverterType != null">
+                and inverter_type = #{inverterType,jdbcType=TINYINT}
+            </if>
+            <if test="isPovertyRelief != null">
+                and is_poverty_relief = #{isPovertyRelief,jdbcType=TINYINT}
+            </if>
+            <if test="stationFileId != null and stationFileId != '' ">
+                and station_file_id = #{stationFileId,jdbcType=VARCHAR}
+            </if>
+            <if test="stationAddr != null and stationAddr != '' ">
+                and station_addr = #{stationAddr,jdbcType=VARCHAR}
+            </if>
+            <if test="stationDesc != null and stationDesc != '' ">
+                and station_desc = #{stationDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="contactPeople != null and contactPeople != '' ">
+                and contact_people = #{contactPeople,jdbcType=VARCHAR}
+            </if>
+            <if test="phone != null and phone != '' ">
+                and phone = #{phone,jdbcType=VARCHAR}
+            </if>
+            <if test="stationPrice != null">
+                and station_price = #{stationPrice,jdbcType=DECIMAL}
+            </if>
+            <if test="timeZone != null">
+                and time_zone = #{timeZone,jdbcType=INTEGER}
+            </if>
+            <if test="enterpriseId != null">
+                and enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+            </if>
+            <if test="domainId != null">
+                and domain_id = #{domainId,jdbcType=BIGINT}
+            </if>
+            <if test="createUserId != null">
+                and create_user_id = #{createUserId,jdbcType=BIGINT}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUserId != null">
+                and update_user_id = #{updateUserId,jdbcType=BIGINT}
+            </if>
+            <if test="updateDate != null">
+                and update_date = #{updateDate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页查询站点数据 -->
+    <select id="selectStationInfoMByPage" parameterType="com.interest.ids.common.project.bean.sm.Page"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        limit #{start},#{pageSize}
+    </select>
+
+    <!-- selectStationInfoMByStationCode -->
+    <select id="selectStationInfoMByStationCode" parameterType="java.lang.String"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        where station_code = #{value}
+    </select>
+
+    <!-- 根据stationcode查询电站的名字 -->
+    <select id="selectStationInfoMNameByStationCode"
+        parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        where station_code = #{value}
+    </select>
+
+    <!-- 根据stationCode删除站点 -->
+    <delete id="deleteStationInfoMByStationCode" parameterType="java.lang.String">
+        delete from ids_station_info_t where station_code = #{value}
+    </delete>
+
+    <!-- 根据多个stationCode批量删除 -->
+    <delete id="deleteStationInfoMsByStationCode" parameterType="java.lang.String">
+        delete from ids_station_info_t where station_code in
+        <foreach collection="array" item="code" close=")" open="("
+            separator=",">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!-- 根据企业id查询所有的站点 -->
+    <select id="selectStationInfoMByEnterpriseId" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        where enterprise_id = #{value}
+    </select>
+
+    <!-- 统计电站个数 -->
+    <select id="selectStationNumberByEnterprise" parameterType="java.lang.Long"
+        resultType="java.lang.Integer">
+        select count(id) from ids_station_info_t
+        where enterprise_id = #{value}
+    </select>
+
+    <!-- 根据用户id查询所有的站点 -->
+    <select id="selectStationInfoMByUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        station.id, station.station_code, station.station_name, station.installed_capacity, station.install_angle, station.assembly_layout,
+        station.floor_space, station.amsl,
+        station.produce_date, station.life_cycle, station.safe_run_datetime, station.online_type, station.station_type,
+        station.station_build_status,realtime.active_power,realtime.day_cap,
+        station.inverter_type, station.is_poverty_relief, station.station_file_id, station.station_addr, station.station_desc, station.contact_people,
+        station.phone, station.station_price, station.latitude, station.longitude, station.time_zone, station.area_code,station.enterprise_id, station.domain_id,
+        station.is_delete,station.create_user_id, station.create_date,station.update_user_id, station.update_date
+        from 
+		<choose>
+			<when test="type_ == 'system'">
+				ids_station_info_t station
+				LEFT JOIN ids_station_realtime_data_t realtime 
+				ON station.station_code = realtime.station_code
+				WHERE 1 = 1
+			</when>
+			<when test="type_ == 'enterprise'">
+				ids_sm_user_info_t usert,
+				ids_station_info_t station
+				LEFT JOIN ids_station_realtime_data_t realtime 
+				ON station.station_code = realtime.station_code
+				WHERE station.enterprise_id = usert.enterprise_id AND usert.id = #{id}
+			</when>
+			<otherwise>
+				ids_sm_user_station_t userStation,
+				ids_station_info_t station
+				LEFT JOIN ids_station_realtime_data_t realtime 
+				ON station.station_code = realtime.station_code
+				WHERE station.station_code = userStation.station_code AND userStation.user_id = #{id}
+			</otherwise>
+		</choose>
+		AND station.is_delete = '0'
+		<if test="stationName != null">
+			AND station.station_name LIKE '%#{stationName}%'
+		</if>
+		<if test="onlineType != null">
+			AND station.online_type = #{onlineType}
+		</if>
+		ORDER BY station.create_date
+    </select>
+
+    <!-- 根据用户id统计站点个数 -->
+    <select id="selectStationCountByUserId" parameterType="java.lang.Long"
+        resultType="java.lang.Integer">
+        select count(station.station_code) count from ids_station_info_t station,
+        ids_sm_user_station_t user_station
+        where station.station_code = user_station.station_code and
+        user_station.user_id = #{value}
+    </select>
+
+    <!-- 根据用户id分页查询站点数据 -->
+    <select id="selectStationInfoMByUserIdAndPage" parameterType="com.interest.ids.common.project.bean.sm.Page"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        where station_code in
+        (
+        select station_code from ids_sm_user_station_t where user_id = #{value}
+        )
+        limit #{start},#{pageSize}
+    </select>
+    
+    <!-- 查询所有拥有环境检测仪的电站 -->
+    <select id="getStationInfoByEmiId" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT station.id,station.station_code,station.station_name
+		FROM ids_station_info_t station,ids_dev_info_t dev
+		WHERE station.station_code = dev.station_code AND dev.dev_type_id = 10
+    </select>
+
+    <select id="selectStationInfoMByStationCodes" resultMap="BaseResultMap" parameterType="collection">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_station_info_t
+        where station_code in
+            <foreach collection="collection" item="stationCode" open="(" separator="," close=")">
+                #{stationCode}
+            </foreach>
+    </select>
+
+    <!--查询所有的未被逻辑删除的电站信息-->
+    <select id="selectAllStations" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from ids_station_info_t
+        where  is_delete = '0'
+    </select>
+    <!-- 根据名称统计记录数 -->
+    <select id="checkStationNameIsExists" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from ids_station_info_t where is_delete = 0 AND station_name = #{value}
+    </select>
+	<!-- 查询存在严重告警的电站编号  -->
+	<select id="selectStationWithCriticalAlarm" parameterType="collection" resultType="java.lang.String">
+		select station_code 
+		from (
+			select station_code, count(1) as alarm_count
+			from ids_alarm_t
+			where level_id = 1
+			<if test="collection != null and collection.size > 0">
+				and station_code in
+	            <foreach collection="collection" item="stationCode" open="(" separator="," close=")">
+	                #{stationCode}
+	            </foreach>
+			</if>
+			group by station_code
+		) t where alarm_count > 0
+	</select>
+
+    <select id="getStationInfoByStationName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT s.id, s.enterprise_id, s.station_code FROM ids_station_info_t s
+        WHERE s.is_delete = 0 AND s.station_name = #{stationName}
+    </select>
+
+    
+    <!-- 通过行政区域的id查询电站的编码和名称 -->
+    <select id="selectstationInfoByAreaCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select station.station_code station_code,station.station_name station_name 
+        from
+            ids_station_info_t station,ids_sm_user_station_t user_station
+        where 
+            station.station_code =  user_station.station_code
+            and user_station.user_id = #{id}
+            and station.area_code = #{areaCode}
+    </select>
+
+    
+    <select id="getStationInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT station.*,domain.name as domainName,
+		(SELECT param.param_value
+		FROM ids_sm_station_param_t param WHERE param.station_code = station.station_code
+		AND param.param_key = 'SAFEOPRDATE') safeOprDate FROM ids_sm_domain_info_t domain,ids_station_info_t station
+		<choose>
+			<when test="type_ == 'system'">
+				WHERE 1 = 1
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_sm_user_info_t usert
+				WHERE station.enterprise_id = usert.enterprise_id AND usert.id = #{id}
+			</when>
+			<otherwise>
+				,ids_sm_user_station_t userStation
+				WHERE station.station_code = userStation.station_code AND userStation.user_id = #{id}
+			</otherwise>
+		</choose>
+		<if test="onlineTime != null and onlineTime != ''">
+			AND station.produce_date = #{onlineTime}
+		</if>
+		<if test="onlineType != null and onlineType != ''">
+			AND station.online_type = #{onlineType}
+		</if>
+		<if test="stationName != null and stationName != ''">
+			AND station.station_name LIKE '%#{stationName}%'
+		</if>
+		<if test="stationStatus != null and stationStatus != ''">
+			AND station.station_build_status = #{stationStatus}
+		</if>
+		<if test="enterpriseId != null">
+			AND station.enterprise_id = #{enterpriseId}
+		</if>
+		<if test="queryType != null and queryType != ''">
+			<choose>
+				<when test="queryType == 'enterprise'">
+					<if test="queryId != null and queryId != ''">
+						AND station.enterprise_id = #{queryId}
+					</if>
+				</when>
+				<otherwise>
+					<if test="queryId != null and queryId != ''">
+						AND station.domain_id = #{queryId}
+					</if>
+				</otherwise>
+			</choose>
+		</if>
+		AND domain.id = station.domain_id
+		AND station.is_delete = '0' LIMIT #{startIndex}, #{endIndex}
+    </select>
+    
+    <!-- 查询未绑定区域的电信信息 -->
+    <select id="getNoBindingStationInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	 SELECT 
+    	 	station.*,
+			(SELECT param.param_value FROM ids_sm_station_param_t param WHERE param.station_code = station.station_code AND param.param_key = 'SAFEOPRDATE') safeOprDate 
+		FROM 
+			ids_station_info_t station
+		where 
+			station.is_delete = '0'
+			and station.domain_id is null
+		<if test="onlineTime != null and onlineTime != ''">
+			AND station.produce_date = #{onlineTime}
+		</if>	
+		<if test="stationName != null and stationName != ''">
+			AND station.station_name LIKE '%${stationName}%'
+		</if>
+		LIMIT #{startIndex}, #{endIndex}
+    </select>
+    
+    <select id="getStationInfoTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) FROM ids_station_info_t station
+		<choose>
+			<when test="type_ == 'system'">
+				WHERE 1 = 1
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_sm_user_info_t usert
+				WHERE station.enterprise_id = usert.enterprise_id AND usert.id = #{id}
+			</when>
+			<otherwise>
+				,ids_sm_user_station_t userStation
+				WHERE station.station_code = userStation.station_code AND userStation.user_id = #{id}
+			</otherwise>
+		</choose>
+		<if test="onlineTime != null and onlineTime != ''">
+			AND station.produce_date = #{onlineTime}
+		</if>
+		<if test="onlineType != null and onlineType != ''">
+			AND station.online_type = #{onlineType}
+		</if>
+		<if test="stationName != null and stationName != ''">
+			AND station.station_name LIKE '%#{stationName}%'
+		</if>
+		<if test="stationStatus != null and stationStatus != ''">
+			AND station.station_build_status = #{stationStatus}
+		</if>
+		<if test="enterpriseId != null">
+			AND station.enterprise_id = #{enterpriseId}
+		</if>
+		<if test="queryType != null and queryType != ''">
+			<choose>
+				<when test="queryType == 'enterprise'">
+					<if test="queryId != null and queryId != ''">
+						AND station.enterprise_id = #{queryId}
+					</if>
+				</when>
+				<otherwise>
+					<if test="queryId != null and queryId != ''">
+						AND station.domain_id = #{queryId}
+					</if>
+				</otherwise>
+			</choose>
+		</if>
+	AND station.is_delete = '0'
+    </select>
+    
+    <!--统计未绑定区域的电站的个数  -->
+    <select id="getNoBindingStationInfoTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT count(station_code) FROM ids_station_info_t station
+    	where 
+    		station.is_delete = '0'
+    		and station.domain_id is null
+    	<if test="stationName != null and stationName != ''">
+			AND station.station_name LIKE '%${stationName}%'
+		</if>
+    	<if test="onlineTime != null and onlineTime != ''">
+			AND station.produce_date = ${onlineTime}
+		</if>
+    </select>
+    
+    <select id="getStationByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT station.*,domainT.`name` AS domainName FROM ids_station_info_t station 
+        LEFT JOIN ids_sm_domain_info_t domainT ON domainT.id = station.domain_id 
+		WHERE station_code = #{value}
+    </select>
+    
+    <select id="getPowerPriceById" parameterType="java.lang.String" resultType="java.lang.Double">
+        SELECT 
+		<choose>
+			<when test="queryType == 'station'">
+				station_price FROM ids_station_info_t WHERE station_code = #{queryId}
+			</when>
+			<when test="queryType == 'area'">
+				domain_price FROM ids_sm_domain_info_t WHERE id = #{queryId}
+			</when>
+		</choose>
+    </select>
+    
+    <!-- 保存电价信息 -->
+	<insert id="insertPowerPrices" parameterType="java.util.List">
+		INSERT INTO ids_power_price_t 
+		(id, enterprise_id, domain_id, station_code, start_date, end_date, start_time, end_time, price) VALUES 
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.enterpriseId},#{item.domainId},#{item.stationCode},
+			#{item.startDate},#{item.endDate},#{item.startTime},#{item.endTime},#{item.price})
+		</foreach>
+	</insert>
+	
+	<delete id="deletePowerPrices" parameterType="java.lang.String">
+        delete from ids_power_price_t where station_code = #{value}
+    </delete>
+    
+    <select id="getAllStationPowerPrices" resultMap="PriceResultMap">
+        SELECT id, enterprise_id, domain_id, station_code, start_date, end_date, start_time, end_time, price 
+        FROM ids_power_price_t
+    </select>
+    
+    <select id="getPriceByStationCode" parameterType="java.lang.String" resultMap="PriceResultMap">
+        SELECT id, enterprise_id, domain_id, station_code, start_date, end_date, start_time, end_time, price 
+        FROM ids_power_price_t WHERE station_code = #{value} ORDER BY start_date
+    </select>
+    
+    <select id="getStationByUser" parameterType="com.interest.ids.common.project.bean.sm.UserInfo" resultMap="BaseResultMap">
+        SELECT * FROM ids_station_info_t station
+        <choose>
+        	<when test="type_ == 'system'">
+        		where 1 = 1
+        	</when>
+        	<when test="type_ == 'enterprise'">
+        		,ids_sm_user_info_t userinfo
+        		WHERE station.enterprise_id = userinfo.enterprise_id AND userinfo.id = #{id}
+        	</when>
+        	<otherwise>
+        		,ids_sm_user_station_t userstation
+				WHERE userstation.station_code = station.station_code 
+				AND userstation.user_id = #{id}
+        	</otherwise>
+        </choose>
+        AND station.is_delete = 0
+    </select>
+    
+    <select id="getStationByStationName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select * from ids_station_info_t
+    	where station_name like concat(concat('%',#{stationName}),'%');
+    </select>
+    
+    <select id="getStationDevAndType" parameterType="java.util.List" resultType="java.util.Map">
+    	SELECT station.station_code stationCode,dev.dev_type_id devTypeId,dev.id 
+		FROM ids_station_info_t station,ids_dev_info_t dev
+		WHERE station.station_code = dev.station_code
+		AND dev.is_logic_delete = 0 AND station.station_code IN 
+		<foreach collection="list" item="sid" close=")" open="(" separator=",">
+			#{sid}
+		</foreach>
+    </select>
+    
+    <select id="getStationDevAndAlarm" parameterType="java.util.List" resultType="java.util.Map">
+    	SELECT station.station_code stationCode,dev.dev_type_id devTypeId,COUNT(1) alarmCount
+		FROM ids_station_info_t station,ids_dev_info_t dev 
+		LEFT JOIN ids_alarm_t alarm ON dev.id = alarm.dev_id AND alarm.level_id = 1
+		WHERE station.station_code = dev.station_code
+		AND dev.is_logic_delete = 0 AND station.station_code IN 
+		<foreach collection="list" item="sid" close=")" open="(" separator=",">
+			#{sid}
+		</foreach>
+		GROUP BY station.station_code ,dev.dev_type_id 
+    </select>
+    <!-- 只根据电站编码查询电站 -->
+    <select id="getStationByStationCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select * from ids_station_info_t where station_code = #{value}
+    </select>
+    <!-- 查询所有监控传递上来的电站信息 -->
+    <select id="getAllMonitorStations" resultMap="BaseResultMap">
+    	SELECT id, station_code, station_name FROM ids_station_info_t WHERE is_monitor = '1'
+    </select>
+    
+</mapper>

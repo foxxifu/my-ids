@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.interest.ids.commoninterface.dao.alarm.WorkFlowDefectMapper">
+	<resultMap id="defectResultMap"
+		type="com.interest.ids.common.project.bean.alarm.WorkFlowDefectM">
+		<id column="defect_id" property="defectId" jdbcType="BIGINT" />
+		<result column="defect_code" property="defectCode" jdbcType="VARCHAR" />
+		<result column="dev_id" property="devId" jdbcType="VARCHAR" />
+		<result column="defect_grade" property="defectGrade" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="proc_id" property="procId" jdbcType="VARCHAR" />
+		<result column="proc_state" property="procState" jdbcType="VARCHAR" />
+		<result column="dev_type" property="devType" jdbcType="VARCHAR" />
+		<result column="dev_vender" property="devVender" jdbcType="VARCHAR" />
+		<result column="dev_version" property="devVersion" jdbcType="VARCHAR" />
+		<result column="fault_type" property="faultType" jdbcType="VARCHAR" />
+		<result column="alarm_num" property="alarmNum" jdbcType="VARCHAR" />
+		<result column="alarm_type" property="alarmType" jdbcType="VARCHAR" />
+		<result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+		<result column="station_name" property="stationName" jdbcType="VARCHAR" />
+		<result column="enterprise_id" property="enterpriseId"
+			jdbcType="BIGINT" />
+		<result column="file_id" property="fileId" jdbcType="VARCHAR" />
+		<result column="create_user_id" property="createUserId"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="update_time" property="updateTime" jdbcType="BIGINT" />
+		<result column="start_time" property="startTime" jdbcType="BIGINT" />
+		<result column="station_start_time" property="stationStartTime"
+			jdbcType="BIGINT" />
+		<result column="end_time" property="endTime" jdbcType="BIGINT" />
+		<result column="time_zone" property="timeZone" jdbcType="INTEGER" />
+		<result column="defect_name" property="defectName" />
+		<result column="station_addr" property="stationAddr" />
+		<result column="task_content" property="taskContent" />
+		<result column="task_state" property="taskState" />
+		<result column="alarm_ids" property="alarmIds" />
+		<association property="process"
+			javaType="com.interest.ids.common.project.bean.alarm.WorkFlowProcessM"
+			column="proc_id"
+			select="com.interest.ids.commoninterface.dao.alarm.WorkFlowProcessMapper.selectWorkFlowProcessMByProcId"></association>
+	</resultMap>
+
+	<resultMap type="com.interest.ids.common.project.bean.sm.StationInfoM"
+		id="nameAndCodeResultMap">
+		<result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+		<result column="station_name" jdbcType="VARCHAR" property="stationName" />
+	</resultMap>
+	<resultMap id="deviceResultMap" type="com.interest.ids.common.project.bean.signal.DeviceInfo">
+		<result column="signal_version" property="signalVersion" jdbcType="VARCHAR" />
+		<result column="dev_alias" property="devName" jdbcType="VARCHAR" />
+		<result column="typeName" property="typeName" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="detailResultMap" type="com.interest.ids.common.project.bean.alarm.WorkFlowDefectDto">
+		<result column="defect_id" property="defectId" />
+		<result column="dev_id" property="devId" />
+		<result column="station_code" property="stationCode" />
+		<result column="station_name" property="stationName" />
+		<result column="dev_type_id" property="devTypeId" />
+		<result column="dev_type" property="devType" />
+		<result column="dev_version" property="devVersion" />
+		<result column="file_id" property="fileId" />
+		<result column="description" property="description" />
+		<result column="dev_alias" property="devAlias" />
+		<result column="proc_id" property="procId" />
+		<result column="proc_state" property="procState" />
+		<result column="create_user_id" property="createUserId" />
+		<result column="defect_name" property="defectName" />
+		<result column="station_addr" property="stationAddr" />
+		<result column="currentUserName" property="currentUserName" />
+		<result column="defect_name" property="defectName" />
+		<result column="alarm_num" property="alarmNum" />
+		<result column="alarm_type" property="alarmType"/>
+		<result column="alarm_ids" property="alarmIds"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="createUserName" property="createUserName"/>
+		<result column="original_name" property="originalName"/>
+		<result column="file_ext" property="fileExt"/>
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Base_Defect_Column_List">
+		defect_id, defect_code, dev_id, defect_grade, description,
+		proc_id, proc_state, dev_type, dev_vender,
+		dev_version, fault_type,
+		alarm_num, alarm_type, station_code, station_name, enterprise_id, file_id,
+		create_user_id,
+		create_time, update_time, start_time, station_start_time, end_time,
+		time_zone,alarm_ids,defect_name
+	</sql>
+
+	<!-- 添加缺陷 -->
+	<insert id="insertWorkFlowDefectM"
+		parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowDefectM">
+		insert into ids_workflow_defect_t (defect_code, dev_id, defect_grade,
+		description,proc_id, proc_state, dev_type, dev_vender, dev_version,
+		fault_type,alarm_num, alarm_type, station_code, station_name, enterprise_id, 
+		file_id,create_user_id,create_time, update_time, start_time,station_start_time, 
+		end_time, time_zone,defect_name,station_addr,alarm_ids
+		)
+		values
+		(
+		#{defectCode},#{devId},#{defectGrade},#{description},
+		#{procId},#{procState},#{devType},#{devVender},#{devVersion},
+		#{faultType},#{alarmNum},#{alarmType},#{stationCode},#{stationName},#{enterpriseId},
+		#{fileId},#{createUserId},#{createTime},#{updateTime},#{startTime},#{stationStartTime},
+		#{endTime},#{timeZone},#{defectName},#{stationAddr},#{alarmIds}
+		)
+	</insert>
+
+	<!-- 根据id跟新缺陷的状态/处理结果/修改时间 -->
+	<update id="updateWorkFlowDefectM"
+		parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowDefectM">
+		update ids_workflow_defect_t
+		<set>
+			<if test="defectCode != null">
+				defect_code = #{defectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="devId != null">
+				dev_id = #{devId,jdbcType=VARCHAR},
+			</if>
+			<if test="defectGrade != null">
+				defect_grade = #{defectGrade,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="procId != null">
+				proc_id = #{procId,jdbcType=VARCHAR},
+			</if>
+			<if test="procState != null">
+				proc_state = #{procState,jdbcType=VARCHAR},
+			</if>
+			<if test="devType != null">
+				dev_type = #{devType,jdbcType=VARCHAR},
+			</if>
+			<if test="devVender != null">
+				dev_vender = #{devVender,jdbcType=VARCHAR},
+			</if>
+			<if test="devVersion != null">
+				dev_version = #{devVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="faultType != null">
+				fault_type = #{faultType,jdbcType=VARCHAR},
+			</if>
+			<if test="alarmNum != null">
+				alarm_num = #{alarmNum,jdbcType=VARCHAR},
+			</if>
+			<if test="alarmType != null">
+				alarm_type = #{alarmType,jdbcType=VARCHAR},
+			</if>
+			<if test="stationCode != null">
+				station_code = #{stationCode,jdbcType=VARCHAR},
+			</if>
+			<if test="stationName != null">
+				station_name = #{stationName,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseId != null">
+				enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+			</if>
+			<if test="fileId != null">
+				file_id = #{fileId,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=BIGINT},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=BIGINT},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=BIGINT},
+			</if>
+			<if test="stationStartTime != null">
+				station_start_time = #{stationStartTime,jdbcType=BIGINT},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=BIGINT},
+			</if>
+			<if test="timeZone != null">
+				time_zone = #{timeZone,jdbcType=INTEGER},
+			</if>
+		</set>
+		where defect_id = #{defectId,jdbcType=BIGINT}
+	</update>
+
+	<!-- 分页查询缺陷数据 -->
+	<select id="getWorkFlowDefectMByPage" parameterType="com.interest.ids.common.project.bean.sm.Page"
+		resultMap="defectResultMap">
+		select
+		<include refid="Base_Defect_Column_List"></include>
+		from ids_workflow_defect_t
+		where station_code in
+		(
+		select station_code from ids_sm_user_station_t where user_id = #{id}
+		)
+		order by defect_id desc
+		limit #{start},#{pageSize}
+	</select>
+
+	<!-- 按照条件分页查询缺陷数据 -->
+	<select id="getWorkFowDefectMByConditonAndPage"
+		parameterType="com.interest.ids.common.project.bean.alarm.QueryWorkFlowDefect"
+		resultMap="defectResultMap">
+		<choose>
+			<when test="defect.queryType == 1">
+				<choose>
+					<when test="defect.type_ == 'system'">
+						select
+						<include refid="Base_Defect_Column_List"></include>
+						from
+						ids_workflow_defect_t defect
+						where 1 = 1
+					</when>
+					<when test="defect.type_ == 'enterprise'">
+						select
+						defect.*
+						from
+						ids_workflow_defect_t defect, ids_sm_user_info_t user
+						where defect.enterprise_id = user.enterprise_id
+						and user.id = #{defect.userId}
+					</when>
+					<otherwise>
+						select
+						<include refid="Base_Defect_Column_List"></include>
+						from
+						ids_workflow_defect_t defect
+						where
+						defect.station_code in
+						(
+						select station_code from ids_sm_user_station_t where user_id =
+						#{defect.userId}
+						)
+					</otherwise>
+				</choose>
+				<if test="defect.stationName != null and defect.stationName != ''">
+					and defect.station_name like concat('%', #{defect.stationName}, '%')
+				</if>
+				<if test="defect.defectName != null and defect.defectName != ''">
+					and defect.defect_name like concat('%', #{defect.defectName}, '%')
+				</if>
+				<if test="defect.stationCode != null and defect.stationCode != ''">
+					and defect.station_code = #{defect.stationCode}
+				</if>
+				<if test="defect.procState != null and defect.procState !='-1'">
+					and defect.proc_state = #{defect.procState}
+				</if>
+				<if test="defect.startTime != null">
+					and defect.start_time <![CDATA[ >= ]]>
+					#{defect.startTime}
+				</if>
+
+				<if test="defect.endTime != null">
+					and defect.start_time <![CDATA[ <= ]]>
+					#{defect.endTime}
+				</if>
+				<!-- <if test="defect.userId != null"> and proc_id in ( select task.proc_id 
+					from ids_workflow_task_t task,ids_workflow_task_user_t task_user where task.proc_id 
+					= task_user.proc_id and task_user.user_id = #{defect.userId} ) </if> -->
+			</when>
+			<otherwise>
+				<choose>
+					<when test="defect.type_ == 'system'">
+						select
+						DISTINCT defect.defect_id defect_id,
+						defect.dev_id dev_id,
+						defect.defect_name defect_name,
+						defect.alarm_num alarm_num,
+						defect.alarm_type alarm_type,
+						defect.alarm_ids alarm_ids,
+						defect.defect_code defect_code,
+						defect.description description,
+						defect.proc_id proc_id,
+						defect.proc_state proc_state,
+						defect.station_code station_code,
+						defect.station_name station_name,
+						defect.proc_state proc_state,
+						defect.start_time start_time,
+						defect.end_time end_time,
+						defect.create_time create_time,
+						(select login_name from ids_sm_user_info_t where id = defect.create_user_id) createUserName
+						from
+						ids_workflow_defect_t defect
+						where
+						1 = 1
+					</when>
+					<when test="defect.type_ == 'enterprise'">
+						select
+						DISTINCT defect.defect_id defect_id,
+						defect.dev_id dev_id,
+						defect.defect_name defect_name,
+						defect.alarm_num alarm_num,
+						defect.alarm_type alarm_type,
+						defect.alarm_ids alarm_ids,
+						defect.defect_code defect_code,
+						defect.description description,
+						defect.proc_id proc_id,
+						defect.proc_state proc_state,
+						defect.station_code station_code,
+						defect.station_name station_name,
+						defect.proc_state proc_state,
+						defect.start_time start_time,
+						defect.end_time end_time,
+						defect.create_time create_time,
+						(select login_name from ids_sm_user_info_t where id = defect.create_user_id) createUserName
+						from
+						ids_workflow_defect_t defect,
+						ids_sm_user_info_t user
+						where
+						defect.enterprise_id = user.enterprise_id
+						and user.id = #{defect.userId}
+					</when>
+					<otherwise>
+						select
+						DISTINCT defect.defect_id defect_id,
+						defect.dev_id dev_id,
+						defect.defect_name defect_name,
+						defect.alarm_num alarm_num,
+						defect.alarm_type alarm_type,
+						defect.alarm_ids alarm_ids,
+						defect.defect_code defect_code,
+						defect.description description,
+						defect.proc_id proc_id,
+						defect.proc_state proc_state,
+						defect.station_code station_code,
+						defect.station_name station_name,
+						defect.proc_state proc_state,
+						defect.start_time start_time,
+						defect.end_time end_time,
+						defect.create_time create_time,
+						(select login_name from ids_sm_user_info_t where id = defect.create_user_id) createUserName
+						from
+						ids_workflow_defect_t defect,
+						ids_workflow_task_t task,
+						ids_workflow_task_user_t task_user
+						where
+						task_user.task_id = task.task_id
+						and defect.proc_id = task.proc_id
+						and task_user.user_id = #{defect.userId}
+					</otherwise>
+				</choose>
+				<if test="defect.stationName != null and defect.stationName != ''">
+					and defect.station_name like concat('%', #{defect.stationName}, '%')
+				</if>
+				<if test="defect.defectName != null and defect.defectName != ''">
+					and defect.defect_name like concat('%', #{defect.defectName}, '%')
+				</if>
+				<if test="defect.stationCode != null and defect.stationCode != ''">
+					and defect.station_code = #{defect.stationCode}
+				</if>
+				<if test="defect.procState != null and defect.procState !='-1'">
+					<if test="defect.procState =='dealing'">
+						and defect.proc_state in ('1','2')
+					</if>
+					<if test="defect.procState !='dealing'">
+						and defect.proc_state = #{defect.procState}
+					</if>
+				</if>
+				<if test="defect.startTime != null">
+					and defect.start_time <![CDATA[ >= ]]>
+					#{defect.startTime}
+				</if>
+
+				<if test="defect.endTime != null">
+					and defect.start_time <![CDATA[ <= ]]>
+					#{defect.endTime}
+				</if>
+				<!-- <if test="defect.userId != null"> and proc_id in ( select task.proc_id 
+					from ids_workflow_task_t task,ids_workflow_task_user_t task_user where task.proc_id 
+					= task_user.proc_id and task_user.user_id = #{defect.userId} ) </if> -->
+			</otherwise>
+		</choose>
+		order by defect_id desc
+		<if test="null != page and null != page.start and null != page.pageSize">
+			limit #{page.start},#{page.pageSize}
+		</if>
+	</select>
+
+	<!-- 统计退回缺陷个数 -->
+	<select id="countWorkFlowDefectM"
+		parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowDefectDto"
+		resultType="java.lang.Integer">
+		<choose>
+			<when test="type_ == 'system'">
+				SELECT COUNT(DISTINCT(defect.defect_id))
+				FROM
+				ids_workflow_defect_t defect,
+				ids_station_info_t station
+				WHERE
+				defect.station_code = station.`station_code`
+			</when>
+			<when test="type_ == 'enterprise'">
+				SELECT COUNT(DISTINCT(defect.defect_id))
+				FROM
+				ids_workflow_defect_t defect,
+				ids_sm_user_station_t user_station,
+				ids_station_info_t station,
+				ids_sm_user_info_t user
+				WHERE
+				defect.station_code = station.`station_code`
+				AND station.station_code = user_station.station_code
+				and defect.enterprise_id = user.enterprise_id
+				and user.id = #{userId}
+			</when>
+			<otherwise>
+				SELECT COUNT(DISTINCT(defect.defect_id))
+				FROM
+				ids_workflow_defect_t defect,
+				ids_sm_user_station_t user_station,
+				ids_station_info_t station
+				WHERE
+				defect.station_code = station.`station_code`
+				AND station.station_code = user_station.station_code
+				AND user_station.`user_id` = #{userId}
+			</otherwise>
+		</choose>
+		<if test="stationName != null and stationName != ''">
+			AND station.`station_name` LIKE '%${stationName}%'
+		</if>
+		<if test="stationCode != null and stationCode != ''">
+			AND station.`station_code` = #{stationCode}
+		</if>
+		<if test="procState != null and procState != '-1'">
+			and defect.proc_state = #{procState}
+		</if>
+		<if test="startFindTime != null">
+			and defect.start_time <![CDATA[ >= ]]>
+			#{startFindTime}
+		</if>
+		<if test="endFindTime != null">
+  			AND defect.end_time IS NOT NULL
+			AND (#{endFindTime} - defect.end_time) between 0 and 86400000
+		</if>
+	</select>
+
+	<!-- 统计缺陷总数 -->
+	<select id="selectAllWorkFlowDefectMCount"
+		parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowDefectDto"
+		resultType="java.lang.Integer">
+		<choose>
+			<when test="queryType == 1">
+				<choose>
+					<when test="type_ == 'system'">
+						select count(DISTINCT(defect_id)) from ids_workflow_defect_t defect where 1 = 1
+					</when>
+					<when test="type_ == 'enterprise'">
+						select count(DISTINCT(defect.defect_id)) from ids_workflow_defect_t defect
+						,ids_sm_user_info_t user
+						where defect.enterprise_id = user.enterprise_id and user.id = #{userId}
+					</when>
+					<otherwise>
+						select count(DISTINCT(defect_id)) from ids_workflow_defect_t defect
+						where defect.station_code in
+						(
+						select station_code from ids_sm_user_station_t where user_id = #{userId}
+						)
+					</otherwise>
+				</choose>
+				<if test="stationName != null and stationName != ''">
+					and defect.station_name like concat('%', #{stationName}, '%')
+				</if>
+				<if test="procState != null and procState !='-1'">
+					<if test="procState == 'dealing'">
+						and defect.proc_state in ('1','2')
+					</if>
+					<if test="procState != 'dealing'">
+						and defect.proc_state = #{procState}
+					</if>
+				</if>
+				<if test="startTime != null">
+					and defect.start_time <![CDATA[ >= ]]>
+					#{startTime}
+				</if>
+
+				<if test="endTime != null">
+					and defect.start_time <![CDATA[ <= ]]>
+					#{endTime}
+				</if>
+				<!-- <if test="defect.userId != null"> and proc_id in ( select task.proc_id 
+					from ids_workflow_task_t task,ids_workflow_task_user_t task_user where task.proc_id 
+					= task_user.proc_id and task_user.user_id = #{defect.userId} ) </if> -->
+			</when>
+			<otherwise>
+				<choose>
+					<when test="type_ == 'system'">
+						select
+						count(DISTINCT(defect.defect_id))
+						from
+						ids_workflow_defect_t defect,
+						ids_workflow_task_t task,
+						ids_workflow_task_user_t task_user
+						where
+						task_user.task_id = task.task_id
+						and defect.proc_id = task.proc_id
+					</when>
+					<when test="type_ == 'enterprise'">
+						select
+						count(DISTINCT(defect.defect_id))
+						from
+						ids_workflow_defect_t defect,
+						ids_workflow_task_t task,
+						ids_workflow_task_user_t task_user,
+						ids_sm_user_info_t user
+						where
+						task_user.task_id = task.task_id
+						and defect.proc_id = task.proc_id
+						and defect.enterprise_id = user.enterprise_id
+						and user.id = #{userId}
+					</when>
+					<otherwise>
+						select
+						count(DISTINCT(defect.defect_id))
+						from
+						ids_workflow_defect_t defect,
+						ids_workflow_task_t task,
+						ids_workflow_task_user_t task_user
+						where
+						task_user.task_id = task.task_id
+						and defect.proc_id = task.proc_id
+						and task_user.user_id = #{userId}
+					</otherwise>
+				</choose>
+				<if test="stationName != null and stationName != ''">
+					and defect.station_name like concat('%', #{stationName}, '%')
+				</if>
+				<if test="procState != null and procState !='-1'">
+					<if test="procState == 'dealing'">
+						and defect.proc_state in ('1','2')
+					</if>
+					<if test="procState != 'dealing'">
+						and defect.proc_state = #{procState}
+					</if>
+				</if>
+				<if test="startTime != null">
+					and defect.start_time <![CDATA[ >= ]]>
+					#{startTime}
+				</if>
+
+				<if test="endTime != null">
+					and defect.start_time <![CDATA[ <= ]]>
+					#{endTime}
+				</if>
+				<!-- <if test="defect.userId != null"> and proc_id in ( select task.proc_id 
+					from ids_workflow_task_t task,ids_workflow_task_user_t task_user where task.proc_id 
+					= task_user.proc_id and task_user.user_id = #{defect.userId} ) </if> -->
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 根据id查询当前的缺陷 -->
+	<select id="selectWorkFlowDefectMById" parameterType="java.lang.Long"
+		resultMap="detailResultMap">
+		select
+		defect.proc_id proc_id,
+		defect.defect_id defect_id,
+		defect.defect_name defect_name,
+		defect.station_code station_code,
+		defect.station_name station_name,
+		defect.dev_id dev_id,
+		defect.dev_type dev_type,
+		dev.dev_type_id dev_type_id,
+		dev.dev_alias dev_alias,
+		defect.proc_state proc_state,
+		defect.dev_version dev_version,
+		defect.create_time create_time,
+		defect.update_time update_time,
+		defect.file_id file_id,
+		defect.description description,
+		defect.alarm_ids alarm_ids,
+		defect.alarm_num alarm_num,
+		defect.alarm_type alarm_type,
+		defect.create_user_id create_user_id,
+		defect.station_addr station_addr,
+		u.login_name currentUserName,
+		file_manager.original_name original_name,
+		file_manager.file_ext file_ext,
+		(select login_name from ids_sm_user_info_t where id = defect.create_user_id) createUserName
+		from
+		ids_workflow_defect_t defect
+		LEFT JOIN ids_file_manager_t file_manager ON defect.file_id = file_manager.file_id AND defect.file_id IS NOT NULL,
+		ids_dev_info_t dev,
+		ids_sm_user_info_t u
+		where
+		defect.dev_id = dev.id
+		and
+		defect.create_user_id = u.id
+		and
+		defect_id = #{value}
+	</select>
+
+	<!-- 告警转缺陷 - 根据设备的id查询告警的信息 -->
+	<resultMap id="alarmMap"
+		type="com.interest.ids.common.project.bean.alarm.AlarmToDefectVO">
+		<result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+		<result column="station_name" property="stationName" jdbcType="VARCHAR" />
+		<result column="dev_alias" property="devAlias" jdbcType="VARCHAR" />
+		<result column="dev_type_id" property="devTypeId" jdbcType="SMALLINT" />
+		<result column="dev_id" property="devId" jdbcType="BIGINT" />
+		<result column="first_happen_time" property="firstHappenTime"
+			jdbcType="BIGINT" />
+		<result column="signal_version" property="devVersion" />
+		<result column="alarm_name" property="alarmName" />
+		<result column="alarm_id" property="alarmId" />
+		<result column="level_id" property="levelId" />
+		<result column="tele_type" property="teleType" />
+		<result column="recover_time" property="recoverTime" />
+		<result column="status_id" property="statusId" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+		<result column="alarm_cause" property="alarmCause" />
+		<result column="sn_code" property="snCode" />
+		<result column="station_addr" property="stationAddr"/>
+		<result column="repair_suggestion" property="repairSuggestion" />
+	</resultMap>
+	<select id="getAlarmMByAlarmMId"  resultMap="alarmMap">
+		SELECT
+		alarm.station_code station_code,
+		alarm.station_name station_name,
+		alarm.dev_alias dev_alias,
+		alarm.dev_type_id dev_type_id,
+		alarm.dev_id dev_id,
+		alarm.id alarm_id,
+		alarm.alarm_name alarm_name,
+		alarm.first_happen_time first_happen_time,
+		alarm.signal_version signal_version,
+		station.station_addr station_addr
+		FROM
+		ids_alarm_t alarm,
+		ids_station_info_t station
+		WHERE
+			alarm.station_code = station.station_code
+		<!-- and alarm.enterprise_id = module.enterprise_id -->
+			and alarm.id in 
+		<foreach collection="array" item="item" close=")" open="(" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
+	<!--根据告警的id查询智能告警的数据 -->
+	<select id="getAnalysisByIds" resultMap="alarmMap">
+		SELECT
+		station.station_code station_code,
+		station.station_name station_name,
+		station.station_addr station_addr,
+		dev.dev_alias dev_alias,
+		dev.dev_type_id dev_type_id,
+		alarm.dev_id dev_id,
+		alarm.id alarm_id,
+		dev.signal_version signal_version,
+		alarm.happen_time first_receive,
+		alarm.alarm_name alarm_name,
+		model.repair_suggestion repair_suggestion
+		FROM
+		ids_analysis_alarm_t alarm,
+		ids_analysis_alarm_model_t model,
+		ids_station_info_t station,
+		ids_dev_info_t dev
+		WHERE
+		alarm.alarm_id = model.alarm_id
+		AND alarm.station_id = station.station_code
+		AND alarm.dev_id = dev.id
+		AND alarm.id in
+		<foreach collection="array" item="item" close=")" open="(" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 根据用户id查询当前用户下的所有的站点 -->
+	<select id="selectStationsByUserId" parameterType="java.lang.Long"
+		resultMap="nameAndCodeResultMap">
+		SELECT s.station_code station_code,s.station_name station_name FROM
+		ids_station_info_t s,ids_sm_user_station_t user_station
+		WHERE s.station_code = user_station.station_code AND
+		user_station.user_id=#{value}
+	</select>
+
+	<!--查询当前站点下的所有的设备名称和id -->
+	<select id="selectDeviceInfoByStationCode" parameterType="java.lang.String" resultMap="deviceResultMap">
+		select d.signal_version signal_version,d.dev_alias dev_alias,t.name typeName
+		from ids_dev_info_t d,ids_dev_type_t t where d.id = t.di and
+		d.station_code = #{value}
+	</select>
+
+	<!-- 分页查询个人任务数据 -->
+	<select id="selectWorkFlowTaskByPage" parameterType="com.interest.ids.common.project.bean.sm.Page"
+		resultMap="defectResultMap">
+		select
+		<include refid="Base_Defect_Column_List"></include>
+		from ids_workflow_defect_t
+		where proc_id in
+		(
+		select p.proc_id from ids_workflow_process_t p,ids_workflow_task_user_t t
+		where p.proc_id = t.proc_id and t.user_id = #{id}
+		)
+		order by defect_id desc
+		limit #{start},#{pageSize}
+	</select>
+
+	<!-- 根据条件查询个人任务信息 -->
+	<select id="selectWorkFlowTaskByCondition"
+		parameterType="com.interest.ids.common.project.bean.alarm.QueryWorkFlowDefect"
+		resultMap="defectResultMap">
+		select
+		<include refid="Base_Defect_Column_List"></include>
+		from ids_workflow_defect_t
+		where proc_id in
+		(
+		select p.proc_id from ids_workflow_process_t p,ids_workflow_task_user_t t
+		where p.proc_id = t.proc_id and t.user_id = #{defect.userId}
+		<if test="null != defect.taskState and defect.taskState !=''">
+			and t.task_state = #{defect.taskState}
+		</if>
+		)
+		<if test="defect.stationName != null and defect.stationName !=''">
+			and station_name = #{defect.stationName}
+		</if>
+		<if test="defect.procState != null and defect.procState != ''">
+			and proc_state = #{defect.procState}
+		</if>
+		<if test="defect.startFindTime != null">
+			and create_time <![CDATA[ >= ]]>
+			UNIX_TIMESTAMP(#{defect.startFindTime})
+		</if>
+
+		<if test="defect.endFindTime != null">
+			and create_time  <![CDATA[ <= ]]>
+			UNIX_TIMESTAMP(#{defect.endFindTime})
+		</if>
+		order by defect_id desc
+		<if test="null != page.start and null != page.pageSize">
+			limit #{page.start},#{page.pageSize}
+		</if>
+	</select>
+
+	<!-- 统计个人任务总条数 -->
+	<select id="selectWorkFlowTaskCountByUserId"
+		parameterType="com.interest.ids.common.project.bean.alarm.QueryWorkFlowDefect"
+		resultType="java.lang.Integer">
+		select
+		COUNT(DISTINCT(task.id))
+		from ids_workflow_task_t task, ids_workflow_task_user_t task_user
+		where
+		task.task_id = task_user.task_id
+		and task_user.user_id = #{defect.userId}
+		<if test="null != defect.taskState and defect.taskState !=''">
+			and task.op_state = #{defect.taskState}
+		</if>
+		<if test="defect.defectName != null and defect.defectName != ''">
+			and defect.defect_name like concat('%', #{defect.defectName}, '%')
+		</if>
+		<if test="defect.startFindTime != null">
+			and defect.start_time <![CDATA[ >= ]]>
+			#{defect.startFindTime}
+		</if>
+		<if test="defect.endFindTime != null">
+			and defect.start_time <![CDATA[ <= ]]>
+			#{defect.endFindTime}
+		</if>
+	</select>
+
+	<!-- 根据设备告警的ids查询告警信息 -->
+	<select id="selectAlarmMByAlarmMIds" parameterType="java.lang.String"
+		resultMap="alarmMap">
+		SELECT   
+			alarm.alarm_name alarm_name,  
+			alarm.id alarm_id,   
+			alarm.level_id level_id,  
+			alarm.tele_type tele_type,
+			alarm.first_happen_time first_happen_time,   
+			dev.dev_alias dev_alias,   
+			alarm.recover_time recover_time,   
+			dev.dev_type_id dev_type_id,   
+			dev.longitude longitude,   
+			dev.latitude latitude,   
+			dev.sn_code sn_code,   
+			station.station_name station_name,
+			alarm_model.alarm_cause alarm_cause,   
+			alarm_model.repair_suggestion repair_suggestion,
+			alarm.status_id status_id
+		FROM ids_cleared_alarm_t alarm
+		 LEFT JOIN ids_alarm_model_t alarm_model ON alarm.alarm_id = alarm_model.alarm_id 
+		 	AND alarm.signal_version = alarm_model.signal_version AND alarm.station_code = alarm_model.station_code
+	     LEFT JOIN ids_dev_info_t dev ON alarm.dev_id = dev.id
+	     LEFT JOIN ids_station_info_t station ON station.station_code = alarm.station_code
+			 WHERE alarm.id IN (${value})
+	</select>
+
+	<!-- 根据告警的ids查询告警数据 -->
+	<select id="selectanalysisByIds" parameterType="java.lang.String"
+		resultMap="alarmMap">
+		select
+			analysis.alarm_name alarm_name,  
+			analysis.alarm_id alarm_id,   
+			analysis.severity_id level_id,  
+			analysis.happen_time first_happen_time,   
+			dev.dev_alias dev_alias,   
+			analysis.recover_time recover_time,   
+			dev.dev_type_id dev_type_id,   
+			dev.longitude longitude,   
+			dev.latitude latitude,   
+			dev.sn_code sn_code,   
+			station.station_name station_name,
+			analysis_alarm.alarm_cause alarm_cause,   
+			analysis_alarm.repair_suggestion repair_suggestion
+		from
+		ids_analysis_alarm_t analysis,
+		ids_analysis_alarm_model_t analysis_alarm,
+		ids_dev_info_t dev,
+		ids_station_info_t station
+		where
+		analysis.alarm_id = analysis_alarm.alarm_id
+		and station.station_code = analysis.station_id
+		and dev.id = analysis.dev_id
+		and analysis.alarm_id in (${value})
+	</select>
+
+	<!-- 根据缺陷的类型和告警的ids查询告警的名称 -->
+	<select id="getAlarmNameByIds" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		select alarm_name
+		from
+		<if test="alarmType == 1">
+			ids_alarm_t
+		</if>
+		<if test="alarmType == 2">
+			ids_analysis_alarm_t
+		</if>
+		where id in
+		<foreach collection="ids" item="item" open="(" close=")"
+			separator=",">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

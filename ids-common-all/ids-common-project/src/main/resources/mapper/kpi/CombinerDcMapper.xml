@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.kpi.CombinerDcMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.CombinerDc" >
+    <id column="collect_time" property="collectTime" jdbcType="BIGINT" />
+    <id column="dev_id" property="deviceId" jdbcType="BIGINT" />
+    <id column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="dev_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="valid" property="valid" jdbcType="VARCHAR" />
+    <result column="dc_i1" property="dcI1" jdbcType="DECIMAL" />
+    <result column="dc_i2" property="dcI2" jdbcType="DECIMAL" />
+    <result column="dc_i3" property="dcI3" jdbcType="DECIMAL" />
+    <result column="dc_i4" property="dcI4" jdbcType="DECIMAL" />
+    <result column="dc_i5" property="dcI5" jdbcType="DECIMAL" />
+    <result column="dc_i6" property="dcI6" jdbcType="DECIMAL" />
+    <result column="dc_i7" property="dcI7" jdbcType="DECIMAL" />
+    <result column="dc_i8" property="dcI8" jdbcType="DECIMAL" />
+    <result column="dc_i9" property="dcI9" jdbcType="DECIMAL" />
+    <result column="dc_i10" property="dcI10" jdbcType="DECIMAL" />
+    <result column="dc_i11" property="dcI11" jdbcType="DECIMAL" />
+    <result column="dc_i12" property="dcI12" jdbcType="DECIMAL" />
+    <result column="dc_i13" property="dcI13" jdbcType="DECIMAL" />
+    <result column="dc_i14" property="dcI14" jdbcType="DECIMAL" />
+    <result column="dc_i15" property="dcI15" jdbcType="DECIMAL" />
+    <result column="dc_i16" property="dcI16" jdbcType="DECIMAL" />
+    <result column="dc_i17" property="dcI17" jdbcType="DECIMAL" />
+    <result column="dc_i18" property="dcI18" jdbcType="DECIMAL" />
+    <result column="dc_i19" property="dcI19" jdbcType="DECIMAL" />
+    <result column="dc_i20" property="dcI20" jdbcType="DECIMAL" />
+    <result column="photc_i" property="photcI" jdbcType="DECIMAL" />
+    <result column="photc_u" property="photcU" jdbcType="DECIMAL" />
+    <result column="temprature" property="temprature" jdbcType="DECIMAL" />
+    <result column="struck_count" property="struckCount" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <!-- 查询某段时间，指定电站的性能数据 -->
+  <select id="selectCombinerDCMs" resultMap="BaseResultMap">
+  	select * from ids_combiner_dc_data_t
+  	where station_code = #{stationCode}
+  		and collect_time between #{startTime} and #{endTime}
+  </select>
+  
+  <!-- 查询某电站各支路最大电流、电压 -->
+  <select id="selectCombinerPvMaxData" resultType="java.util.HashMap">
+  	select dev_id as device_id,max(dc_i1) maxdci1,max(dc_i2) maxdci2,max(dc_i3) maxdci3,max(dc_i4) maxdci4,max(dc_i5) maxdci5,
+      max(dc_i6) maxdci6,max(dc_i7) maxdci7,max(dc_i8) maxdci8,max(dc_i9) maxdci9,max(dc_i10) maxdci10,
+      max(dc_i11) maxdci11,max(dc_i12) maxdci12,max(dc_i13) maxdci13,max(dc_i14) maxdci14,max(dc_i15) maxdci15,
+      max(dc_i16) maxdci16,max(dc_i17) maxdci17,max(dc_i18) maxdci18,max(dc_i19) maxdci19,max(dc_i20) maxdci20,
+      max(photc_u) maxphotcu,
+      min(dc_i1) mindci1,min(dc_i2) mindci2,min(dc_i3) mindci3,min(dc_i4) mindci4,min(dc_i5) mindci5,min(dc_i6) mindci6,
+      min(dc_i7) mindci7,min(dc_i8) mindci8,min(dc_i9) mindci9,min(dc_i10) mindci10,min(dc_i11) mindci11,min(dc_i12) mindci12,
+      min(dc_i13) mindci13,min(dc_i14) mindci14,min(dc_i15) mindci15,min(dc_i16) mindci16,min(dc_i17) mindci17,min(dc_i18) mindci18,
+      min(dc_i19) mindci19,min(dc_i20) mindci20   
+  	from ids_combiner_dc_data_t
+  	where station_code = #{stationCode}
+  		and collect_time between #{startTime} and #{endTime}
+  	group by dev_id
+  </select>
+</mapper>

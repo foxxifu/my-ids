@@ -1,0 +1,105 @@
+@import (once, reference) '~@/assets/css/lib';
+
+.el-tabs--right {
+  overflow: visible;
+  &.el-tabs--border-card {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    /deep/ .el-tabs__header {
+      background-color: transparent;
+      &.is-right {
+        margin: 0 auto;
+        width: 40px;
+        border: none;
+        height: 100%;
+      }
+      .el-tabs__nav-wrap {
+        &.is-right {
+          .el-tabs__item {
+            &.is-right {
+              min-height: 120px;
+              padding: 111% 8px;
+              margin: 0 -1px 15px;
+              color: #202e33;
+              border-radius: 0 15px 15px 0;
+              border: 1px solid #08A8D8;
+              writing-mode: tb-rl;
+              text-transform: capitalize;
+              letter-spacing: 0.1em;
+              &.is-active {
+                color: white;
+                background: #08A8D8;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /deep/ .el-tabs__content {
+    height: 100%;
+    overflow: auto;
+    border: 1px solid #21b1dc;
+  }
+
+  /deep/ .el-tabs__header {
+    &.is-right {
+      /deep/ .el-tabs__nav {
+        white-space: pre-wrap;
+        /deep/ .el-tabs__item {
+          height: auto;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  /deep/ .el-form-item {
+    margin-bottom: 0px;
+  }
+
+  /deep/ div.cell {
+    overflow: visible;
+  }
+}
+
+.el-container{
+  /deep/ .el-form-item{
+    margin-bottom: 10px;
+  }
+
+  /deep/ .el-tree-node__children {
+    overflow: visible;
+  }
+
+  /deep/ .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content{
+    background-color: #C6E9EF;
+    color: #1E9FBF;
+  }
+
+  /deep/ .el-tree-node__content:hover {
+    background-color: #C6E9EF;
+  }
+
+  /deep/.el-table--enable-row-hover.stationInfoTable .el-table__body tr:hover>td {
+    background-color: #e6f6fb;
+  }
+
+  /deep/ .el-table.stationTableData .cell{
+    overflow: visible;
+  }
+
+  /deep/ .el-table.elePriceSettingTable .cell{
+    overflow: visible;
+  }
+
+  /deep/ .self-is-required:after {
+    content: '*';
+    color: #f56c6c;
+    margin-right: 4px;
+  }
+
+}
+

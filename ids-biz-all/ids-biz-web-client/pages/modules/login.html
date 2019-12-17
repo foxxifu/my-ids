@@ -1,0 +1,35 @@
+<div class="ids-login" id="loginPageDiv">
+    <div class="login-top"></div>
+    <div class="login-main">
+        <div class="logo i18n">Msg.modules.login.loginFormTitle</div>
+        <form class="login-form" role="form" autocomplete="off" onsubmit="return false">
+            <p class="login-inp userName">
+                <label class="userIcon" for="userName"></label>
+                <input class="i18n" value="" type="text" data-i18n-type="title" id="userName"
+                       title="Msg.modules.login.username" autofocus>
+            </p>
+            <p class="login-inp password">
+                <label class="pwdIcon" for="password"></label>
+                <input class="i18n" value="" id="password" data-i18n-type="title"
+                       title="Msg.modules.login.password" type="password">
+            </p>
+
+            <div class="login-event clearfix">
+                <label for="checkboxSel">
+                    <input type="checkbox" id="checkboxSel" checked="checked" />
+                    <span class="i18n">Msg.modules.login.saveUserName</span>
+                </label>
+            </div>
+
+            <div class="login-buttons">
+                <button type="submit" id="loginValid" class="login-btn i18n">Msg.modules.login.loginBtnTxt</button>
+            </div>
+        </form>
+        <div class="login-form-bottom"></div>
+    </div>
+    <div class="login-bottom">
+        <p class="inner">
+            <span class='i18n'>Msg.system.copyright</span>
+        </p>
+    </div>
+</div>

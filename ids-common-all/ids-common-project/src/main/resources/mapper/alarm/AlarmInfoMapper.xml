@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.signal.AlarmMapper">
+    <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.alarm.AlarmM">
+
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="station_name" property="stationName" jdbcType="VARCHAR"/>
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR"/>
+        <result column="busi_code" property="deviceName" jdbcType="VARCHAR"/>
+        <result column="busi_name" property="deviceName" jdbcType="INTEGER"/>
+        <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER"/>
+        <result column="device_id" property="deviceId" jdbcType="BIGINT"/>
+        <result column="status_id" property="statusId" jdbcType="INTEGER"/>
+        <result column="act_id" property="actId" jdbcType="INTEGER"/>
+        <result column="first_receive" property="firstReciveTime" jdbcType="BIGINT"/>
+        <result column="raised_date" property="raiseDate" jdbcType="BIGINT"/>
+        <result column="create_date" property="createDate" jdbcType="BIGINT"/>
+        <result column="ack_date" property="ackDate" jdbcType="BIGINT"/>
+        <result column="recover_date" property="recoverDate" jdbcType="BIGINT"/>
+        <result column="domain_id" property="domainId" jdbcType="BIGINT"/>
+        <result column="alarm_name" property="alarmName" jdbcType="VARCHAR"/>
+        <result column="lev_id" property="levId" jdbcType="INTEGER"/>
+        <result column="tele_type" property="teleTypeId" jdbcType="SMALLINT"/>
+        <result column="model_version_code" property="modelVersionCode" jdbcType="VARCHAR"/>
+        <result column="alarm_id" property="alarmId" jdbcType="BIGINT"/>
+        <result column="caused_id" property="causeId" jdbcType="BIGINT"/>
+        <result column="sequence_num" property="sequenceNum" jdbcType="BIGINT"/>
+        <result column="work_flow_id" property="workFlowId" jdbcType="BIGINT"/>
+        <result column="data_source" property="dataSource" jdbcType="INTEGER"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="time_zone" property="timeZone" jdbcType="INTEGER"/>
+        <result column="station_happen_time" property="stationHappenTime" jdbcType="BIGINT"/>
+    </resultMap>
+
+</mapper>

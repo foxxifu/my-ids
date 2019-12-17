@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.interest.ids.biz.web.operation.mapper.IOperationWorkSiteMapper">
+	<resultMap id="OperationStationMap" type="com.interest.ids.biz.web.operation.vo.OperationStationVo">
+		<result column="station_code" property="stationCode" />
+		<result column="station_name" property="stationName" />
+		<result column="online_type" property="onlineType" />
+		<result column="station_addr" property="stationAddr" />
+		<result column="installed_capacity" property="installedCapacity" />
+		<result column="total_alarm" property="totalAlarm" />
+		<result column="total_task" property="totalTask" />
+		<result column="undo_task" property="undoTask"/>
+	</resultMap>
+
+	<resultMap id="OperationDeviceMap" type="com.interest.ids.biz.web.operation.vo.OperationDeviceInfoVo">
+		<result column="dev_id" property="deviceId" />
+		<result column="dev_name" property="devName"/>
+		<result column="dev_type_id" property="deviceTypeId"/>
+		<result column="proc_state" property="dealStatus"/>
+		<result column="parent_id" property="parentId" />
+	</resultMap>
+	
+	<!-- 用户任务封装 -->
+	<resultMap id="UserTaskMap"
+		type="com.interest.ids.biz.web.operation.vo.OperationTaskVo">
+		<result column="task_id" property="taskId" />
+		<result column="task_desc" property="taskDesc" />
+		<result column="task_status" property="taskStatus" />
+		<result column="current_deal_user" property="currDealUser" />
+		<result column="station_name" property="stationName" />
+		<result column="station_code" property="stationCode" />
+		<result column="user_id" property="userId" />
+	</resultMap>
+	
+	<!-- 告警封装 -->
+	<resultMap id="OperationAlarmMap" type="com.interest.ids.biz.web.operation.vo.OperationAlarmVo" >
+		<result column="alarm_id" property="alarmId"/>
+		<result column="alarm_level" property="alarmLevel"/>
+		<result column="alarm_status" property="alarmState"/>
+		<result column="alarm_type" property="alarmType"/>
+		<result column="first_happen_time" property="firstHappenTime"/>
+		<result column="recover_time" property="recoverTime"/>
+		<result column="alarm_name" property="alarmName"/>
+		<result column="alarm_cause" property="alarmCause"/>
+		<result column="repair_suggestion" property="repairSuggestion"/>
+		<result column="latitude" property="devLatitude"/>
+		<result column="longitude" property="devLongitude"/>
+		<result column="dev_name" property="devName"/>
+		<result column="sn_code" property="snCode"/>
+		<result column="dev_addr" property="devAddr"/>
+		<result column="station_code" property="stationCode"/>
+		<result column="station_name" property="stationName"/>
+		<result column="dev_interval" property="devInterval"/>
+		<result column="alarm_model_id" property="alarmModelId"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		station_code, station_name, station_file_id, station_addr, performance_ratio,
+		alarm_count, defect_count
+	</sql>
+
+	<!-- 查询运维工作台初始界面基本信息 -->
+	<select id="selectOperationStationBaseVo" resultMap="OperationStationMap">
+		select t1.station_code, t1.station_name, t1.online_type, t1.installed_capacity,
+			t1.station_addr, t2.total_alarm, t3.total_task, t3.undo_task
+		from
+		(select station_code, station_name, station_addr, online_type, installed_capacity
+			from ids_station_info_t
+			<where>
+				<if test="stationName != null and stationName.length > 0">
+					and station_name like concat('%', concat(#{stationName}, '%'))
+				</if>
+				<if test="onlineType != null">
+					and online_type = #{onlineType}
+				</if>
+				<if test="stationCodes != null and stationCodes.size > 0">
+					and station_code in
+					<foreach collection="stationCodes" item="stationCode" open="("
+						separator="," close=")">
+						#{stationCode}
+					</foreach>
+				</if>
+			</where>
+		) t1
+		left join
+		(
+			select station_code, count(*) total_alarm from ids_alarm_t
+			where level_id=1 and first_happen_time >= #{beginOfDay}
+			<if test="stationCodes != null and stationCodes.size > 0">
+				and station_code in
+				<foreach collection="stationCodes" item="stationCode" open="("
+					separator="," close=")">
+					#{stationCode}
+				</foreach>
+			</if>
+			group by station_code
+		) t2 on t1.station_code = t2.station_code
+		left join
+		(
+			select station_code, count(1) as total_task, SUM(if(proc_state != 3, 1, 0) ) as undo_task
+			from ids_workflow_defect_t
+			where create_time >= #{beginOfDay}
+			<if test="stationCodes != null and stationCodes.size > 0">
+				and station_code in
+				<foreach collection="stationCodes" item="stationCode" open="("
+					separator="," close=")">
+					#{stationCode}
+				</foreach>
+			</if>
+			group by station_code
+		) t3 on t1.station_code = t3.station_code
+	</select>
+
+	<!-- 查询电站下的设备类型 -->
+	<select id="countStationDeviceTypes" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		select dev_type_id
+		from (
+			select dev_type_id, count(1) as type_count
+			from ids_dev_info_t
+			where is_logic_delete = 0 and dev_type_id is not null and station_code =
+			#{stationCode}
+			group by dev_type_id
+		) t where type_count > 0
+	</select>
+
+	<!-- 查询设备关联告警的处理状态 -->
+	<select id="selectOperationDeviceDataVo" resultMap="OperationDeviceMap">
+		select t1.id as dev_id, t1.dev_alias as dev_name, t1.dev_type_id, NULL AS proc_state ,t1.parent_id
+		from (
+				select dev_alias, id, dev_type_id, parent_id
+				from ids_dev_info_t 
+				where station_code = #{stationCode}
+					and dev_type_id in 
+					<foreach collection="deviceTypeIds" item="deviceTypeId" open="(" separator="," close=")">
+						#{deviceTypeId}
+					</foreach>
+			) t1
+	</select>
+	
+	<select id="selectStationDeviceTypes" resultType="java.util.Map" parameterType="java.util.List">
+		select station_code, dev_type_id
+		from ids_dev_info_t
+		<where>
+			<if test="list != null and list.size > 0">
+				station_code in
+				<foreach collection="list" item="stationCode" open="(" separator="," close=")">
+					#{stationCode}
+				</foreach>
+			</if>
+		</where>
+		group by station_code, dev_type_id
+	</select>
+	
+	<select id="selectUserTasks" parameterType="java.util.List" resultMap="UserTaskMap">
+		SELECT
+			wut.user_id,
+			wt.id as task_id,
+			wd.description AS task_desc,
+			wt.assignee_name AS current_deal_user,
+			wt.task_state AS task_status,
+			wd.station_code,
+			wd.station_name
+			
+		FROM
+			ids_workflow_task_user_t wut
+		JOIN ids_workflow_task_t wt ON wut.task_id = wt.task_id AND wt.task_state != 3
+			AND wt.op_state = 0
+		JOIN ids_workflow_defect_t wd ON wd.proc_id = wt.proc_id
+		<where>
+			<if test="list != null and list.size > 0">
+				wut.user_id IN 
+				<foreach collection="list" item="userId" open="(" separator="," close=")">
+					#{userId}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY
+			wut.user_id
+	</select>
+
+	<sql id="BaseAlarmSql">
+			SELECT
+				alt.id AS alarm_id, level_id AS alarm_level, status_id AS alarm_status, 
+				'1' AS alarm_type, alt.alarm_name, alt.station_code, alt.station_name,
+				-1 as alarm_model_id
+			FROM ids_alarm_t alt		
+			INNER JOIN ids_station_info_t st ON alt.station_code = st.station_code
+				<choose>
+					<when test="nodeType == 2 and nodeId != null">
+						AND st.enterprise_id = #{nodeId}
+					</when>
+					<when test="nodeType == 3 and nodeId != null">
+						AND st.domain_id = #{nodeId}
+					</when>
+					<when test="nodeType == 4 and nodeId != null">
+						AND st.station_code = #{nodeId}
+					</when>
+				</choose>
+			<if test="userType == 'normal'">
+				INNER JOIN ids_sm_user_station_t ust ON st.station_code = ust.station_code
+					AND ust.user_id = #{userId}
+			</if>
+			WHERE alt.status_id NOT IN (4, 5, 6)
+		UNION
+			SELECT
+				aat.id AS alarm_id, aat.severity_id AS alarm_level, aat.alarm_state AS alarm_status, 
+				'2' AS alarm_type, aat.alarm_name, st.station_code, st.station_name,
+				aat.alarm_id AS alarm_model_id
+			FROM ids_analysis_alarm_t aat
+			INNER JOIN ids_station_info_t st ON aat.station_id = st.station_code
+				<choose>
+					<when test="nodeType == 2 and nodeId != null">
+						AND st.enterprise_id = #{nodeId}
+					</when>
+					<when test="nodeType == 3 and nodeId != null">
+						AND st.domain_id = #{nodeId}
+					</when>
+					<when test="nodeType == 4 and nodeId != null">
+						AND st.station_code = #{nodeId}
+					</when>
+				</choose>
+			<if test="userType == 'normal'">
+				INNER JOIN ids_sm_user_station_t ust ON st.station_code = ust.station_code 
+					AND ust.user_id = #{userId}
+			</if>
+			WHERE aat.alarm_state NOT IN (4, 5, 6)
+	</sql>
+	<!-- 查询告警信息  -->
+	<select id="selectUserStationAlarms"  parameterType="java.util.Map" resultMap="OperationAlarmMap">
+		SELECT * FROM (
+			<include refid="BaseAlarmSql"/>
+		) t ORDER BY station_code
+	</select>
+	
+	<select id="selectAlarmDetail" resultMap="OperationAlarmMap">
+		<choose>
+			<when test='alarmType == "1"'>
+				SELECT
+					alt.id AS alarm_id, level_id AS alarm_level, status_id AS alarm_status, 
+						'1' AS alarm_type, alt.first_happen_time, alt.recover_time, 
+					alt.alarm_name, almt.alarm_cause, almt.repair_suggestion, 
+					dt.latitude, dt.longitude, dt.dev_alias AS dev_name, dt.id AS dev_id, dt.sn_code,
+					st.station_code, st.station_name, st.station_addr AS dev_addr,
+					(SELECT CONCAT(station.station_name,' ',IFNULL(phalanx.phalanx_name,''),' ',IFNULL(subarray.subarray_name,'')) devInterval 
+					FROM ids_station_info_t station,ids_dev_info_t dev LEFT JOIN ids_subarray_info_t subarray ON dev.matrix_id = subarray.id
+					LEFT JOIN ids_phalanx_info_t phalanx ON dev.phalanx_id = phalanx.id
+					WHERE station.station_code = dev.station_code AND dev.id = alt.dev_id) AS dev_interval
+				FROM ids_cleared_alarm_t alt
+					LEFT JOIN ids_alarm_model_t almt ON alt.alarm_id = almt.alarm_id AND alt.station_code = almt.station_code AND alt.signal_version = almt.signal_version
+					INNER JOIN ids_dev_info_t dt ON alt.dev_id = dt.id
+					INNER JOIN ids_station_info_t st ON alt.station_code = st.station_code
+				WHERE alt.id = #{alarmId}
+			</when>
+			<otherwise>
+				SELECT
+					aat.id AS alarm_id, aat.severity_id AS alarm_level, aat.alarm_state AS alarm_status, 
+						'2' AS alarm_type, aat.happen_time as first_happen_time, aat.recovered_time as recover_time,
+					aat.alarm_name, aamt.alarm_cause, aamt.repair_suggestion,
+					dt.latitude, dt.longitude, dt.dev_alias AS dev_name, dt.id AS dev_id, dt.sn_code,
+					st.station_code, st.station_name, st.station_addr AS dev_addr,
+					(SELECT CONCAT(station.station_name,' ',IFNULL(phalanx.phalanx_name,''),' ',IFNULL(subarray.subarray_name,'')) devInterval 
+					FROM ids_station_info_t station,ids_dev_info_t dev LEFT JOIN ids_subarray_info_t subarray ON dev.matrix_id = subarray.id
+					LEFT JOIN ids_phalanx_info_t phalanx ON dev.phalanx_id = phalanx.id
+					WHERE station.station_code = dev.station_code AND dev.id = aat.dev_id) AS dev_interval,
+					aat.alarm_id AS alarm_model_id
+				FROM
+					ids_analysis_alarm_t aat
+					LEFT JOIN ids_analysis_alarm_model_t aamt ON aat.alarm_id = aamt.alarm_id
+					INNER JOIN ids_dev_info_t dt ON aat.dev_id = dt.id
+					INNER JOIN ids_station_info_t st ON aat.station_id = st.station_code
+				WHERE aat.id = #{alarmId}
+			</otherwise>
+		</choose>
+	</select>
+
+	<sql id="BaseTaskSql">
+		SELECT
+			wdt.defect_id AS task_id, wdt.description AS task_desc, wdt.proc_state AS task_status, 
+			wt.assignee_name AS current_deal_user, wtu.user_id, st.station_code, st.station_name
+		FROM
+			ids_workflow_defect_t wdt
+		INNER JOIN ids_workflow_process_t wpt ON wdt.proc_id = wpt.proc_id
+		INNER JOIN ids_workflow_task_t wt ON wpt.current_task_id = wt.task_id
+		INNER JOIN ids_workflow_task_user_t wtu ON wpt.current_task_id = wtu.task_id
+		INNER JOIN ids_station_info_t st ON wdt.station_code = st.station_code
+			<choose>
+				<when test="nodeType == 2 and nodeId != null">
+					AND st.enterprise_id = #{nodeId}
+				</when>
+				<when test="nodeType == 3 and nodeId != null">
+					AND st.domain_id = #{nodeId}
+				</when>
+				<when test="nodeType == 4 and nodeId != null">
+					AND st.station_code = #{nodeId}
+				</when>
+			</choose>
+		<if test="userType == 'normal'">
+			INNER JOIN ids_sm_user_station_t ust ON st.station_code = ust.station_code
+				AND ust.user_id = #{userId}
+		</if>
+
+		WHERE wpt.proc_state != 3
+	</sql>
+	<!-- 查询任务列表  -->
+	<select id="selectUserStationTasks" parameterType="java.util.Map" resultMap="UserTaskMap">
+		SELECT * FROM (
+		 	<include refid="BaseTaskSql"/>
+		)t
+		ORDER BY station_code
+	</select>
+	
+	<!-- 检验被任务是否可指派给某运维人员  -->
+	<select id="validTaskToUser" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			ids_workflow_process_t wpt
+		INNER JOIN ids_sm_user_station_t ust ON wpt.station_code = ust.station_code
+		WHERE wpt.proc_id = #{taskId} AND ust.user_id = #{userId}
+	</select>
+</mapper>

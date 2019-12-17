@@ -1,0 +1,267 @@
+form .vertical-table {
+    background-color: #0b649e;
+    border: none;
+    border-spacing: 0.1em;
+    border-collapse: separate;
+    width: 100%;
+    margin: 0 auto;
+}
+
+form .vertical-table .keycls {
+    min-width: 58px;
+    background-color: #024673;
+    text-align: center;
+    padding: 2px 5px;
+}
+
+form .vertical-table td.address-keycls.keycls {
+    width: 106px;
+}
+
+form .vertical-table .valcls {
+    position: relative;
+    background-color: #003E67;
+    padding: 5px;
+}
+
+form .vertical-table .valcls-unit {
+    margin-left: 5px;
+}
+
+form .vertical-table .valcls .valinput {
+    width: 178px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+}
+
+form .vertical-table .valcls .valfileForm {
+    position: relative;
+    width: auto;
+    height: auto;
+    max-height: 240px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+    display: inline-block;
+}
+
+form .vertical-table .valcls .valfileForm img {
+    max-width: 240px;
+    height: 120px;
+    margin: 5px;
+    display: block;
+}
+
+form .vertical-table .valcls .valfileForm button {
+    margin-left: 0;
+}
+
+form .vertical-table .valcls .valinput.disabled {
+    /* width: 100%; */
+    min-height: 22px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 0px inset;
+    background-color: transparent;
+}
+
+form .vertical-table .valcls .valcheckbox {
+    width: 18px;
+    overflow: visible;
+    text-overflow: initial;
+    display: inline-block;
+}
+
+form .vertical-table .valcls .valselect.disabled {
+    -webkit-appearance: none;
+    /*pointer-events: none;*/
+    white-space: nowrap;
+    width: 164px;
+    padding: 4px 0;
+}
+
+form .vertical-table .valcls .Wdate {
+    width: 148px;
+}
+
+form .vertical-table .valcls .Wdate.disabled {
+    background: transparent;
+}
+
+form .vertical-table textarea.valtextarea.valinput {
+    width: 464px;
+    height: 50px;
+    margin-top: 5px;
+}
+
+form .vertical-table textarea.valtextarea.valinput,
+form .vertical-table textarea.valtextarea.valinput.disabled {
+    min-height: 50px;
+    resize: vertical;
+    width: 96%;
+    overflow: auto;
+}
+
+form .vertical-table .valgroup.valinput,
+form .vertical-table .valgroup.valinput.disabled {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+    max-height: 480px;
+    padding-top: 4px;
+    box-sizing: content-box;
+    overflow: auto !important;
+    background-color: transparent;
+}
+
+form .vertical-table .valgroup.valinput.disabled input {
+    /*width: 160px;*/
+    height: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 0px inset;
+    text-align: right;
+    background-color: transparent;
+}
+
+form .vertical-table .valgroup.valinput.disabled .Wdate {
+    text-align: left;
+    padding: 0 0 0 20px;
+    background: transparent;
+}
+
+form .vertical-table .valgroup.valinput.disabled button,
+form .vertical-table .valgroup.valinput.disabled .required-label {
+    display: none;
+}
+
+
+form .horizontal-table {
+    line-height: 28px;
+}
+
+form .horizontal-table div.clsRow {
+    display: inline-block;
+    line-height: 28px;
+    white-space: nowrap;
+    margin: 5px 0;
+}
+
+form .horizontal-table div.clsRow .searchBtn {
+    vertical-align: baseline;
+}
+form .horizontal-table div.clsRow .baseline {
+    vertical-align: baseline;
+}
+
+form .horizontal-table .keycls {
+    height: 28px;
+    text-align: center;
+    padding-right: 5px;
+}
+
+form .horizontal-table .valcls {
+    height: 28px;
+    text-align: center;
+    padding-right: 15px;
+    display: inline-block;
+}
+
+form .horizontal-table .valcls .valinput {
+    width: 110px;
+    line-height: 19px;
+    min-height: 22px;
+}
+
+form .horizontal-table .valcls .Wdate.valinput {
+    width: 112px;
+    margin-right: 0;
+}
+
+form .horizontal-table select.valselect.valinput {
+    width: 114px;
+    line-height: 19px;
+    margin-right: 0;
+    padding-left: 3px;
+}
+
+form .horizontal-table input {
+    margin-left: 0;
+}
+
+form .horizontal-table .inline-button {
+    display: inline-block;
+}
+
+form .horizontal.button-pane {
+    position: absolute;
+    width: auto;
+    margin: 5px;
+}
+
+form .horizontal.button-pane.pane-left {
+    left: 0;
+}
+
+form .horizontal.button-pane.pane-right {
+    right: 0;
+}
+
+form .horizontal.button-pane.pane-top {
+    top: 0;
+}
+
+form .horizontal.button-pane.pane-bottom {
+    bottom: 0;
+}
+
+form .horizontal.button-pane.pane-center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+form .horizontal.button-pane.pane-middle {
+    top: calc(50% - 45px / 2);
+    top: 0 \9;
+    bottom: calc(50% - 45px / 2);
+    height: 100%;
+    line-height: 40px;
+}
+
+form .vertical.button-pane {
+    position: static;
+    width: auto;
+    display: inline-block;
+}
+
+form .vertical.button-pane.pane-left {
+    float: left;
+    left: 0;
+    text-align: left;
+}
+
+form .vertical.button-pane.pane-right {
+    float: right;
+    right: 0;
+    text-align: right;
+}
+
+form .vertical.button-pane.pane-top {
+}
+
+form .vertical.button-pane.pane-bottom {
+}
+
+form .vertical.button-pane.pane-center {
+    width: 100%;
+
+}
+form .vertical.button-pane.pane-center table {
+    margin: 0 auto;
+    text-align: center;
+}
+
+form .vertical.button-pane.pane-middle {
+}

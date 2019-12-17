@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-biz-all</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ids-biz-data</module>
+        <module>ids-biz-report</module>
+        <module>ids-biz-web</module>
+        <module>ids-biz-kpicalc</module>
+        <module>ids-biz-authorize</module>
+    </modules>
+
+
+</project>
+

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.biz.web.alarm.dao.AlarmDao">
+
+    <resultMap id="BaseResultMap" type="com.interest.ids.biz.web.alarm.vo.AlarmVO">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="station_name" property="stationName" jdbcType="VARCHAR"/>
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR"/>
+        <result column="alarm_name" property="alarmName" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="BIGINT"/>
+        <result column="recover_date" property="recoverDate" jdbcType="BIGINT"/>
+        <result column="alarm_level" property="alarmLevel" jdbcType="INTEGER"/>
+        <result column="dev_alias" property="devAlias" jdbcType="BIGINT"/>
+        <result column="dev_type_id" property="DevType" jdbcType="BIGINT"/>
+        <result column="alarm_state" property="alarmState" jdbcType="INTEGER"/>
+        <result column="alarm_type" property="alarmType" jdbcType="INTEGER"/>
+        <result column="dev_id" property="devId"/>
+        <result column="alarm_location" property="alarmLocation"/>
+        <result column="repair_suggestion" property="repairSuggestion" jdbcType="BIGINT"/>
+        <result column="dev_interval" property="devInterval" jdbcType="VARCHAR"/>
+        <result column="alarm_id" property="alarmId"/>
+    </resultMap>
+
+    <resultMap id="RepairResultMap" type="com.interest.ids.biz.web.alarm.vo.AlarmRepariVO">
+        <result column="alarm_name" property="alarmName" jdbcType="VARCHAR"/>
+        <result column="lev_id" property="alarmLeve" jdbcType="VARCHAR"/>
+        <result column="first_receive" property="firstDate" jdbcType="BIGINT"/>
+        <result column="raised_date" property="lastDate" jdbcType="BIGINT"/>
+        <result column="alarm_number" property="alarmNumber" jdbcType="INTEGER"/>
+        <result column="signal_version" property="version" jdbcType="VARCHAR"/>
+        <result column="alarm_position" property="alarmPosition" jdbcType="VARCHAR"/>
+        <result column="dev_alias" property="devAlias" jdbcType="VARCHAR"/>
+        <result column="alarm_cause" property="alarmCause" jdbcType="VARCHAR"/>
+        <result column="repair_suggestion" property="repairSuggestion" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="stationIdByEnterpriseId">
+        SELECT s.id FROM ids_station_info_t s WHERE s.enterprise_id
+    </sql>
+
+    <sql id="stationCode">
+        SELECT s.station_code FROM ids_sm_user_station_t s WHERE s.user_id
+    </sql>
+
+    <sql id="enterpriseId">
+        select u.enterprise_id from ids_sm_user_info_t u where u.id
+    </sql>
+
+    <select id="listInfoByUserId" resultMap="BaseResultMap">
+        SELECT a.id,a.station_name,a.station_code,a.alarm_name,a.create_time as create_date,a.recover_time as recover_date,
+	        a.level_id AS alarm_level,a.dev_alias,a.dev_type_id,a.status_id AS alarm_state,
+	        a.alarm_type,a.dev_id,
+	        (SELECT CONCAT(station.station_name,' ',IFNULL(phalanx.phalanx_name,''),' ',IFNULL(subarray.subarray_name,'')) devInterval 
+			FROM ids_station_info_t station,ids_dev_info_t dev LEFT JOIN ids_subarray_info_t subarray ON dev.matrix_id = subarray.id
+			LEFT JOIN ids_phalanx_info_t phalanx ON dev.phalanx_id = phalanx.id
+			WHERE station.station_code = dev.station_code AND dev.id = a.dev_id) AS dev_interval
+        FROM ids_cleared_alarm_t a
+        <where>
+            <choose>
+            	<when test="params.userType == 'normal'">
+	            	and a.station_code IN (
+	                <include refid="stationCode"/>=#{params.userId}
+	                )
+            	</when>
+            	<when test="params.userType == 'enterprise'">
+	            	AND a.station_code in (
+	                SELECT station.station_code FROM ids_station_info_t station 
+					WHERE station.enterprise_id = #{params.enterpriseId})
+            	</when>
+            </choose>
+            
+            <if test="params.stationName != null and params.stationName != ''">
+                <bind name="stationName" value="'%' + params.stationName + '%'"/>
+                AND a.station_name like #{stationName}
+            </if>
+            <if test="params.alarmName != null and params.alarmName != ''">
+                <bind name="alarmName" value="'%' + params.alarmName + '%'"/>
+                AND a.alarm_name like #{alarmName}
+            </if>
+            <if test="params.alarmLevel != null and params.alarmLevel != -1">
+                AND a.level_id = #{params.alarmLevel}
+            </if>
+            <if test="params.devAlias != null and params.devAlias != ''">
+                <bind name="devAlias" value="'%' + params.devAlias + '%'"/>
+                AND a.dev_alias like #{devAlias}
+            </if>
+            <if test="params.stationCode != null and params.stationCode != ''">
+            	AND a.station_code = #{params.stationCode}
+            </if>
+            <if test="params.devId != null">
+            	AND a.dev_id = #{params.devId}
+            </if>
+        </where>
+        ORDER BY a.create_time desc
+    </select>
+    <!-- 查询实时告警信息 -->
+    <select id="listOnlineInfoByUserId" resultMap="BaseResultMap">
+        SELECT a.id,a.station_name,a.station_code,a.alarm_name,a.create_time as create_date,a.recover_time as recover_date,
+	        a.level_id AS alarm_level,a.dev_alias,a.dev_type_id,a.status_id AS alarm_state,
+	        a.alarm_type,a.dev_id,
+	        (SELECT CONCAT(station.station_name,' ',IFNULL(phalanx.phalanx_name,''),' ',IFNULL(subarray.subarray_name,'')) devInterval 
+			FROM ids_station_info_t station,ids_dev_info_t dev LEFT JOIN ids_subarray_info_t subarray ON dev.matrix_id = subarray.id
+			LEFT JOIN ids_phalanx_info_t phalanx ON dev.phalanx_id = phalanx.id
+			WHERE station.station_code = dev.station_code AND dev.id = a.dev_id) AS dev_interval
+        FROM ids_alarm_t a
+        <where>
+            <choose>
+            	<when test="params.userType == 'normal'">
+	            	and a.station_code IN (
+	                <include refid="stationCode"/>=#{params.userId}
+	                )
+            	</when>
+            	<when test="params.userType == 'enterprise'">
+	            	AND a.station_code in (
+	                SELECT station.station_code FROM ids_station_info_t station 
+					WHERE station.enterprise_id = #{params.enterpriseId})
+            	</when>
+            </choose>
+            
+            <if test="params.stationName != null and params.stationName != ''">
+                <bind name="stationName" value="'%' + params.stationName + '%'"/>
+                AND a.station_name like #{stationName}
+            </if>
+            <if test="params.alarmName != null and params.alarmName != ''">
+                <bind name="alarmName" value="'%' + params.alarmName + '%'"/>
+                AND a.alarm_name like #{alarmName}
+            </if>
+            <if test="params.alarmLevel != null and params.alarmLevel != -1">
+                AND a.level_id = #{params.alarmLevel}
+            </if>
+            <if test="params.devAlias != null and params.devAlias != ''">
+                <bind name="devAlias" value="'%' + params.devAlias + '%'"/>
+                AND a.dev_alias like #{devAlias}
+            </if>
+            <if test="params.stationCode != null and params.stationCode != ''">
+            	AND a.station_code = #{params.stationCode}
+            </if>
+            <if test="params.devId != null">
+            	AND a.dev_id = #{params.devId}
+            </if>
+        </where>
+        ORDER BY a.create_time desc
+    </select>
+
+    <select id="listInfoByDevId" resultMap="BaseResultMap">
+	    SELECT
+			a.id,
+			a.station_name,
+			a.alarm_name,
+			a.create_time AS create_date,
+			a.recover_time AS recover_date,
+			a.level_id AS alarm_level,
+			a.dev_alias,
+			a.dev_type_id,
+			a.status_id AS alarm_state,
+			a.alarm_type,
+			m.repair_suggestion
+		FROM
+			ids_alarm_t a
+		LEFT JOIN ids_alarm_model_t m ON m.id = a.alarm_id
+		AND m.cause_id = a.caused_id
+		AND m.signal_version = a.signal_version
+		AND m.station_code = a.station_code
+		WHERE
+			a.dev_id = #{params.devId}
+		UNION
+		SELECT
+			a.id,
+			s.station_name,
+			a.alarm_name,
+			a.happen_time AS create_date,
+			a.recovered_time AS recover_date,
+			a.severity_id AS alarm_level,
+			a.dev_alias,
+			a.dev_type_id AS dev_type_id,
+			a.alarm_state AS alarm_state,
+			m.alarm_type,
+			a.repair_suggestion
+		FROM
+			ids_analysis_alarm_t a
+		LEFT JOIN ids_station_info_t s ON s.station_code = a.station_id
+		LEFT JOIN ids_alarm_model_t m ON m.alarm_id = a.alarm_id
+		AND m.dev_type_id = a.dev_type_id
+		AND m.severity_id = a.severity_id
+		AND m.station_code = s.station_code
+		WHERE
+			a.dev_id = #{params.devId}
+    </select>
+
+    <select id="getAlarmRepariByAlarmId" parameterType="java.lang.Long" resultMap="RepairResultMap">
+        SELECT a.alarm_name, a.level_id, a.first_happen_time as first_receive, a.last_happen_time as raised_date,
+        (
+        SELECT COUNT(*) FROM ids_cleared_alarm_t h
+        WHERE h.enterprise_id = a.enterprise_id
+        AND h.signal_version = a.signal_version
+        AND h.alarm_id = a.act_id
+        AND h.caused_id = a.caused_id
+        ) AS alarm_number,
+        a.signal_version,
+        CONCAT(a.station_name, a.dev_alias) AS alarm_position,
+        a.dev_alias,
+        (
+        SELECT m.alarm_cause FROM ids_alarm_model_t m
+        WHERE m.enterprise_id = a.enterprise_id
+        AND m.signal_version = a.signal_version
+        AND m.alarm_id = a.act_id
+        AND m.cause_id = a.caused_id
+        ) AS alarm_cause,
+        (
+        SELECT m.repair_suggestion FROM ids_alarm_model_t m
+        WHERE m.enterprise_id = a.enterprise_id
+        AND m.signal_version = a.signal_version
+        AND m.alarm_id = a.act_id
+        AND m.cause_id = a.caused_id
+        ) AS repair_suggestion
+        FROM ids_alarm_t AS a
+        WHERE a.id = #{alarmId};
+    </select>
+
+    <select id="getStatisticsByUserId" parameterType="java.lang.Long"
+            resultType="com.interest.ids.biz.web.alarm.vo.AlarmStatisticsVO">
+        select
+        (select count(*) from ids_alarm_t a where a.level_id = 1) as serious,
+        (select count(*) from ids_alarm_t a where a.level_id = 2) as important,
+        (select count(*) from ids_alarm_t a where a.level_id = 3) as secondary,
+        (select count(*) from ids_alarm_t a where a.level_id = 4) as prompt,
+        (select count(*) from ids_alarm_t a) as total
+        from ids_alarm_t a
+        where a.station_code in (
+        <include refid="stationCode"/>
+        = #{userId});
+    </select>
+
+    <!-- analysis alarm -->
+    <select id="listAnalysisInfo" resultMap="BaseResultMap">
+        SELECT a.id,a.alarm_location,
+        (SELECT s.station_name FROM ids_station_info_t s WHERE s.station_code = a.station_id) AS station_name,
+        a.alarm_name,a.happen_time AS create_date,a.recovered_time AS recover_date,a.severity_id AS alarm_level,
+        a.dev_alias,a.dev_type_id AS dev_type_id,a.alarm_state AS alarm_state,a.dev_id dev_id,
+        (SELECT m.alarm_type FROM ids_alarm_model_t m WHERE m.alarm_id = a.alarm_id
+        AND m.dev_type_id = a.dev_type_id AND m.severity_id = a.severity_id
+        AND m.enterprise_id = (SELECT s.enterprise_id FROM ids_station_info_t s
+        WHERE s.id = a.station_id) AND m.station_code = (SELECT s.station_code FROM ids_station_info_t s
+        WHERE s.id = a.station_id)) AS alarm_type,a.repair_suggestion ,
+		(SELECT CONCAT(station.station_name,' ',IFNULL(phalanx.phalanx_name,''),' ',IFNULL(subarray.subarray_name,'')) devInterval 
+		FROM ids_station_info_t station,ids_dev_info_t dev LEFT JOIN ids_subarray_info_t subarray ON dev.matrix_id = subarray.id
+		LEFT JOIN ids_phalanx_info_t phalanx ON dev.phalanx_id = phalanx.id
+		WHERE station.station_code = dev.station_code AND dev.id = a.dev_id) AS dev_interval,
+		a.alarm_id
+        FROM ids_analysis_alarm_t a
+        <where>
+             <choose>
+            	<when test="params.userType == 'normal'">
+	            	and a.station_id IN (
+	                <include refid="stationCode"/>=#{params.userId}
+	                )
+            	</when>
+            	<when test="params.userType == 'enterprise'">
+	            	AND a.station_id in (
+	                SELECT station.station_code FROM ids_station_info_t station 
+					WHERE station.enterprise_id = #{params.enterpriseId})
+            	</when>
+            </choose>
+            
+            <if test="params.stationName != null and params.stationName != ''">
+                <bind name="stationName" value="'%' + params.stationName + '%'"/>
+                AND a.station_id IN (
+                SELECT s.station_code FROM ids_station_info_t s WHERE s.station_name like #{stationName}
+                )
+            </if>
+            <if test="params.alarmName != null and params.alarmName != ''">
+                <bind name="alarmName" value="'%' + params.alarmName + '%'"/>
+                AND a.alarm_name like #{alarmName}
+            </if>
+            <if test="params.alarmLevel != null and params.alarmLevel != -1">
+                AND a.severity_id = #{params.alarmLevel}
+            </if>
+            <if test="params.devAlias != null and params.devAlias != ''">
+                <bind name="devAlias" value="'%' + params.devAlias + '%'"/>
+                AND a.dev_alias like #{devAlias}
+            </if>
+            <if test="params.stationCode != null and params.stationCode != ''">
+                AND a.station_id = #{params.stationCode}
+            </if>
+            <if test="params.devId != null">
+                AND a.dev_id= #{params.devId}
+            </if>
+            <if test="params.alarmState != null and params.alarmState != 0">
+                AND a.alarm_state = #{params.alarmState}
+            </if>
+        </where>
+        ORDER BY a.happen_time desc
+    </select>
+
+    <select id="getAnalysisRepari" parameterType="java.lang.Long"
+            resultType="com.interest.ids.biz.web.alarm.vo.AnalysisRepariVO">
+        select a.id,model.alarm_id as causeId,model.alarm_name as alarmCause,model.repair_suggestion as repairSuggestion from 
+        ids_analysis_alarm_t a,ids_analysis_alarm_model_t model where  a.alarm_id=model.alarm_id and a.id=#{id}
+    </select>
+
+    <!-- 智能运维工作台使用接口 -->
+    <!-- 统计电站下各类设备的活动告警数 -->
+    <select id="countDeviceCriticalAlarms" parameterType="java.util.List" resultType="java.util.Map">
+        select * from (
+        select station_code, dev_type_id, count(*) as alarm_count
+        from ids_alarm_t
+        where level_id = 1 and status_id = 1
+        <if test="stationCodes != null and stationCodes.size > 0">
+            and station_code in
+            <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+                #{stationCode}
+            </foreach>
+        </if>
+        group by station_code, dev_type_id
+        ) t where alarm_count > 0
+    </select>
+
+    <!-- 统计设备的活动告警数 -->
+    <select id="countDeviceCriticalAlarmsByDeviceId" parameterType="java.util.List" resultType="java.util.Map">
+        select * from (
+        select dev_id as device_id, count(*) as alarm_count
+        from ids_alarm_t
+        where level_id = 1 and status_id = 1
+        <if test="deviceIds != null and deviceIds.size > 0">
+            and dev_id in
+            <foreach collection="deviceIds" item="deviceId" open="(" separator="," close=")">
+                #{deviceId}
+            </foreach>
+        </if>
+        group by dev_id
+        ) t where alarm_count > 0
+    </select>
+    
+  	<update id="updateAlarm" parameterType="java.util.Map">
+    	update 
+    		ids_alarm_t 
+    	set 
+    		status_id = #{statusId}
+    	<if test="null != confirmTime">
+    		,confirm_time=#{confirmTime}
+    	</if>
+    	 where id in (${ids})
+    </update>
+</mapper>

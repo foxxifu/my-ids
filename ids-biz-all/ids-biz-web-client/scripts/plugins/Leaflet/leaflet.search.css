@@ -1,0 +1,240 @@
+/* 
+ * Leaflet Control Search v2.7.0 - 2016-09-13 
+ * 
+ * Copyright 2016 Stefano Cudini 
+ * stefano.cudini@gmail.com 
+ * http://labs.easyblog.it/ 
+ * 
+ * Licensed under the MIT license. 
+ * 
+ * Demo: 
+ * http://labs.easyblog.it/maps/leaflet-search/ 
+ * 
+ * Source: 
+ * git@github.com:stefanocudini/leaflet-search.git 
+ * 
+ */
+
+.leaflet-container .leaflet-control-search {
+    margin-left: 10px;
+    position: relative;
+    float: left;
+    color: #1978cf;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+}
+
+.leaflet-control-search.search-exp {
+    /*expanded*/
+    /*box-shadow: 0 1px 7px #999;*/
+    box-shadow: none;
+    /*background: #fff;*/
+    background: transparent;
+}
+
+.leaflet-control-search .search-input {
+    color: rgb(51, 51, 51);
+    width: 215px;
+    height: 30px;
+    line-height: 19px;
+    display: block;
+    float: left;
+    background: #fff;
+    border: 1px solid #CCCCCC;
+    border-right: none;
+    border-radius: 2px;
+    padding: 0 32px 0 2px;
+    padding-right: 20px \9;
+    margin: 0 -15px 0 0;
+}
+
+.leaflet-control-search .search-input:focus {
+    border-color: #cccccc;
+}
+
+.leaflet-control-search.search-load .search-input {
+    background: url('images/loader.gif') no-repeat center right;
+    background-color: #fff;
+}
+
+.leaflet-control-search.search-load .search-cancel {
+    /*visibility: hidden;*/
+}
+
+.leaflet-control-search .search-cancel {
+    float: left;
+    display: block;
+    width: 22px;
+    height: 22px;
+    right: 15px;
+    margin: 5px 0;
+    /*background: url('images/search-icon.png') no-repeat center -46px;*/
+    text-decoration: none;
+}
+
+.leaflet-control-search .search-cancel:hover {
+}
+
+.leaflet-control-search .search-cancel .icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    /* display: none\9; */
+    background: url('images/close-circle-20.png') no-repeat;
+    background-color: #ffffff;
+}
+
+.leaflet-control-search .search-cancel:hover span {
+    color: #aaa;
+}
+
+.leaflet-control-search .search-button {
+    float: left;
+    right: 15px;
+    margin: 0;
+    display: block;
+    width: 28px;
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-left: none;
+    background: #FFFFFF url('images/search.png') center center no-repeat;
+}
+
+.leaflet-control-search .search-button:hover {
+   /* background: #FFFFFF url('images/search_on.png') center center no-repeat;*/
+}
+
+.leaflet-control-search .search-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    float: left;
+    list-style: none;
+    padding-left: 0;
+    width: 245px;
+    max-height: 150px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.4);
+    background-color: #fff;
+    z-index: 1010;
+    overflow-y: auto;
+    overflow-x: hidden;
+    cursor: pointer;
+}
+
+.leaflet-control-search .search-tip {
+    margin: 1px;
+    padding: 5px;
+    display: block;
+    color: black;
+    background: #eee;
+    border-radius: .2em;
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-bottom: 1px solid #DEDEDE;
+}
+
+.leaflet-control-search .search-button:hover {
+    background-color: #f4f4f4;
+}
+
+.leaflet-control-search .search-tip-select,
+.leaflet-control-search .search-tip:hover {
+    background-color: #fff;
+}
+
+.leaflet-control-search .search-alert {
+    cursor: pointer;
+    clear: both;
+    font-size: .75em;
+    margin-bottom: 5px;
+    padding: 0 .25em;
+    color: #e00;
+    font-weight: bold;
+    border-radius: .25em;
+}
+
+.leaflet-control-search-filter {
+    float: left;
+}
+
+.filterIcon {
+    margin-right: 8px;
+    width: 18px;
+    border-width: 0;
+}
+
+.collapsed {
+    display: none;
+}
+
+.select__control {
+    display: inline-block;
+    width: 95px;
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-radius: .2em;
+    margin: 0 1px;
+    padding: 1px 18px 1px 1px;
+    cursor: pointer;
+    color: #888;
+    background: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2222%22%20viewBox%3D%220%200%2018%2022%22%3E%3Cpath%20d%3D%22M9%2017L2.07%205L15.93%205z%22%20stroke-width%3D%222%22%20stroke%3D%22%232980b9%22%20fill%3D%22transparent%22%2F%3E%3C%2Fsvg%3E') right 6px center no-repeat;
+    background-color: #FFFFFF;
+    -webkit-background-size: 12%;
+    background-size: 12%;
+    font-size: 1em;
+    line-height: 2em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.filter {
+    border: 1px solid #c4c4c4;
+    min-width: 90px;
+    font-size: 14px;
+    font-weight: normal;
+    border-radius: 2px;
+    color: rgb(85, 85, 85);
+    background-color: #fff;
+}
+
+.filter .title {
+    height: 28px;
+    text-transform: uppercase;
+    /*letter-spacing: 2px;*/
+    display: block;
+    padding: 3px 10px 3px 10px;
+    cursor: pointer;
+}
+
+.filter .items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.filter .items > li {
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+}
+
+.filter .items > li:hover {
+    background-color: #ffa71c;
+}
+
+.filter .items > li.selected {
+    background: #9d0300;
+}
+
+/* 解决IE下出现搜索框出现两个清除图标 */
+input::-ms-clear {
+    display: none;
+}

@@ -1,0 +1,396 @@
+@import (once, reference) "../../base";
+
+#pm {
+  width: 100%;
+  height: 100%;
+  display: table;
+
+  .view-left {
+    width: 50px;
+    height: 100%;
+    vertical-align: top;
+    .rgba(0, 64, 106, 0.3);
+    box-shadow: inset -12px 0 12px -6px rgba(46, 177, 226, .1);
+    border-right: 1px solid #0F5B71;
+    display: table-cell;
+  }
+
+  .view-box {
+    height: 100%;
+    padding: 20px;
+    vertical-align: top;
+    display: table-cell;
+
+    .ids-module {
+      height: 100%;
+      min-width: 320px;
+      min-height: 368px;
+      padding: 0;
+      background: rgba(0, 64, 106, 0.3);
+      background-clip: padding-box;
+      background-origin: padding-box;
+      border: 28px solid rgba(130, 248, 255, 0.3);
+      border-image: url(/images/main/box_bg.png) 28 repeat;
+      overflow: auto;
+    }
+    #pm_station_echart, #pm_fault_echart, #pm_invent_echart {
+      height: 260px;
+      margin-top: 20px;
+    }
+
+    #pm_station_list_bar, #pm_fault_list_bar, #pm_invent_list_bar {
+      margin-top: 20px;
+    }
+    .pm_title_head {
+      float: left;
+    }
+    .pm_title_btn {
+      float: right;
+      margin-right: 20px;
+    }
+    #pm_station_list_head, #pm_fault_list_head, #pm_invent_list_head {
+      margin-bottom: 15px;
+    }
+    .pm_clear {
+      clear: both;
+      overflow: hidden;
+    }
+  }
+}
+
+#pm_dev_manage_div {
+  #pm_dev_manage_nav {
+    font-size: 16px;
+    font-weight: 600;
+    color: #00e7ff;
+    margin: 0px 0 20px 10px;
+  }
+  #pm_dev_manage_tabs {
+    height: 90%;
+    .easy-tabs-bodys {
+      height: 100%;
+      .myHidden { //开始都是隐藏的
+        display: none;
+        width: 100%;
+        height: 100%;
+      }
+      //设备运行数据
+      #pm_dev_run_data_detail {
+        & * {
+          margin: 0;
+          padding: 0;
+        }
+        width: 90%;
+        height: 200px;
+        margin: 0 auto;
+        overflow: hidden;
+        & > div {
+          position: relative;
+          background: red;
+          float: left;
+        }
+        & > div:nth-of-type(1) {
+          background: url(/images/main/pm/gfb.png) no-repeat 0 40%;
+          height: 100%;
+          width: 173px;
+        }
+        & > div:nth-of-type(2) {
+          background: url(/images/main/pm/gd.png) repeat-x 0 60%;
+          height: 100%;
+          width: -moz-calc(~"(100% - (448px)) / 2");
+          width: -webkit-calc(~"(100% - (448px)) / 2");
+          width: calc(~"(100% - (448px)) / 2");
+          min-width: 258px;
+          animation: bgRound 3s infinite linear;
+        }
+        & > div:nth-of-type(3) {
+          background: url(/images/main/pm/inventer.png) no-repeat 0 center;
+          height: 100%;
+          width: 99px;
+        }
+        & > div:nth-of-type(4) {
+          background: url(/images/main/pm/gd.png) repeat-x 0 60%;
+          height: 100%;
+          width: -moz-calc(~"(100% - (448px)) / 2");
+          width: -webkit-calc(~"(100% - (448px)) / 2");
+          width: calc(~"(100% - (448px)) / 2");
+          min-width: 258px;
+          animation: bgRound 3s infinite linear;
+        }
+        & > div:nth-of-type(5) {
+          background: url(/images/main/pm/tt.png) repeat-x 0 35%;
+          height: 100%;
+          width: 172px;
+        }
+        & .myBottom {
+          position: absolute;
+          width: 200%;
+          text-align: center;
+          bottom: 4%;
+          left: -50%;
+          white-space: nowrap;
+          color: #fff;
+        }
+        & .myUp {
+          position: absolute;
+          left: 0;
+          top: 2%;
+          color: #fff;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        & .mySwitch {
+          position: absolute;
+          bottom: 5%;
+          left: 10%;
+          color: #FFFFFF;
+        }
+
+        /*选择框的样式开始*/
+        & .switch2 {
+          width: 77px;
+          height: 36px;
+          position: relative;
+          display: block;
+          z-index: 4;
+          outline: none;
+        }
+        & .switch2[type=checkbox]::before {
+          content: '关';
+          width: 71px;
+          height: 36px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          border: 3px solid #FF0000;
+          background: #0a314e;
+          border-radius: 20px;
+          z-index: 2;
+          display: block;
+          font-size: 18px;
+          color: #FF0000;
+          line-height: 33px;
+          text-indent: 43px;
+          transition: all .3s ease;
+        }
+        & .switch2[type=checkbox]::after {
+          transition: all .3s ease;
+          content: '';
+          height: 28px;
+          width: 28px;
+          position: absolute;
+          background: red;
+          top: 4px;
+          left: 6px;
+          border-radius: 50%;
+          z-index: 3;
+        }
+        & .switch2[type=checkbox]:checked::after {
+          left: 39px;
+          background: #00FF00;
+        }
+        & .switch2[type=checkbox]:checked::before {
+          content: '开';
+          text-indent: 6px;
+          color: #00FF00;
+          border: 3px solid #00FF00;
+        }
+        /*选择框的样式结束*/
+      }
+      #pm_dev_run_data_table {
+        width: 90%;
+        height: 64%;
+        margin: 1% auto;
+        overflow: hidden;
+        & > div {
+          float: left;
+          height: 100%;
+        }
+        & > div:nth-of-type(1) {
+          width: 64%;
+          height: 100%;
+          & .title-bg {
+            background: rgba(14, 99, 156, 0.3);
+            height: 50px;
+            width: 17.3%;
+            text-align: center;
+            text-overflow: ellipsis;
+          }
+          & .value-bg {
+            width: 32.3%;
+            text-indent: 2%;
+          }
+        }
+        & > div:nth-of-type(2) {
+          margin-left: 1%;
+          width: 35%;
+        }
+
+        #pm_dev_run_data_control {
+          & > div {
+            width: 90%;
+            input {
+              width: 100%;
+              height: 70px;
+            }
+            &:nth-of-type(1) {
+              margin: 3% auto;
+            }
+            &:nth-of-type(2) {
+              margin: 8% auto;
+            }
+            &:nth-of-type(3) {
+              margin: 3% auto;
+            }
+          }
+        }
+      }
+      //设备信息
+      #pm_dev_dev_info_detail {
+        width: 90%;
+        height: 45%;
+        margin: 2% auto;
+        & tr > td.title-bg {
+          background: rgba(14, 99, 156, 0.3);
+          height: 50px;
+          width: 10%;
+          text-align: center;
+          text-overflow: ellipsis;
+          color: #00e7ff;
+        }
+        & tr > td.value-bg {
+          height: 19.8%;
+          width: 50px;
+          text-overflow: ellipsis;
+          text-indent: 2%;
+          color: #fff;
+        }
+      }
+
+      #pm_dev_dev_info_capacity {
+        width: 90%;
+        height: 50px;
+        margin: 2% auto;
+        & .capacity-title {
+          color: #00e7ff;
+          font-size: 20px;
+          text-indent: 5px;
+        }
+        & .capacity-title::before {
+          font-size: 24px;
+          content: '\bb';
+          padding-right: 0.5%;
+        }
+        & > .capacity-tab {
+          width: 100%;
+          height: 60%;
+          margin-top: 0.5%;
+        }
+        & > .capacity-tab > table tr > td.cap-title-bg {
+          background: rgba(14, 99, 156, 0.3);
+          height: 60px;
+          text-align: center;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          color: #00e7ff;
+          font-size: 14px;
+        }
+        & > .capacity-tab > table tr > td.cap-val-bg {
+          height: 50px;
+          text-align: center;
+          text-overflow: ellipsis;
+          color: #fff;
+        }
+      }
+
+      //告警信息
+
+    }
+
+  }
+}
+
+//弹框样式
+dialog {
+  //组串容量的样式
+  #capacy_content {
+    & > .ck-all-div {
+      margin-left: 1.2%;
+      margin-bottom: 1%;
+    }
+    & .formDiv {
+      width: 100%;
+      //height: 80%;
+      max-height: 80%;
+      overflow-y: auto;
+      form {
+        height: 100%;
+        & td.capt-label-td {
+          width: 15%;
+          height: 50px;
+          text-align: center;
+          border-left: 1px solid #0072ba;
+          border-top: 1px solid #0072ba;
+          &.capt-pv-last-row-td{
+            border-bottom: 1px solid #0072ba;
+          }
+        }
+        & td.capt-pv-td {
+          width: 35%;
+          text-indent: 1%;
+          border-left: 1px solid #0072ba;
+          border-top: 1px solid #0072ba;
+          &.capt-pv-lasttd{
+            border-right: 1px solid #0072ba;
+          }
+          &.capt-pv-last-row-td{
+            border-bottom: 1px solid #0072ba;
+          }
+        }
+        & td.capt-pv-td input {
+          margin-left: 1%;
+        }
+      }
+    }
+  }
+  #pm_invent_config_content {
+    .table-div {
+      width: 100%;
+      max-height: 400px;
+      .num-input {
+        width: 60px;
+        min-width: 50px !important
+      }
+      .num-input-cap {
+        width: 100px;
+        min-width: 100px !important
+      }
+      .num-input{width:60px;min-width: 50px !important;margin-left: 5px;}
+      .num-input-cap{width:100px;min-width: 100px !important; margin-left: 5px;}
+      .expand-box>table tr>td{
+        height: 35px;
+        text-indent: 5px;
+      }
+    }
+  }
+  #pm_dev_channel_content {
+    td.keycls {
+      width: 30%;
+      min-width: 150px;
+    }
+    td.valcls {
+      min-width: 200px;
+    }
+  }
+}
+
+/*背景图片的动画*/
+@keyframes bgRound {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: calc(100%);
+  }
+}

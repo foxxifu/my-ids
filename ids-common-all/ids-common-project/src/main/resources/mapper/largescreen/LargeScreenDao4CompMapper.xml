@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.interest.ids.commoninterface.dao.largescreen.LargeScreenDao4CompMapper">
+
+	<!-- 查询当前人员所在企业的当日日负荷曲线 -->
+	<select id="getActivePower" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT result.collect_time collectTime,sum(result.active_Power) activePower
+		FROM (SELECT realtimeT.collect_time,realtimeT.active_Power,realtimeT.station_code
+		FROM ids_station_realtime_data_t realtimeT
+		where realtimeT.collect_time BETWEEN #{startDate} and #{endDate}
+		UNION 
+		SELECT realtimeH.collect_time,realtimeH.active_Power,realtimeH.station_code
+		FROM ids_station_realtime_data_h realtimeH where realtimeH.collect_time BETWEEN #{startDate} and #{endDate} )
+		result,
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						ids_station_info_t station WHERE
+						result.station_code = station.station_code AND station.is_delete = '0'
+					</when>
+					<otherwise>
+						ids_station_info_t station WHERE
+						result.station_code = station.station_code AND station.is_delete = '0'
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterprise, ids_station_info_t station 
+				WHERE userT.enterprise_id = enterprise.id AND enterprise.id = station.enterprise_id
+				and result.station_code = station.station_code and userT.id = #{id} AND station.is_delete = '0'
+			</when>
+			<otherwise>
+				ids_sm_user_info_t userT,ids_sm_user_station_t userStation, ids_station_info_t station 
+				WHERE userT.id = userStation.user_id AND userStation.station_code = station.station_code
+				and result.station_code = station.station_code and userT.id = #{id} AND station.is_delete = '0'
+			</otherwise>
+		</choose>
+		GROUP BY result.collect_time
+	</select>
+
+	<!-- 查询当前人员所在企业的当前负荷 -->
+	<select id="getCurrentActivePower" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT SUM(realtime.active_power) AS currentPower
+		FROM ids_station_realtime_data_t realtime,
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						ids_station_info_t station
+						WHERE realtime.station_code = station.station_code AND station.is_delete = '0'
+					</when>
+					<otherwise>
+						ids_station_info_t station
+						WHERE realtime.station_code = station.station_code AND station.is_delete = '0'
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterprise,ids_station_info_t station
+				WHERE realtime.station_code = station.station_code AND station.enterprise_id = enterprise.id
+				AND enterprise.id = userT.enterprise_id AND userT.id = #{id}
+			</when>
+			<otherwise>
+				ids_sm_user_info_t userT,ids_sm_user_station_t userStation,ids_station_info_t station
+				WHERE realtime.station_code = station.station_code AND station.station_code = userStation.station_code
+				AND userStation.user_id = userT.id AND userT.id = #{id} AND station.is_delete = '0'
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 查询当前人员所在企业的简介 -->
+	<select id="getCompdisc" parameterType="java.util.Map" resultType="java.lang.String">
+		<choose>
+			<when test="type_ == 'system'">
+				select param_value compDisc,'' as compPic from ids_sm_station_param_t where param_key = 'systemDisc'
+			</when>
+			<otherwise>
+				SELECT enterP.description compDisc,enterP.avatar_path compPic
+				FROM ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterP
+				WHERE userT.enterprise_id = enterP.id AND userT.id = #{id}
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 查询当前系统的安全运行天数 -->
+	<select id="getSafeRunDays" parameterType="java.util.Map" resultType="java.lang.String">
+		select MAX(stationparam.param_value) safeRunDays from ids_sm_station_param_t stationparam
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						where 1 = 1
+					</when>
+					<otherwise>
+						,ids_station_info_t station
+						WHERE stationparam.station_code = station.station_code AND station.is_delete = '0'
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_sm_user_info_t userinfo,ids_station_info_t station 
+				WHERE stationparam.station_code = station.station_code AND station.enterprise_id = userinfo.enterprise_id 
+				AND userinfo.id = #{id}
+			</when>
+			<otherwise>
+				,ids_sm_user_station_t userstation
+				WHERE userstation.station_code = stationparam.station_code
+				AND userstation.user_id = #{id}
+			</otherwise>
+		</choose>
+		and stationparam.param_key = 'SAFEOPRDATE'
+	</select>
+
+	<!-- 查询当前人员所在企业的累计发电量 -->
+	<select id="getCommonData" parameterType="java.util.Map" resultType="java.util.Map">
+		select SUM(realtime.product_power) totalCapacity,SUM(station.installed_capacity) capacity,
+		SUM(taskinfo.allTaskCount) allTaskCount,SUM(taskinfo.notFinishTaskCount) notFinishTaskCount
+		from ids_station_realtime_data_t realtime
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						,ids_station_info_t station LEFT JOIN 
+						(SELECT alltask.station_code,alltask.allTaskCount,notfinishtask.notFinishTaskCount FROM 
+						(SELECT station_code,COUNT(1) allTaskCount 
+						FROM ids_workflow_defect_t GROUP BY station_code) alltask
+						LEFT JOIN
+						(SELECT station_code,COUNT(1) notFinishTaskCount 
+						FROM ids_workflow_defect_t WHERE proc_state <![CDATA[ <> ]]> 3 GROUP BY station_code) notfinishtask
+						ON alltask.station_code = notfinishtask.station_code) taskinfo 
+						ON taskinfo.station_code = station.station_code
+						where station.station_code = realtime.station_code
+					</when>
+					<otherwise>
+						,ids_station_info_t station LEFT JOIN 
+						(SELECT alltask.station_code,alltask.allTaskCount,notfinishtask.notFinishTaskCount FROM 
+						(SELECT station_code,COUNT(1) allTaskCount 
+						FROM ids_workflow_defect_t GROUP BY station_code) alltask
+						LEFT JOIN
+						(SELECT station_code,COUNT(1) notFinishTaskCount 
+						FROM ids_workflow_defect_t WHERE proc_state <![CDATA[ <> ]]> 3 GROUP BY station_code) notfinishtask
+						ON alltask.station_code = notfinishtask.station_code) taskinfo 
+						ON taskinfo.station_code = station.station_code
+						WHERE station.station_code = realtime.station_code AND station.is_delete = '0'
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_sm_user_info_t userT,ids_station_info_t station LEFT JOIN 
+				(SELECT alltask.station_code,alltask.allTaskCount,notfinishtask.notFinishTaskCount FROM 
+				(SELECT station_code,COUNT(1) allTaskCount 
+				FROM ids_workflow_defect_t GROUP BY station_code) alltask
+				LEFT JOIN
+				(SELECT station_code,COUNT(1) notFinishTaskCount 
+				FROM ids_workflow_defect_t WHERE proc_state <![CDATA[ <> ]]> 3 GROUP BY station_code) notfinishtask
+				ON alltask.station_code = notfinishtask.station_code) taskinfo 
+				ON taskinfo.station_code = station.station_code
+				WHERE userT.enterprise_id = station.enterprise_id 
+				AND station.station_code = realtime.station_code and userT.id = #{id}
+			</when>
+			<otherwise>
+				,ids_sm_user_info_t userT,
+				ids_sm_user_station_t userStation,ids_station_info_t station LEFT JOIN 
+				(SELECT alltask.station_code,alltask.allTaskCount,notfinishtask.notFinishTaskCount FROM 
+				(SELECT station_code,COUNT(1) allTaskCount 
+				FROM ids_workflow_defect_t GROUP BY station_code) alltask
+				LEFT JOIN
+				(SELECT station_code,COUNT(1) notFinishTaskCount 
+				FROM ids_workflow_defect_t WHERE proc_state <![CDATA[ <> ]]> 3 GROUP BY station_code) notfinishtask
+				ON alltask.station_code = notfinishtask.station_code) taskinfo 
+				ON taskinfo.station_code = station.station_code
+				where userT.id = userStation.user_id 
+				and userStation.station_code = station.station_code
+				and station.station_code = realtime.station_code and userT.id = #{id}
+			</otherwise>
+		</choose>
+		
+	</select>
+
+	<!-- 查询当前人员所在企业的电站统计 -->
+	<select id="getListStationInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select result.stationLevel,count(1) stationCount from
+		(SELECT CASE 
+		WHEN <![CDATA[station.installed_capacity > 0 ]]> <![CDATA[AND station.installed_capacity <= 5 THEN]]> 's0to5'
+		WHEN <![CDATA[station.installed_capacity > 5 ]]> <![CDATA[AND station.installed_capacity <= 10 THEN]]> 's5to10'
+		WHEN <![CDATA[station.installed_capacity > 10 ]]> <![CDATA[AND station.installed_capacity <= 100 THEN]]> 's10to100'
+		WHEN <![CDATA[station.installed_capacity > 100 ]]> <![CDATA[AND station.installed_capacity <= 500 THEN]]> 's100to500'
+		ELSE 's500up' END as stationLevel
+		FROM ids_station_info_t station
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						where 1 = 1
+					</when>
+					<otherwise>
+						where station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_sm_user_info_t userT
+				WHERE userT.enterprise_id = station.enterprise_id 
+				and userT.id = #{id}
+			</when>
+			<otherwise>
+				,ids_sm_user_info_t userT,ids_sm_user_station_t userStation
+				WHERE userT.id = userStation.user_id AND userStation.station_code = station.station_code
+				AND station.is_delete = '0' AND userT.id = #{id}
+			</otherwise>
+		</choose>
+		) result 
+		GROUP BY result.stationLevel
+	</select>
+
+	<!-- 查询当前人员所在企业的当年社会贡献 -->
+	<select id="getYearSocialContribution" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT SUM(yearS.product_power/1000)*0.997 carbonEmissions,
+		SUM(yearS.product_power/1000)*0.4 savedCoal,
+		SUM(yearS.product_power)/18.3 deforestation
+		FROM ids_kpi_year_station_t yearS
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						where 1 = 1
+					</when>
+					<otherwise>
+						,ids_station_info_t station
+						WHERE station.station_code = yearS.station_code
+						AND station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_station_info_t station,ids_sm_user_info_t userT
+				WHERE userT.enterprise_id = station.enterprise_id 
+				AND station.station_code = yearS.station_code
+				AND userT.id = #{id}
+			</when>
+			<otherwise>
+				,ids_station_info_t station,ids_sm_user_info_t userT,ids_sm_user_station_t userStation
+				WHERE userT.id = userStation.user_id AND userStation.station_code = station.station_code 
+				AND station.station_code = yearS.station_code
+				AND userT.id = #{id}
+			</otherwise>
+		</choose>
+		and yearS.collect_time = #{year}
+	</select>
+
+	<!-- 查询当前人员所在企业的累计社会贡献 -->
+	<select id="getTotalSocialContribution" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		SUM(realtime.product_power/1000)*0.997 carbonEmissions,
+		SUM(realtime.product_power/1000)*0.4 savedCoal,
+		SUM(realtime.product_power)/18.3 deforestation
+		FROM
+		ids_station_realtime_data_t realtime
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						where 1 = 1
+					</when>
+					<otherwise>
+						,ids_station_info_t station
+						WHERE station.station_code = realtime.station_code
+						AND station.enterprise_id = #{enterpriseId}
+						AND station.is_delete = '0'
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_sm_user_info_t userT,
+				ids_station_info_t station
+				WHERE userT.enterprise_id = station.enterprise_id
+				AND station.station_code = realtime.station_code
+				AND userT.id = #{id} 
+				AND station.is_delete = '0'
+			</when>
+			<otherwise>
+				,ids_sm_user_info_t userT,
+				ids_sm_user_station_t userStation,
+				ids_station_info_t station
+				WHERE userT.id = userStation.user_id AND userStation.station_code = station.station_code 
+				AND station.station_code = realtime.station_code
+				AND userT.id = #{id}
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 查询当前人员所在企业当月每天的日发电量和收益 -->
+	<select id="getPowerTrends" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT stationDay.collect_time collectTime,SUM(stationDay.product_power) productPower,
+		SUM(stationDay.power_profit) powerProfit
+		FROM ids_kpi_day_station_t stationDay,
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						ids_station_info_t station
+						WHERE station.station_code = stationDay.station_code and station.is_delete = '0'
+					</when>
+					<otherwise>
+						ids_station_info_t station
+						WHERE station.station_code = stationDay.station_code and station.is_delete = '0'
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterP,ids_station_info_t station
+				WHERE userT.enterprise_id = enterP.id AND enterP.id = station.enterprise_id
+				AND station.station_code = stationDay.station_code AND userT.id = #{id} 
+				AND station.is_delete = '0'
+			</when>
+			<otherwise>
+				ids_sm_user_info_t userT,ids_sm_user_station_t userStation,ids_station_info_t station
+				WHERE userT.id = userStation.user_id AND userStation.station_code = station.station_code
+				AND station.station_code = stationDay.station_code AND userT.id = #{id} and station.is_delete = '0'
+			</otherwise>
+		</choose>
+		and stationDay.collect_time BETWEEN #{firstDayOfMonth} and #{lastDayOfMonth}
+		GROUP BY stationDay.collect_time
+	</select>
+
+	<!-- 根据人员查询当前人员所在的企业 -->
+	<select id="getEnterpriseByUserId" parameterType="java.util.Map" resultType="java.util.Map">
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						SELECT enterP.id,enterP.`name`,enterP.parent_id pid,'1' as nodeType,
+						enterP.latitude,enterP.longitude,enterP.radius
+						FROM ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterP
+						WHERE userT.enterprise_id = enterP.id AND userT.id = #{id}
+					</when>
+					<otherwise>
+						SELECT enterP.id,enterP.`name`,enterP.parent_id pid,'1' as nodeType,
+						enterP.latitude,enterP.longitude,enterP.radius
+						FROM ids_sm_enterprise_info_t enterP where enterP.id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				SELECT enterP.id,enterP.`name`,enterP.parent_id pid,'1' as nodeType,
+				enterP.latitude,enterP.longitude,enterP.radius
+				FROM ids_sm_user_info_t userT,ids_sm_enterprise_info_t enterP
+				WHERE userT.enterprise_id = enterP.id AND userT.id = #{id}
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 根据人员查询当前企业下直属电站和区域 -->
+	<select id="getEnterPChildByUserId" parameterType="java.util.Map" resultType="java.util.Map">
+		<choose>
+		<when test="type_ == 'system' and (enterpriseId == '' or enterpriseId == null)">
+			SELECT enterprise.id,enterprise.`name`,enterprise.latitude,enterprise.longitude,'1' AS nodeType,
+			"" AS combinedType,"" AS stationType,SUM(station.installed_capacity) AS capacity,enterprise.radius
+			from ids_sm_enterprise_info_t enterprise,ids_station_info_t station 
+			WHERE enterprise.id = station.enterprise_id GROUP BY station.enterprise_id
+		</when>
+		<otherwise>
+			SELECT domain.id,domain.`name`,domain.latitude,domain.longitude,'2' AS nodeType,
+			"" AS combinedType,"" AS stationType,'' AS capacity,domain.radius
+			FROM ids_sm_domain_info_t domain
+			LEFT JOIN ids_station_info_t station ON domain.id = station.domain_id
+			<choose>
+				<when test="type_ == 'system'">
+					<choose>
+						<when test="enterpriseId == '' or enterpriseId == null">
+							where 1 = 1
+						</when>
+						<otherwise>
+							where domain.id in (SELECT DISTINCT domain.id FROM ids_sm_domain_info_t domain JOIN
+							(SELECT domain.path FROM ids_station_info_t station,ids_sm_domain_info_t domain WHERE station.domain_id = domain.id) userdomain
+							ON userdomain.path like '%'||domain.path||'%'
+							WHERE domain.enterprise_id = #{enterpriseId})
+						</otherwise>
+					</choose>
+				</when>
+				<when test="type_ == 'enterprise'">
+					,ids_sm_user_info_t userT
+					WHERE userT.id = #{id} AND
+					userT.enterprise_id = domain.enterprise_id
+				</when>
+				<otherwise>
+					WHERE domain.id in (
+					SELECT substring_index(substring(substring_index(domain.path, 0, -1),2,6), '@', 1)
+					FROM ids_sm_domain_info_t domain,ids_station_info_t station,ids_sm_user_station_t userstation
+					WHERE userstation.user_id = #{id} AND userstation.station_code = station.station_code AND station.domain_id = domain.id)
+				</otherwise>
+			</choose>
+			AND (domain.parent_id =0 OR domain.parent_id IS NULL) 
+			GROUP BY domain.id
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 根据用户id查询用户所在企业的设备数量 -->
+	<select id="getDeviceCount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT dev.dev_type_id devTypeId,count(1) devTypeCount
+		FROM ids_dev_info_t dev
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						where 1 = 1
+					</when>
+					<otherwise>
+						,ids_station_info_t station
+						WHERE station.is_delete = '0' AND station.station_code = dev.station_code 
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_station_info_t station,ids_sm_user_info_t usert
+				WHERE usert.enterprise_id = station.enterprise_id AND usert.id = #{id}
+				AND station.is_delete = '0' AND station.station_code = dev.station_code 
+			</when>
+			<otherwise>
+				,ids_station_info_t station,ids_sm_user_station_t userStation
+				WHERE userStation.user_id = #{id} and userStation.station_code = station.station_code 
+				AND station.is_delete = '0' AND station.station_code = dev.station_code 
+			</otherwise>
+		</choose>
+		AND dev.is_logic_delete = '0' AND dev.dev_type_id IN (1, 14, 15)
+		GROUP BY dev.dev_type_id
+		UNION ALL
+		SELECT 'pv' AS devTypeId,SUM(module.modules_num_per_string) devTypeCount
+		FROM ids_device_pv_module_t module,ids_dev_info_t dev
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						where 1 = 1
+					</when>
+					<otherwise>
+						,ids_station_info_t station
+						WHERE station.is_delete = '0' AND station.station_code = dev.station_code 
+						and station.enterprise_id = #{enterpriseId}
+						AND module.station_code = station.station_code
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				,ids_station_info_t station,ids_sm_user_info_t usert
+				WHERE station.enterprise_id = usert.enterprise_id AND usert.id = #{id}
+				AND station.is_delete = '0' AND station.station_code = dev.station_code 
+				AND module.station_code = station.station_code
+			</when>
+			<otherwise>
+				,ids_station_info_t station,ids_sm_user_station_t userStation
+				WHERE userStation.user_id = #{id} AND station.station_code = userStation.station_code
+				AND station.is_delete = '0' AND station.station_code = dev.station_code 
+				AND module.station_code = station.station_code
+			</otherwise>
+		</choose>
+		AND module.dev_id = dev.id AND dev.is_logic_delete = '0' AND dev.dev_type_id IN (1, 14, 15)
+	</select>
+
+	<!-- 根据用户id查询用户所在企业的设备数量 -->
+	<select id="getCurrentDayCap" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT SUM(realtime.day_cap) dayCapacity,SUM(realtime.day_income) dayIncome
+		FROM ids_station_realtime_data_t realtime,
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						ids_station_info_t station WHERE realtime.station_code = station.station_code
+						AND station.is_delete = '0' AND realtime.collect_time > #{currentDay}
+					</when>
+					<otherwise>
+						ids_station_info_t station WHERE realtime.station_code = station.station_code
+						AND station.is_delete = '0' AND realtime.collect_time > #{currentDay}
+						and station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				ids_sm_user_info_t userT,
+				ids_station_info_t station
+				WHERE realtime.station_code = station.station_code
+				AND station.enterprise_id = userT.enterprise_id
+				AND station.is_delete = '0' AND userT.id = #{id}
+			</when>
+			<otherwise>
+				ids_sm_user_info_t userT,ids_station_info_t station,ids_sm_user_station_t userStation
+				WHERE realtime.station_code = station.station_code AND userStation.station_code = station.station_code
+				AND userT.id = userStation.user_id AND station.is_delete = '0' AND userT.id = #{id}
+			</otherwise>
+		</choose>
+		AND realtime.collect_time > #{currentDay}
+	</select>
+	
+	<select id="getPowerGeneration" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT SUM(realtime.active_power) activePower,SUM(realtime.day_cap) dayCap,SUM(realtime.day_income) dayIncome,
+		SUM(stationyear.ongrid_power) ongridPower,SUM(realtime.product_power) totalPower,SUM(realtime.total_income) totalIncome,
+		SUM(station.installed_capacity) capacity
+		FROM 
+		<choose>
+			<when test="type_ == 'system'">
+				<choose>
+					<when test="enterpriseId == '' or enterpriseId == null">
+						ids_station_info_t station
+						LEFT JOIN ids_station_realtime_data_t realtime ON station.station_code = realtime.station_code
+						AND realtime.collect_time > #{today}
+						LEFT JOIN ids_kpi_year_station_t stationyear ON station.station_code = stationyear.station_code
+						AND stationyear.collect_time = #{year}
+					</when>
+					<otherwise>
+						ids_station_info_t station
+						LEFT JOIN ids_station_realtime_data_t realtime ON station.station_code = realtime.station_code
+						AND realtime.collect_time > #{today}
+						LEFT JOIN ids_kpi_year_station_t stationyear ON station.station_code = stationyear.station_code
+						AND stationyear.collect_time = #{year}
+						WHERE station.enterprise_id = #{enterpriseId}
+					</otherwise>
+				</choose>
+			</when>
+			<when test="type_ == 'enterprise'">
+				ids_sm_user_info_t userT,ids_station_info_t station 
+				LEFT JOIN ids_station_realtime_data_t realtime ON station.station_code = realtime.station_code
+				AND realtime.collect_time > #{today}
+				LEFT JOIN ids_kpi_year_station_t stationyear ON station.station_code = stationyear.station_code
+				AND stationyear.collect_time = #{year}
+				WHERE userT.enterprise_id = station.enterprise_id AND userT.id = #{id} 
+				AND station.is_delete = '0'
+			</when>
+			<otherwise>
+				ids_station_info_t station,ids_sm_user_station_t userStation
+				LEFT JOIN ids_station_realtime_data_t realtime ON userStation.station_code = realtime.station_code
+				AND realtime.collect_time > #{today}
+				LEFT JOIN ids_kpi_year_station_t stationyear ON userStation.station_code = stationyear.station_code
+				AND stationyear.collect_time = #{year}
+				WHERE userStation.station_code = station.station_code
+				AND userStation.user_id = #{id}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getAllEnterprise" resultType="java.util.Map">
+		SELECT enterP.id,enterP.`name`,enterP.parent_id pid,'1' as nodeType,enterP.latitude,enterP.longitude,enterP.radius
+		FROM ids_sm_enterprise_info_t enterP
+	</select>
+
+</mapper>

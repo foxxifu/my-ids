@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:sharding="http://www.dangdang.com/schema/ddframe/rdb"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.dangdang.com/schema/ddframe/rdb 
+        http://www.dangdang.com/schema/ddframe/rdb/rdb.xsd ">
+        	
+	<!-- 自动扫描 -->
+	 <context:component-scan base-package="com.interest.ids.dev.starter" /> 
+ 
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}"></property>
+		<property name="filters" value="config" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+	</bean>
+	
+	<!-- 慢SQL记录  -->
+    <bean id="statfilter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!-- 开启合并sql -->
+        <property name="mergeSql" value="true" />
+        <!-- 开启慢查询语句,200毫秒 -->
+        <property name="slowSqlMillis" value="20" />
+        <property name="logSlowSql" value="true" />
+    </bean>
+    
+    <bean id="logFilter" class="com.alibaba.druid.filter.logging.Log4jFilter">
+        <property name="resultSetLogEnabled" value="false" />
+        <property name="statementExecutableSqlLogEnable" value="true" />
+    </bean>
+	
+	<!-- 分表算法 -->
+
+	<sharding:strategy id="tableStrategy" sharding-columns="collect_time" algorithm-class="com.interest.ids.common.project.sharding.RunTimeDataAlgorithm"/>
+	
+	<sharding:data-source id="shardingDataSource">
+	   
+        <sharding:sharding-rule data-sources="dataSource" default-data-source="dataSource">
+            <sharding:table-rules>
+                <!-- 组串式逆变器 -->
+                <sharding:table-rule logic-table="ids_inverter_string_data_t" actual-tables="dataSource.ids_inverter_string_data_t_${1..366}" table-strategy="tableStrategy" />
+                <!-- 集中式逆变器 -->
+                <sharding:table-rule logic-table="ids_inverter_conc_data_t" actual-tables="dataSource.ids_inverter_conc_data_t_${1..366}" table-strategy="tableStrategy" />
+<!--     			<sharding:table-rule logic-table="ids_emi_data_t" actual-tables="dataSource.ids_emi_data_t_${1..366}" table-strategy="tableStrategy" /> -->
+    			
+                <sharding:table-rule logic-table="ids_meter_data_t" actual-tables="dataSource.ids_meter_data_t_${1..366}" table-strategy="tableStrategy" />
+                <sharding:table-rule logic-table="ids_combiner_dc_data_t" actual-tables="dataSource.ids_combiner_dc_data_t_${1..366}" table-strategy="tableStrategy" /> 
+            </sharding:table-rules>
+        </sharding:sharding-rule>
+    </sharding:data-source>
+	
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="shardingDataSource" />
+		<property name="configLocation" value="classpath:mybatis/mybatis.xml"/>
+		<property name="mapperLocations">
+            <array>
+				<value>classpath*:mapper/*.xml</value>
+                <value>classpath*:mapper/*/*.xml</value>
+            </array>
+        </property>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<!-- 这里的几个配置主要演示如何使用，如果不理解，一定要去掉下面的配置 -->
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+							reasonable=true
+							supportMethodsArguments=true
+							params=count=countSql
+							autoRuntimeDialect=true
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+	
+     <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.interest.ids.common.project.mapper"/>
+       
+        <property name="markerInterface" value="com.interest.ids.common.project.utils.CommonMapper"/>
+    </bean> 
+
+	 <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.interest.ids.commoninterface.dao,
+		com.interest.ids.common.project.mapper,
+		com.interest.ids.dev.starter.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>   
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="shardingDataSource" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" /> 
+	
+</beans>

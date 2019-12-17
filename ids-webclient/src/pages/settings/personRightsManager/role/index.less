@@ -1,0 +1,24 @@
+.dialog {
+  .el-checkbox {
+    margin-left: 0;
+    margin-right: 30px;
+  }
+  /deep/ .el-table.roleModelTableData {
+    overflow: visible;
+    /deep/ .el-table__body-wrapper {
+      overflow: visible;
+      /deep/ .cell {
+        overflow: visible;
+        /deep/ .el-form-item{
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+
+  /deep/ .self-is-required:after {
+    content: '*';
+    color: #f56c6c;
+    margin-right: 4px;
+  }
+}

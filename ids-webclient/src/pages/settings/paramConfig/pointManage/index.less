@@ -1,0 +1,129 @@
+@import (once) '~@/assets/css/variables';
+#importPointTable {
+  .avatar-uploader /deep/ .el-upload {
+    border: 2px dashed #409EFF;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .el-dialog__wrapper{
+    .el-form-item.tr-border{
+      position: relative;
+      border: 1px solid @dialog-form-border-color;
+      &:not(.bottom-border){
+        border-bottom: none;
+      }
+      margin:0;
+      .el-col{
+        padding: 3px;
+        &.label-right {
+          text-align: right;
+          padding-right: 10px;
+        }
+        &:not(.label-right), &.left-border{
+          border-left: 1px solid @dialog-form-border-color;
+        }
+      }
+    }
+  }
+}
+
+.el-tabs--right {
+  overflow: visible;
+  &.el-tabs--border-card {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    /deep/ .el-tabs__header {
+      background-color: transparent;
+      &.is-right {
+        margin: 0 auto;
+        width: 40px;
+        border: none;
+        height: 100%;
+      }
+      .el-tabs__nav-wrap {
+        &.is-right {
+          .el-tabs__item {
+            &.is-right {
+              min-height: 120px;
+              padding: 100% 8px;
+              margin: 0 -1px 15px;
+              color: #202e33;
+              border-radius: 0 15px 15px 0;
+              border: 1px solid #08A8D8;
+              writing-mode: tb-rl;
+              text-transform: capitalize;
+              letter-spacing: 0.1em;
+              &.is-active {
+                color: white;
+                background: #08A8D8;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /deep/ .el-tabs__content {
+    height: 100%;
+    overflow: auto;
+    border: 1px solid #21b1dc;
+  }
+
+  /deep/ .el-tabs__header {
+    &.is-right {
+      /deep/ .el-tabs__nav {
+        white-space: pre-wrap;
+        /deep/ .el-tabs__item {
+          height: auto;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  /deep/.el-table--enable-row-hover {
+    &.singleTable .el-table__body tr:hover>td{
+      background-color: #e6f6fb;
+    }
+
+    &.toAlarmTable .el-table__body tr:hover>td{
+      background-color: #e6f6fb;
+    }
+
+    &.toShakeInfoTable .el-table__body tr:hover>td{
+      background-color: #e6f6fb;
+    }
+
+    &.pointParamSettingTable .el-table__body tr:hover>td{
+      background-color: #e6f6fb;
+    }
+
+    &.popTable .el-table__body tr:hover>td{
+      background-color: #e6f6fb;
+    }
+
+    &.popTable .inputClass .cell{
+      overflow: visible;
+      /deep/ .el-form-item{
+        margin-bottom: 0px;
+      }
+    }
+  }
+
+
+}

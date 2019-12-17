@@ -1,0 +1,154 @@
+<!-- 展示逆变器信息的实时数据的div -->
+<div id="pm_dev_invent_content" class="myHidden">
+    <!--展示关键数据和图片-->
+    <div id="pm_dev_run_data_detail">
+        <div>
+            <div class="myBottom">光伏组件</div>
+        </div>
+        <div class="myMove">
+            <!--电压电流信息-->
+            <div class="myUp" id="pm_dev_invente_input_info">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="117" align="center" height="30"></td>
+                        <td width="88" align="center">PV1</td>
+                        <td width="88" align="center">PV2</td>
+                        <td width="88" align="center">PV3</td>
+                        <td width="88" align="center">PV4</td>
+                        <td width="88" align="center">PV5</td>
+                        <td width="88" align="center">PV6</td>
+                    </tr>
+                    <tr>
+                        <!--电压pv1-pv6  == pv1_u,pv2_u,pv3_u,pv4_u,pv5_u,pv6_u-->
+                        <td width="117" align="center" height="30">输入电压(V)</td>
+                        <td name="PV1" width="88" align="center" myShowValueName="pv1_u">-</td>
+                        <td name="PV2" width="88" align="center" myShowValueName="pv2_u">-</td>
+                        <td name="PV3" width="88" align="center" myShowValueName="pv3_u">-</td>
+                        <td name="PV4" width="88" align="center" myShowValueName="pv4_u">-</td>
+                        <td name="PV5" width="88" align="center" myShowValueName="pv5_u">-</td>
+                        <td name="PV6" width="88" align="center" myShowValueName="pv6_u">-</td>
+                    </tr>
+                    <tr>
+                        <!--电流pv1-pv6 == pv1_i,pv2_i,pv3_i,pv4_i,pv5_i,pv6_i-->
+                        <td width="117" align="center" height="30">输入电流(A)</td>
+                        <td name="IV1" width="88" align="center" myShowValueName="pv1_i">-</td>
+                        <td name="IV2" width="88" align="center" myShowValueName="pv2_i">-</td>
+                        <td name="IV3" width="88" align="center" myShowValueName="pv3_i">-</td>
+                        <td name="IV4" width="88" align="center" myShowValueName="pv4_i">-</td>
+                        <td name="IV5" width="88" align="center" myShowValueName="pv5_i">-</td>
+                        <td name="IV6" width="88" align="center" myShowValueName="pv6_i">-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="myBottom">01-01#组串式逆变器</div>
+        </div>
+        <div class="myMove">
+            <!--交流电压电流信息-->
+            <div class="myUp" id="pm_dev_invente_out_info">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="120" align="center" height="30"></td>
+                        <td width="88" align="center">PV1</td>
+                        <td width="88" align="center">PV2</td>
+                        <td width="88" align="center">PV3</td>
+                    </tr>
+                    <tr>
+                        <!--交流侧电压  电网AB电压 电网BC电压 电网CA电压（ab_u,bc_u,ca_u）-->
+                        <td width="120" align="center" height="30">交流侧电流(V)</td>
+                        <td name="UV1" width="88" align="center" myShowValueName="ab_u">-</td>
+                        <td name="UV2" width="88" align="center" myShowValueName="bc_u">-</td>
+                        <td name="UV3" width="88" align="center" myShowValueName="ca_u">-</td>
+                    </tr>
+                    <tr>
+                        <!--交流侧电流 == a_i,b_i,c_i-->
+                        <td width="120" align="center" height="30">交流侧电流(A)</td>
+                        <td name="UI1" width="88" align="center" myShowValueName="a_i">-</td>
+                        <td name="UI2" width="88" align="center" myShowValueName="b_i">-</td>
+                        <td name="UI3" width="88" align="center" myShowValueName="c_i">-</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mySwitch">
+                <!--逆变器开关机状态 == inverter_state-->
+                <input type="checkbox" name="status" class="switch2" myShowValueName="inverter_state"/>
+                <div>逆变器开关</div>
+            </div>
+        </div>
+        <div>
+            <div class="myBottom">电网</div>
+        </div>
+    </div>
+    <!--展示运行数据的表格图-->
+    <div id="pm_dev_run_data_table">
+        <!--表格1的table-->
+        <div id="pm_dev_run_data_info1">
+            <table border="1" cellspacing="0" cellpadding="0" bordercolor="#0b649e" width="100%" height="100%">
+                <tr>
+                    <td class="title-bg">当日发电量</td>
+                    <!--当日发电量 == day_capacity-->
+                    <td class="value-bg"><span myShowValueName="day_capacity">-</span> kWh</td>
+                    <td class="title-bg">功率因数</td>
+                    <!--功率因数 == power_factor-->
+                    <td class="value-bg"><span myShowValueName="power_factor">-</span></td>
+                </tr>
+                <tr>
+                    <!--累计发电量 == total_cap-->
+                    <td class="title-bg">总发电量</td>
+                    <td class="value-bg"><span myShowValueName="power_factor">-</span> kWh</td>
+                    <td class="title-bg">电网频率</td>
+                    <!--电网频率 == elec_freq-->
+                    <td class="value-bg"><span myShowValueName="elec_freq">-</span> Hz</td>
+                </tr>
+                <tr>
+                    <td class="title-bg">有功功率</td>
+                    <!--有功功率 == active_power-->
+                    <td class="value-bg"><span myShowValueName="active_power">-</span> kW</td>
+                    <!--机内温度 == temperature-->
+                    <td class="title-bg"><span>机内温度</span></td>
+                    <td class="value-bg"><span myShowValueName="temperature">-</span> ℃</td>
+                </tr>
+                <tr>
+                    <!--输出无功功率 == reactive_power-->
+                    <td class="title-bg">无功功率</td>
+                    <td class="value-bg"><span myShowValueName="reactive_power">-</span> kVar</td>
+                    <!--逆变器开机时间 == open_time-->
+                    <td class="title-bg">逆变器开机时间</td>
+                    <td class="value-bg"><span myShowValueName="open_time">-</span></td>
+                </tr>
+                <tr>
+                    <!--MPPT输入总功率 == mppt_power-->
+                    <td class="title-bg">输入总功率</td>
+                    <td class="value-bg"><span myShowValueName="mppt_power">-</span> kWh</td>
+                    <!--逆变器关机时间 close_time-->
+                    <td class="title-bg">逆变器关机时间</td>
+                    <td class="value-bg"><span myShowValueName="close_time">-</span></td>
+                </tr>
+                <tr>
+                    <!--逆变器额定容量 == inv_capacity-->
+                    <td class="title-bg">逆变器额定容量</td>
+                    <td class="value-bg"><span myShowValueName="inv_capacity">-</span> kW</td>
+                    <!--电网一级欠频保护点 == underfrequency1_point-->
+                    <td class="title-bg">电网一级欠频保护点</td>
+                    <td class="value-bg"><span myShowValueName="underfrequency1_point">-</span> Hz</td>
+                </tr>
+                <tr>
+                    <!--逆变器转换效率(厂家) == conversionEfficiency-->
+                    <td class="title-bg">逆变器效率</td>
+                    <td class="value-bg"><span myShowValueName="conversionEfficiency">-</span> %</td>
+                    <!--绝缘阻抗ISO保护点 == ir_iso-->
+                    <td class="title-bg">绝缘阻抗ISO保护点</td>
+                    <td class="value-bg"><span myShowValueName="ir_iso">-</span> MΩ</td>
+                </tr>
+
+            </table>
+        </div>
+        <!--控制栏-->
+        <div id="pm_dev_run_data_control">
+            <div> <input type="button" class="btn" value="有功功率调节"/></div>
+            <div> <input type="button" class="btn" value="无功功率调节"/></div>
+            <div> <input type="button" class="btn" value="功率因数调节"/></div>
+        </div>
+    </div>
+</div>

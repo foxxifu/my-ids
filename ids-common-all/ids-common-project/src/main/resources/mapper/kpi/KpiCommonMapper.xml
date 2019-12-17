@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiCommonMapper">
+
+    <!-- 获取累计发电量的总额/单站发电总额 -->
+  <select id="getKpiStationAllProductPower" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power,count(power_profit) power_profit from ids_kpi_month_station_t
+          <where>
+              <!-- <if test="null != enterpriseId">
+                  and station_code in 
+                  (
+                      select station_code from ids_station_info_t where enterprise_id = #{enterpriseId}
+                  )
+              </if> -->
+              <if test="null != userId">
+                  and station_code in 
+                  (
+                      select station_code from ids_sm_user_station_t where user_id = #{userId}
+                  )
+              </if>
+              <if test="null != stationCode">
+                  and station_code = #{stationCode}
+              </if>
+          </where>
+  </select>
+  
+  <!-- 获取集团的安全运行天数 -->
+  <select id="getEnterpriseSafeDays" parameterType="java.lang.Long" resultType="java.lang.String">
+      select param_value from ids_sm_station_param_t where enterprise_id = #{value} and param_name = '安全运行天数'
+  </select>
+
+  <!-- 获取最新30天的每日发电量 -->
+  <select id="getJfreeKpiStationByDay" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select collect_time,count(product_power) product_power,count(power_profit) power_profit 
+      from ids_kpi_day_station_t 
+      where station_code in
+      (
+          select station_code from ids_sm_user_station_t where user_id = #{userId}
+      ) 
+      group by FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c-%d') 
+      order by FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c-%d') desc 
+      limit #{start},#{end}
+  </select>
+  
+  <!-- 获取当日发电量总额 -->
+  <select id="getCurrentDayPower" parameterType="java.lang.Long" resultType="java.lang.Double">
+      select count(product_power) product_power from ids_kpi_day_station_t
+      where station_code in
+      (
+          select station_code from ids_sm_user_station_t where user_id = #{value}
+      )
+      and FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c-%d') = date_format(NOW(), '%Y-%c-%d')
+  </select>
+  
+  <resultMap type="HashMap" id="domainCapacity">
+      <result property="key" column="name" />  
+    <result property="value" column="capacity" />  
+  </resultMap>
+  
+  <!-- 根据地区统计每个地区的装机容量 -->
+  <select id="getProductPowerByDomain" parameterType="java.lang.Long" resultMap="domainCapacity">
+      select count(station.installed_capacity) capacity,domain.name name from ids_sm_domain_info_t domain,ids_station_info_t station
+      where station.domain_id = domain.id and station.station_code in
+      (
+          select station_code from ids_sm_user_station_t where user_id = #{value}
+      )
+      group by domain.id
+  </select>
+  
+  <!-- 按年度查询社会贡献值 -->
+  <select id="getKpiStationByYear" parameterType="java.lang.Long" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(co2_reduction) co2_reduction,count(coal_reduction) coal_reduction,count(tree_reduction) tree_reduction from ids_kpi_year_station_t
+      where station_code in
+      (
+          select station_code from ids_sm_user_station_t where user_id = #{value}
+      )
+      and 
+      FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y') = date_format(NOW(), '%Y')  
+  </select>
+  
+  <!-- 统计历史社会贡献值 -->
+  <select id="getAllKpiStation" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select 
+      count(co2_reduction) co2_reduction,count(coal_reduction) coal_reduction,count(tree_reduction) tree_reduction 
+      from ids_kpi_year_station_t
+      where station_code in
+      (
+          select station_code from ids_sm_user_station_t where user_id = #{value}
+      )
+  </select>
+  
+  <!-- 企业实时功率  用户 -->
+  <select id="getHourseholdActivePowerByEnterpriseId" parameterType="java.lang.Long" resultType="java.lang.Double">
+      select count(active_power) from ids_inverter_hoursehold_t 
+          where station_code in
+          (
+              select station_code from ids_sm_user_station_t where user_id = #{value}
+          )
+          and (truncate(unix_timestamp(now())/1000,0) - collect_time) <![CDATA[   <=  ]]> (5*60 * 1000)
+          order by collect_time desc
+          limit 0,1
+  </select>
+  
+  <!-- 企业实时功率 - 组串式-->
+  <select id="getStringActivePowerByEnterpriseId" parameterType="java.lang.Long" resultType="java.lang.Double">
+      select count(active_power) from ids_inverter_string_data_t 
+          where station_code in
+          (
+              select station_code from ids_sm_user_station_t where user_id = #{value}
+          )
+          and (truncate(unix_timestamp(now())/1000,0) - collect_time) <![CDATA[   <=  ]]> 5*60 * 1000
+          order by collect_time desc
+          limit 0,1
+  </select>
+  
+  <!-- 企业实时功率 - 集中 -->
+  <select id="getConcActivePowerByEnterpriseId" parameterType="java.lang.Long" resultType="java.lang.Double">
+      select count(active_power) from ids_inverter_conc_data_t 
+          where station_code in
+          (
+              select station_code from ids_sm_user_station_t where user_id = #{value}
+          )
+          and (truncate(unix_timestamp(now())/1000,0) - collect_time) <![CDATA[   <=  ]]> 5*60 * 1000
+          order by collect_time desc
+          limit 0,1
+  </select>
+  
+  <!-- 获取日发电量 -->
+  <select id="getKpiStationProductPowerByDay" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power,count(power_profit) power_profit from ids_kpi_day_station_t
+      where FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c-%d') = date_format(NOW(), '%Y-%c-%d') 
+          <if test="null != userId">
+              and station_code in 
+              (
+                  select station_code from ids_sm_user_station_t where user_id = #{userId}
+              )
+          </if>
+          <if test="null != stationCode">
+              and station_code = #{stationCode}
+          </if>
+  </select>
+  
+  <!-- 获取年发电量/单站总额 -->
+  <select id="getKpiStationProductPowerByYear" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power, count(power_profit) power_profit from ids_kpi_year_station_t
+      where FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y') = date_format(NOW(), '%Y') 
+          <if test="null != userId">
+              and station_code in 
+              (
+                  select station_code from ids_sm_user_station_t where user_id = #{userId}
+              )
+          </if>
+          <if test="null != stationCode">
+              and station_code = #{stationCode}
+          </if>
+  </select>
+  
+  <!-- 获取月发电量/单站总额 -->
+  <select id="getKpiStationProductPowerByMonth" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power,count(power_profit) power_profit from ids_kpi_month_station_t
+      where FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c') = date_format(NOW(), '%Y-%c') 
+          <if test="null != userId">
+              and station_code in 
+              (
+                  select station_code from ids_sm_user_station_t where user_id = #{userId}
+              )
+          </if>
+          <if test="null != stationCode">
+              and station_code = #{stationCode}
+          </if>
+  </select>
+  
+  
+  <!-- 电站排名(pr) -->
+  <select id="getStationOrderByPr" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select s.performance_ratio,station.station_name from ids_station_info_t station,ids_kpi_day_station_t s
+     where s.station_code = station.station_code 
+     and station.station_code in
+     {
+         select station_code from ids_sm_user_station_t where user_id = #{userId}
+     }
+     order by s.performance_ratio
+     limit #{start},#{end}
+  </select>
+  
+  <!-- 电站排名(等效利用小时) -->
+  <select id="getStationOrderByEh" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select s.equivalent_hour,station.station_name from ids_station_info_t station,ids_kpi_day_station_t s
+     where s.station_code = station.station_code 
+     and station.station_code in
+     {
+         select station_code from ids_sm_user_station_t where user_id = #{userId}
+     }
+     order by s.equivalent_hour
+     limit #{start},#{end}
+  </select>
+  
+  <!-- 获取日发电量和收益 -->
+  <select id="getJFreeKpiStationByDay" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power,count(power_profit) power_profit from ids_kpi_day_station_t
+      <where>
+            <if test="null != userId">
+              and station_code in 
+              (
+                  select station_code from ids_sm_user_station_t where user_id = #{userId}
+              )
+          </if>
+          <if test="null != stationCode">
+              and station_code = #{stationCode}
+          </if>
+      </where>
+    group by  FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c-%d')
+    limit #{start},#{end}
+  </select>
+  
+  <!-- 获取月发电量和收益 -->
+  <select id="getJFreeKpiStationByMonth" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power,count(power_profit) power_profit from ids_kpi_month_station_t
+      <where>
+            <if test="null != userId">
+              and station_code in 
+              (
+                  select station_code from ids_sm_user_station_t where user_id = #{userId}
+              )
+          </if>
+          <if test="null != stationCode">
+              and station_code = #{stationCode}
+          </if>
+      </where>
+    group by  FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c')
+    limit #{start},#{end}
+  </select>
+  
+  <!-- 获取年发电量和收益 -->
+  <select id="getJFreeKpiStationByYear" parameterType="com.interest.ids.common.project.bean.kpi.StationAndEnterprise" resultType="com.interest.ids.common.project.bean.kpi.KpiStation">
+      select count(product_power) product_power,count(power_profit) power_profit from ids_kpi_year_station_t
+      <where>
+            <if test="null != userId">
+              and station_code in 
+              (
+                  select station_code from ids_sm_user_station_t where user_id = #{userId}
+              )
+          </if>
+          <if test="null != stationCode">
+              and station_code = #{stationCode}
+          </if>
+      </where>
+    group by  FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y')
+    limit #{start},#{end}
+  </select>
+  
+  <!-- 单站单站户用逆变器实时功率 -->
+  <select id="getStationHourseholdActivePower" parameterType="java.lang.String" resultType="java.lang.Double">
+          select count(active_power) from ids_inverter_hoursehold_t 
+          where station_code = #{stationCode} 
+          and (truncate(unix_timestamp(now())/1000,0) - collect_time) <![CDATA[   <=  ]]> 5*60 * 1000
+          order by collect_time desc
+          limit 0,1
+  </select>
+  
+  <!-- 单站单站户用逆变器实时功率 -->
+  <select id="getStationStringActivePower" parameterType="java.lang.String" resultType="java.lang.Double">
+          select count(active_power) from ids_inverter_string_data_t 
+          where station_code = #{stationCode} 
+          and (truncate(unix_timestamp(now())/1000,0) - collect_time) <![CDATA[   <=  ]]> 5*60 * 1000
+          order by collect_time desc
+          limit 0,1
+  </select>
+  
+   <!-- 单站集中式逆变器实时功率 -->
+  <select id="getStationConcActivePower" parameterType="java.lang.String" resultType="java.lang.Double">
+          select count(active_power) from ids_inverter_conc_data_t 
+          where station_code = #{stationCode} 
+          and (truncate(unix_timestamp(now())/1000,0) - collect_time) <![CDATA[   <=  ]]> 5*60 * 1000
+          order by collect_time desc
+          limit 0,1
+  </select>
+  
+  <resultMap type="HashMap" id="stationActivePower">
+      <result property="key" column="date" />  
+    <result property="value" column="active_power" />  
+  </resultMap>
+  <!-- 根据日期统计单站的功率 -->
+  <select id="getStationActivePowerByStationCode" parameterType="java.lang.String" resultMap="stationActivePower">
+      select count(active_power) active_power,FROM_UNIXTIME(collect_time,'%Y-%c-%d') date from ids_meter_data_t 
+      where station_code = #{stationCode}
+      group by FROM_UNIXTIME(truncate(collect_time/1000,0),'%Y-%c-%d')
+      limit #{start},#{end}
+  </select>
+  
+  <resultMap type="HashMap" id="stationDomain">
+      <result property="key" column="name" />  
+    <result property="value" column="count" /> 
+  </resultMap>
+  <!-- 按照地区分布统计/电站统计 -->
+  <select id="getStationByDomain" parameterType="java.lang.Long" resultMap="stationDomain">
+      select domain.name name,count(domain.id) count
+      from ids_sm_domain_info_t domain,ids_station_info_t station
+      where domain.id = station.domain_id 
+      and station.station_code in
+      (
+          select station_code from ids_sm_user_station_t where user_id = #{userId}
+      )
+      group by domain.id
+  </select>
+
+
+  <!--===========================================================================================-->
+  <!-- 查询关口电表当日起点发电量数据 -->
+  <select id="selectMeterDataByField" parameterType="map" resultType="java.util.Map" statementType="STATEMENT">
+    select dev_id as device_id, min(${field}) as ${field}
+    from ids_meter_data_t
+    where substr(valid,22,1) = '0' or valid is null
+      <if test="deviceTypeIds != null">
+          and meter_type in
+            <foreach collection="deviceTypeIds" item="devTypeId" open="(" separator="," close=")">
+                ${devTypeId}
+            </foreach>
+      </if>
+      and collect_time between ${startTime} and ${endTime}
+      <if test="stationCodes != null and stationCodes.size() > 0">
+      	and station_code in
+        <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+            &apos;${stationCode}&apos;
+        </foreach>
+      </if>
+    group by dev_id
+  </select>
+
+  <select id="selectThisYearSocialContributionData" resultType="java.util.Map">
+      select station_code,co2_reduction,coal_reduction,tree_reduction
+      from ids_kpi_year_station_t
+      where collect_time between #{startTime} and #{endTime}
+
+  </select>
+
+  <select id="selectTotalStationSocialKpi" parameterType="java.util.List" resultType="java.util.Map">
+    select station_code, sum(co2_reduction) as total_co2_reduction, sum(coal_reduction) as total_coal_reduction,
+      sum(tree_reduction) as total_tree_reduction
+    from ids_kpi_year_station_t
+    <where>
+        <if test="stationCodes != null and stationCodes.size() > 0">
+            and station_code in
+            <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+                #{stationCode}
+            </foreach>
+        </if>
+    </where>
+    group by station_code
+  </select>
+
+  <select id="selectSocialContributionByEnterpriseId" resultType="java.util.Map">
+      select sum(co2_reduction) as total_co2_reduction, sum(coal_reduction) as total_coal_reduction,
+        sum(tree_reduction) as total_tree_reduction
+      from ids_kpi_year_station_t
+      where enterprise_id = #{enterpriseId}
+        and collect_time between #{startTime} and #{endTime}
+  </select>
+
+  <select id="selectTotalSocialContributionByEnterpriseId" resultType="java.util.Map">
+    select sum(co2_reduction) as total_co2_reduction, sum(coal_reduction) as total_coal_reduction,
+    sum(tree_reduction) as total_tree_reduction
+    from ids_kpi_year_station_t
+    where enterprise_id = #{enterpriseId}
+  </select>
+  
+  <!-- 查询电站下设备类型 -->
+  <select id="selectStationDeviceTypes" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select distinct dev_type_id 
+  	from ids_dev_info_t 
+  	where station_code = #{stationCode}
+  </select>
+  
+  <resultMap type="com.interest.ids.common.project.bean.kpi.KpiMeterMonthM" id="meterMouthData">
+  	<result column="equivalent_hour" property="equivalentHour"/>
+  	<result column="statistics_time" property="statisticsTime"/>
+  	<result column="dev_name" property="devName"/>
+  </resultMap>
+  <!-- 根据时间范围统计逆变器的月数据  -->
+  <select id="queryMeterDataByTime" resultMap="meterMouthData">
+  	select  
+  		equivalent_hour,statistics_time,dev_name
+  	from ids_kpi_month_inverter_t
+  	where 
+  		station_code = #{stationCode}
+  		and statistics_time between #{startTime} and #{endTime}
+  	order by equivalent_hour desc
+  	limit 0,10
+  </select>
+</mapper>

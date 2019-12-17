@@ -1,0 +1,30 @@
+
+export default {
+  licMan: {
+    stationName: 'Plant Name',
+    startTime: 'Start Time',
+    endTime: 'End Time',
+    devName: 'Equipment Name',
+    operation: 'Operate',
+    detail: 'Detail',
+    timeDuration: 'Time Range',
+    submit_sucess: 'Submitted successfully',
+    submit_fail: 'Failed to submit',
+    confirm_delte: 'Confirm Delete?',
+    delete_success: 'Successfully deleted',
+    delete_fail: 'Failed to delete',
+    modify_success: 'Update successfully',
+    modify_fail: 'Failed to update',
+    choose_file: 'Select the file',
+    import_success: 'Successfully imported',
+    import_fail: 'Failed to import',
+    impTime: 'Import Time',
+    impUser: 'Import User',
+    accCap: 'Accessible Capacity(kW)',
+    acceCap: 'Access Capacity(kW)',
+    accInv: 'Number of inverters that can be connected (PCS)',
+    invCom: 'Number of inverters connected (PCS)',
+    kpiVal: 'KPI Value',
+    kpiName: 'KPI Name',
+  }
+}

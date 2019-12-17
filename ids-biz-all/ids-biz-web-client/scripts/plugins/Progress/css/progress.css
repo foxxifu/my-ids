@@ -1,0 +1,143 @@
+*{
+	margin: 0;padding: 0;
+}
+
+.progress-box{
+	display: block;
+	position: relative;
+	top:0;
+	left: 0;
+}
+/*显示进度的外框*/
+.progress-box p.progress-border{
+	position: absolute;
+	background: rgba(22,82,118,1);
+	overflow: hidden;/*进度条超过的部分就隐藏掉*/
+	width: 100%;
+	height: 60%;
+	top: 20%;
+	left: 0;
+	z-index: 1;
+	border-radius: 15px;
+}
+/*进度条的信息*/
+.progress-box span.progress-content{
+	display: block;
+	height: 100%;
+	border-radius: 15px;
+	background: #33ccb8;
+}
+/*圆形的实现旋转使用到的事3个面来实现圆形的旋转,其中有一个遮罩层的背景色与父节点的背景色一样 开始*/
+.progress-box span.progress-cirle-box{
+	display: block;
+	height: 100%;
+	width: 50%;
+	transform-origin: right center;
+	background: #33ccb8;
+	position: absolute;
+	top:0;
+	left: 0;
+}
+.progress-box span.box1{
+	z-index: 4;
+}
+.progress-box span.box2{
+	z-index: 2;
+}
+.progress-box span.box3{
+	z-index: 3;
+	background: rgba(22,82,118,1) !important;/*与进度条的框的颜色保持一致*/
+}
+
+.progress-box .boxMaxZIndex{/*设置是最最外层的遮罩*/
+	z-index: 5 !important;
+}
+/*圆形的实现旋转使用到的事3个面来实现圆形的旋转,其中有一个遮罩层的背景色与父节点的背景色一样 结束*/
+
+/*长方形的无进度的显示样式*/
+.progress-box span.progress-content.progresss-no-progress{
+	width:100%;
+	height: 100%;
+	/*background:-webkit-linear-gradient(left, transparent 0%, transparent 25%, green 25%, green 75%, transparent 75%, transparent 100%);*/
+	background:-webkit-linear-gradient(left, green 0%, transparent 25%, green 50%, transparent 75%, green 100%);
+	animation: pa 0.8s infinite linear;
+}
+
+/*圆形的无进度样式*/
+.progress-box span.progress-content.progress-no-progress-cirle{
+	position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -50%;
+    left: -50%;
+	background: -webkit-linear-gradient(transparent,#00e7ff, #165276);/*最右边的颜色与背景的颜色基本一致，左边的颜色可以随意的修改*/
+    animation: pr 2s infinite linear;
+    transform-origin: 100% 100%;
+    border-radius: 0;
+    box-sizing: border-box;
+}
+/*显示文字的div*/
+.progress-box div.progress-text{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 9;
+	top: 0;
+	left: 0;
+	text-overflow: ellipsis;
+	color: #fff;
+}
+.progress-box div.progress-text.progerss-text-close{
+	opacity: 0;/*全透明*/
+}
+/*圆形的样式*/
+.progress-box>div label.psrogress-text-label-cirle{
+	display: block;
+	position: absolute;
+	background: #fff;
+	/*color: red;*/
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+/*长方形的样式*/
+.progress-box>div label.psrogress-text-label-squre{
+	display: block;
+	position: absolute;
+	/*color: red;*/
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/*进度条弹出框的遮罩层的样式*/
+.progress-dialog-overlay{
+	position: absolute;
+	z-index: 99;
+	background: rgba(0,0,0,0.8);
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+.progress-dialog-parent{
+	display: block;
+	z-index: 100 !important;
+	position: absolute !important; 
+	top:48%;
+	left: 48%;
+}
+/*长方形进度条动画*/
+@keyframes pa{
+	/*0% {transform: translate(0%);}
+	50% {transform: translate(25%);}
+	100%{ transform: translate(100%);}*/
+	0% {background:-webkit-linear-gradient(left, green 0%, transparent 25%, green 50%, transparent 75%, green 100%)}
+	50% {background:-webkit-linear-gradient(left, transparent 0%, green 25%, transparent 50%, green 75%, transparent 100%);}
+	100% {background:-webkit-linear-gradient(left, green 0%, transparent 25%, green 50%, transparent 75%, green 100%);}
+}
+/*球形的进度条动画*/
+@keyframes pr{
+	0% {transform: rotate(0deg);}
+	100%{ transform: rotate(360deg);}
+}

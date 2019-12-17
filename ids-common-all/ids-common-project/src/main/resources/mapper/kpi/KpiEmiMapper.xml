@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiEmiHourMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiEmiHourM">
+    <id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <id column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="dev_name" jdbcType="VARCHAR" property="devName" />
+    <result column="temperature" jdbcType="DECIMAL" property="temperature" />
+    <result column="pv_temperature" jdbcType="DECIMAL" property="pvTemperature" />
+    <result column="wind_speed" jdbcType="DECIMAL" property="windSpeed" />
+    <result column="total_radiant" jdbcType="DECIMAL" property="totalRadiant" />
+    <result column="horiz_radiant" jdbcType="DECIMAL" property="horizRadiant" />
+    <result column="max_radiant_point" jdbcType="DECIMAL" property="maxRadiantPoint" />
+    <result column="min_radiant_point" jdbcType="DECIMAL" property="minRadiantPoint" />
+    <result column="statistics_time" jdbcType="BIGINT" property="statisticsTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    collect_time, station_code, device_id, dev_name, temperature, pv_temperature,
+    wind_speed, total_radiant, horiz_radiant, max_radiant_point, min_radiant_point, statistics_time
+  </sql>
+
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into ids_kpi_hour_emi_t(
+      <include refid="Base_Column_List"/>
+    ) values
+      <foreach collection="list" item="item" separator=",">
+        (
+          #{item.collectTime}, #{item.stationCode}, #{item.deviceId}, #{item.devName},
+          #{item.temperature}, #{item.pvTemperature}, #{item.windSpeed}, #{item.totalRadiant}, #{item.horizRadiant},
+          #{item.maxRadiantPoint}, #{item.minRadiantPoint}, #{item.statisticsTime}
+        )
+      </foreach>
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="com.interest.ids.common.project.bean.KpiBaseModel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ids_kpi_hour_emi_t
+    where collect_time = #{collectTime,jdbcType=BIGINT}
+      and station_code = #{stationCode,jdbcType=VARCHAR}
+      and device_id = #{deviceId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+    delete from ids_kpi_hour_emi_t
+    where collect_time in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.collectTime}
+    </foreach>
+    and station_code in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.stationCode}
+    </foreach>
+    and device_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.deviceId}
+    </foreach>
+  </delete>
+
+</mapper>

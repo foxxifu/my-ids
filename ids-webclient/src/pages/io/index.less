@@ -1,0 +1,316 @@
+.io-index {
+  top: 45px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  .io-main {
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    /deep/ .activeArea {
+      position: absolute;
+      top: 90px;
+      left: 20px;
+      right: 20px;
+      bottom: 90px;
+      z-index: 0;
+    }
+    & /deep/ .popupInfoWindow-station {
+      a.leaflet-popup-close-button {
+        top: 24px;
+        right: 20px;
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        color: #f7f7f7;
+        border: 1px solid #f7f7f7;
+        border-radius: 50%;
+      }
+      .leaflet-popup-content-wrapper {
+        width: 660px;
+        height: 520px;
+        border-radius: 0;
+        box-shadow: none;
+        background: url("~/assets/images/io/popup-bg.png") 3px 0 no-repeat;
+        .popup-custom-station-container {
+          position: relative;
+          width: 620px;
+          min-width: 120px;
+          .popup-title {
+            height: 28px;
+            color: #f7f7f7;
+          }
+        }
+      }
+      .leaflet-popup-tip-container {
+        width: 38px;
+        height: 48px;
+        margin-top: -32px;
+        .leaflet-popup-tip {
+          width: 100%;
+          height: 100%;
+          box-shadow: none;
+          background: url("~/assets/images/io/popup-p.png") center no-repeat;
+          transform: none;
+        }
+      }
+    }
+    & /deep/ .popupInfoWindow-user {
+      color: #f7f7f7;
+      a.leaflet-popup-close-button {
+        top: 13px;
+        right: 13px;
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        color: #f7f7f7;
+        border: 1px solid #f7f7f7;
+        border-radius: 50%;
+      }
+      .leaflet-popup-content-wrapper {
+        width: 480px;
+        border-radius: 0 20px;
+        background: rgba(0, 137, 197, 0.95);
+        .leaflet-popup-content {
+          width: 100% !important;
+          margin: 0;
+          padding: 0;
+          .popup-custom-station-container {
+            position: relative;
+            min-width: 120px;
+            .popup-title {
+              height: 28px;
+              color: #f7f7f7;
+            }
+          }
+        }
+      }
+      .leaflet-popup-tip {
+        background: rgba(0, 137, 197, 0.95);
+      }
+    }
+  }
+  .map-path {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    height: 36px;
+    color: #f7f7f7;
+    z-index: 450;
+    > ul {
+      > li.map-path-item {
+        height: 0;
+        margin-left: -18px;
+        padding-left: 0.5em;
+        padding-right: 2px;
+        font-family: 'Glyphicons Halflings';
+        background: #0f3e5a;
+        background-clip: padding-box;
+        border-style: solid;
+        border-width: 26px 26px 10px 26px;
+        border-image: url(/assets/images/io/map_place_item_bg.png) 24 24 10 28 round;
+        display: inline-block;
+        cursor: pointer;
+
+        &.mp_selected {
+          cursor: auto;
+        }
+
+        span {
+          position: relative;
+          top: -20px;
+          height: 25px;
+          line-height: 25px;
+          display: inline-block;
+        }
+
+        &:first-child {
+          margin-left: 0;
+          margin-right: 1px;
+          padding-left: 0;
+          padding-right: 18px;
+          border-width: 26px 24px 10px 18px;
+          border-image: url(/assets/images/io/map_place_bg.png) 26 24 10 18 repeat;
+          span {
+            left: 15px;
+          }
+          &::before {
+            content: "\E61F";
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 20px;
+            height: 24px;
+            font-size: 15pt;
+            margin-right: 8px;
+            font-family: element-icons !important;
+          }
+        }
+      }
+    }
+  }
+  .pos-abs {
+    position: absolute;
+  }
+  .io-total {
+    top: 20px;
+    right: 483px;
+    color: #ffffff;
+    border-radius: 10px;
+    background: rgba(59, 161, 191, 0.88);
+    box-shadow: 0 0 10px 0 #81a3c4;
+    .io-total-title {
+      height: 38px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 8px 20px;
+      .io-total-hand {
+        cursor: pointer;
+        color: #fff;
+        font-size: 20px;
+      }
+    }
+    .show-title {
+      height: 0;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 0 0 10px 10px;
+      -webkit-transition: height .5s;
+      -moz-transition: height .5s;
+      -ms-transition: height .5s;
+      -o-transition: height .5s;
+      transition: height .5s;
+      &.is-show-title {
+        height: 240px;
+      }
+    }
+  }
+  .io-btns {
+    top: 20px;
+    right: 20px;
+    .isActive {
+      background: #35D0FF;
+    }
+  }
+  .io-search {
+    bottom: 20px;
+    left: 20px;
+    .el-form-item {
+      margin: 0;
+    }
+  }
+  .io-showList {
+    top: 70px;
+    right: 20px;
+    background: #fff;
+    border-radius: 10px;
+    width: 786px;
+    max-height: ~'calc(100% - 120px)';
+    box-shadow: 0 0 10px 0 #81a3c4;
+    display: none;
+    &.is-io-show-list {
+      display: block;
+      .my-li-dev {
+        display: inline-block;
+        text-align: center;
+        padding: 12px 0;
+        // 表格内容数据 第一列
+        // &.my-li-col1 {
+        //   width: 160px;
+        // }
+        // &.my-li-col2 {
+        //   width: 130px;
+        // }
+        // &.my-li-col3 {
+        //   width: 130px;
+        // }
+        // &.my-li-col4 {
+        //   width: 110px;
+        // }
+        // &.my-li-col5 {
+        //   width: 106px;
+        // }
+        // &.my-li-col6 {
+        //   width: 98px;
+        // }
+         &.my-li-col1 {
+           width: 24%;
+         }
+         &.my-li-col2 {
+           width: 20%;
+         }
+         &.my-li-col3 {
+           width: 19%;
+         }
+         &.my-li-col4 {
+           width: 18%;
+         }
+         &.my-li-col5 {
+           width: 17%;
+         }
+         &.my-li-col6 {
+           width: 17%;
+         }
+      }
+    }
+    .tab-content-ul {
+      //li:nth-child(2n + 1) { // 设置奇数项的背景样式
+      //  background: #F2F2F2;
+      //}
+      li {
+        border-bottom: 1px solid #ccc;
+        cursor: move;
+        cursor: -webkit-grab;
+        cursor: -moz-grab;
+      }
+    }
+    .my-table-content-div {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+  }
+  .status-cirle {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #999;
+    margin: 0 auto;
+    position: relative;
+    top: 5px;
+    // 正常的颜色
+    &.status-blue {
+      background-color: #0f0;
+    }
+    // 红色
+    &.status-red {
+      background-color: #f00;
+    }
+  }
+  .text-color-red {
+    color: #f00;
+  }
+  .text-color-blue {
+    color: #09f;
+  }
+  .text-color-green {
+    color: #af4;
+  }
+  // 缺陷的颜色
+  .defect-color-state0 { // 待审核
+    color: #444;
+  }
+  .defect-color-state1 { // 已回退
+    color: #a00;
+  }
+  .defect-color-state2 { // 消缺中
+    color: #f90;
+  }
+  .defect-color-state3 { // 待确认
+    color: #3399FF;
+  }
+  .defect-color-state4 { // 已完成
+    color: #009900;
+  }
+}

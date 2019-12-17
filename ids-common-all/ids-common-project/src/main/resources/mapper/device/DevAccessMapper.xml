@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.device.DevAccessMapper">
+    
+    <resultMap id="DevResultMap" type="com.interest.ids.common.project.bean.signal.DeviceInfo">
+        <result column="signal_version" property="signalVersion"/>
+        <result column="dev_alias" property="devAlias"/>
+        <result column="sn_code" property="snCode"/>
+        <result column="enterprise_id" property="enterpriseId"/>
+        <result column="dev_name" property="devName"/>
+        <result column="dev_type_id" property="devTypeId"/>
+    </resultMap>
+    
+    
+    <!-- 设备接入保持 -->
+    <insert id="insertDevInfo" parameterType="com.interest.ids.common.project.bean.signal.DeviceInfo">
+        insert into ids_dev_info_t (station_code,enterprise_id,signal_version,dev_type_id,parent_id
+        ,matrix_id,dev_alias,dev_name,sn_code,kks_code,ne_version,
+        dev_ip,dev_port,linked_host,second_address,longitude,latitude,is_logic_delete,
+        create_date,modified_date,protocol_code,phalanx_id,matrix_id) 
+        values(#{stationCode},#{enterpriseId},#{signalVersion},#{devTypeId},#{parentId},
+        #{matrixId},#{devAlias},#{devName},#{snCode},#{kksCode},#{neVersion},
+        #{devIp},#{devPort},#{linkedHost},#{secondAddress},#{longitude},#{latitude},#{isLogicDelete},
+        #{createDate},#{modifiedDate},#{protocolCode}, #{phalanxId}, #{matrixId})
+    </insert>
+    
+    <!-- 根据协议类型查询点表信息 -->
+    <select id="getSignalVersionList" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT `name`,signal_version signalVersion,protocol_code protocolCode,dev_type_id devTypeId 
+        FROM ids_signal_version_t WHERE protocol_code = #{value}
+    </select>
+    
+    <!-- 获取设备信息 -->
+    <select id="getDevList" resultType="java.util.Map">
+        SELECT dev.dev_alias devAlias,dev.id,dev.signal_version signalVersion,dev.protocol_code protocolCode,dev.sn_code snCode
+		FROM ids_dev_info_t dev WHERE dev.dev_type_id = #{devTypeId} AND dev.protocol_code = #{protocolType}
+		AND station_code = #{stationCode}
+    </select>
+    
+</mapper>

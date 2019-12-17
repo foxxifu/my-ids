@@ -1,0 +1,16 @@
+.NumberRoll {
+    width: auto;
+    margin: 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    border-radius: 0;
+    box-shadow: 0 0 10px #000000;
+}
+
+.NumberRoll span {
+    color: white;
+    font-family: 'Open Sans', cursive;
+    font-size: 36px;
+    position: absolute;
+}

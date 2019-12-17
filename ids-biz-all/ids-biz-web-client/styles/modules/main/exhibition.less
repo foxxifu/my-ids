@@ -1,0 +1,1353 @@
+@import (once, reference) '../../base';
+
+#exhibition {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+
+  .wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .type-1 {
+    background: url(/images/main/exhibition/bg1.jpg) 0 0 no-repeat;
+
+    .box {
+      width: 100%;
+      padding: 0;
+      margin: 18px 0;
+      background: none;
+
+      //&:hover {
+      //  background-color: rgba(0, 64, 106, .3);
+      //}
+
+      .box-content {
+        height: 290px;
+
+        h2 {
+          min-width: 200px;
+          height: 70px;
+          line-height: 64px;
+          color: #0a9ffe;
+          font-size: 18px;
+          font-weight: 500;
+          margin: 0;
+          background: url(/images/main/exhibition/box_title_bg.png) 0 0 no-repeat;
+          .background-size();
+          display: inline-block;
+          text-indent: 2.4em;
+          .text-overflow();
+        }
+
+        .content {
+          width: 100%;
+          height: ~'calc(100% - 80px)';
+          overflow: auto;
+        }
+      }
+
+      #kpi_resume {
+        display: none;
+      }
+      #kpi_power_trend {
+        height: 400px;
+        .content {
+          overflow: inherit;
+
+          .power-trend-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: 100%;
+          }
+          .power-trend-tip {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            color: rgba(255,255,255,0.5);
+            .power-trend-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_power_scale {
+        height: 400px;
+        .content {
+          overflow: inherit;
+
+          .power-scale-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: ~'calc(100% + 20px)';
+            height: 100% @hack-v-ie8-10;
+          }
+          .power-scale-tip {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            color: rgba(255,255,255,0.5);
+            .power-scale-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_equipment_distribution {
+        .content {
+          overflow: inherit;
+
+          .equipment-distribution-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: 100%;
+          }
+          .equipment-distribution-tip {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            color: rgba(255,255,255,0.5);
+            .equipment-distribution-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_power_supply {
+        .content {
+          overflow: inherit;
+
+          .power-supply-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: 100%;
+          }
+          .power-supply-tip {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            color: rgba(255,255,255,0.5);
+            .power-supply-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_social_contribution {
+        .content {
+          width: 100%;
+          height: 100%;
+          font-size: 9pt;
+          display: table;
+          ul {
+            position: relative;
+            &::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              height: 1px;
+              display: table-row;
+              .liner-gradient(left; transparent 0%, #1fbaff 5%, #1fbaff 95%, transparent 100%);
+            }
+            li {
+              width: 15%;
+              line-height: 50px;
+              display: table-cell;
+              img, span {
+                text-align: center;
+                margin: 0 auto;
+                display: block;
+              }
+              i {
+                font-size: 9pt;
+                font-style: normal;
+              }
+              &.socialContribution-title {
+                width: 5%;
+                text-align: right;
+              }
+              &.socialContribution-value {
+                color: #00c6ff;
+                font-size: 16pt;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .top {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 66px;
+      display: block;
+      z-index: 3;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0 0 100px 100px rgba(0,0,0,0.5);
+
+      .top-left {
+        position: absolute;
+        top: 125px;
+        width: 380px;
+        height: 92px;
+        padding: 15px 30px;
+        line-height: 45px;
+        vertical-align: top;
+        color: rgba(255, 255, 255, 0.5);
+        display: block;
+
+        span {
+          font-size: 18px;
+          line-height: 50px;
+          vertical-align: top;
+          display: inline-block;
+        }
+        .total-power-unit {
+          font-size: 16px;
+          &::before {
+            content: '(';
+          }
+          &::after {
+            content: ')';
+          }
+        }
+        .total-power-value {
+          float: left;
+          top: -88px;
+          min-width: 460px;
+          margin: 8px 0;
+          padding-right: 2px;
+          border-radius: 2px;
+          display: inline-block;
+          overflow: hidden;
+        }
+      }
+      .top-center {
+        width: 100%;
+        height: 100%;
+        padding: 0 30px;
+        color: #ffffff;
+        text-align: left;
+        vertical-align: middle;
+        display: block;
+
+        h1 {
+          float: left;
+          line-height: 64px;
+          font-size: 30px;
+          cursor: pointer;
+        }
+
+        .top-current-time {
+          float: right;
+          line-height: 100px;
+          color: #b1ffff;
+          font-size: 14px;
+        }
+      }
+      .top-right {
+        display: none;
+      }
+    }
+
+    .left {
+      float: left;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      padding-left: 30px;
+      width: 432px;
+      height: 100%;
+      z-index: 2;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0px 0 100px 150px rgba(0, 0, 0, 0.5);
+
+      .box:first-child {
+        height: 110px;
+      }
+    }
+
+    .right {
+      float: right;
+      position: absolute;
+      top: 72px;
+      right: 0;
+      padding-right: 30px;
+      width: 432px;
+      height: 100%;
+      z-index: 3;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0px 0 100px 150px rgba(0, 0, 0, 0.5);
+    }
+
+    .center {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden @hack-v-ie8-10;
+      z-index: 0;
+
+      .map-path {
+        position: absolute;
+        top: 40px;
+        left: 60px;
+        display: none;
+        z-index: 450;
+        > ul {
+          > li.mp_item {
+            height: 0;
+            margin-left: -20px;
+            padding-left: 0.5em;
+            font-family: 'Glyphicons Halflings';
+            background: rgb(15, 62, 90);
+            background-clip: padding-box;
+            border-style: solid;
+            border-width: 25px 24px 10px 25px;
+            border-image: url(/images/main/exhibition/map_place_item_bg.png) 25 24 10 25 round;
+            display: inline-block;
+            cursor: pointer;
+
+            &.mp_selected {
+              cursor: auto;
+            }
+
+            span {
+              position: relative;
+              top: -20px;
+              height: 25px;
+              line-height: 25px;
+              display: inline-block;
+            }
+
+            &:first-child {
+              margin-left: 0;
+              padding-left: 0;
+              padding-right: 18px;
+              border-width: 24px 24px 10px 12px;
+              border-image: url(/images/main/exhibition/map_place_bg.png) 24 24 10 12 repeat;
+
+              span {
+                left: 18px;
+              }
+
+              &::before {
+                content: "\e062";
+                position: absolute;
+                top: -17px;
+                width: 12px;
+                height: 12px;
+                margin-right: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      .center-map {
+        width: 100%;
+        height: 100%;
+        border: 0 solid #285e6f;
+        border-radius: 50%;
+        z-index: 500;
+
+        .domain-icon {
+          width: 55px;
+          height: 55px;
+          border-radius: 50%;
+        }
+        .domain-wrapper {
+          width: 50px;
+          height: 50px;
+          opacity: 1;
+          cursor: pointer;
+          margin: 0 auto;
+          position: relative;
+          -webkit-border-radius: 50%;
+          border-radius: 50%;
+          color: #ffffff;
+          .rgba(255, 180, 0, 0.78);
+          box-shadow: 0 0 10px rgba(255, 180, 0, 0.78);
+          text-shadow: 0 2px 5px #fff;
+          .title {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            span {
+              font-size: 16px;
+              display: inline-block;
+              text-align: center;
+              white-space: nowrap;
+            }
+          }
+          .glow {
+            background: #ff9600;
+            width: 0px;
+            height: 0px;
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
+            //border: 15px solid #ff4a50;
+            -webkit-animation: glowKeyFrame 5s ease-out infinite both;
+            animation: glowKeyFrame 5s ease-out infinite both;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+          }
+
+          @keyframes glowKeyFrame {
+            0% {
+              width: 0px;
+              height: 0px;
+              opacity: 0.8;
+              top: 25px;
+              left: 25px;
+            }
+            100% {
+              top: -25px;
+              left: -25px;
+              width: 100px;
+              height: 100px;
+              opacity: 0;
+            }
+          }
+        }
+
+        /*大屏电站图标样式 start*/
+        .awesome-marker {
+          width: 35px;
+          height: 46px;
+          i {
+            display: none;
+          }
+
+          //地面式
+          &.awesome-marker-icon-centralized-planning {
+            background: url('/images/main/exhibition/mapPoints/centralized_planning.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-centralized-building {
+            background: url('/images/main/exhibition/mapPoints/centralized_building.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-centralized-running {
+            background: url('/images/main/exhibition/mapPoints/centralized_running.png') no-repeat -1px 7px;
+          }
+
+          //分布式
+          &.awesome-marker-icon-distributed-planning {
+            background: url('/images/main/exhibition/mapPoints/distributed_planning.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-distributed-building {
+            background: url('/images/main/exhibition/mapPoints/distributed_building.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-distributed-running {
+            background: url('/images/main/exhibition/mapPoints/distributed_running.png') no-repeat -1px 7px;
+          }
+
+          //户用
+          &.awesome-marker-icon-household-planning {
+            background: url('/images/main/exhibition/mapPoints/household_planning.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-household-building {
+            background: url('/images/main/exhibition/mapPoints/household_building.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-household-running {
+            background: url('/images/main/exhibition/mapPoints/household_running.png') no-repeat -1px 7px;
+          }
+        }
+        /*大屏电站图标样式 end*/
+
+        /*地图弹窗风格设置 start*/
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+          background: rgba(0, 64, 106, .95);
+          border: 1px solid #285f74;
+        }
+        .leaflet-popup-content-wrapper {
+          .leaflet-popup-content {
+            padding: 20px;
+            margin: -1px;
+            border-radius: 12px;
+
+            #exhibition_station_infoWin {
+              width: 800px;
+              min-height: 360px;
+
+              label {
+                line-height: 1.8;
+                font-size: 14px;
+                font-weight: normal;
+              }
+
+              .bold {
+                font-weight: 600;
+              }
+
+              #title {
+                .col-xs-12 {
+                  padding: 0;
+                  margin: 5px 0;
+                }
+              }
+
+              #content {
+                .info-picture {
+                  width: 500px;
+                  height: 300px;
+                }
+
+                .info-weather-msg {
+                  width: 500px;
+                  #info_dz_weather {
+                    height: 200px;
+                    font-size: 11px;
+                    color: #fff;
+                    padding: 10px;
+                    margin: 20px auto -8px;
+                    box-shadow: inset 0 0 50px #145784;
+                    border-radius: 0 8px;
+                    border: 1px solid #275a69;
+
+                    .weather-top {
+                      height: 30px;
+                      padding: 2px 10px;
+                    }
+                    .weather-main {
+                      width: 100%;
+                      margin: 0 auto;
+                      display: table;
+
+                      .weather-left {
+                        width: 25%;
+                        vertical-align: top;
+                        display: table-cell;
+
+                        .wl-img {
+                          img {
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto;
+                            display: block;
+                          }
+                        }
+                        .wl-temperature {
+                          font-size: 12pt;
+                          text-align: center;
+                        }
+                      }
+
+                      .weather-right {
+                        width: 75%;
+                        vertical-align: top;
+                        display: table-cell;
+
+                        .weather-right-day {
+                          float: left;
+                          width: 25%;
+                          height: 98%;
+                          border-left: 1px solid #2f547c;
+
+                          .wr-img {
+                            img {
+                              width: 45px;
+                              height: 45px;
+                              margin: 0 auto;
+                              display: block;
+                            }
+                          }
+                        }
+                      }
+
+                      .wm-msg {
+                        display: -webkit-box;
+                        margin: 0 auto;
+                        overflow: hidden;
+                        height: 22px;
+                        line-height: 22px;
+                        text-align: center;
+                        word-break: break-word;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                      }
+                    }
+                  }
+                }
+
+                .info-station-msg {
+                  height: 100%;
+                  margin-right: 15px;
+                  display: flex;
+                  flex-direction: column;
+
+                  #station_briefing {
+                    height: 248px;
+                    font-size: 10pt;
+                    line-height: 1.5;
+                    text-indent: 2em;
+                    flex: 1;
+                    overflow: auto;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .center-top-shade {
+        position: absolute;
+        top: -1px;
+        left: 224px;
+        width: 541px;
+        height: 32px;
+        z-index: 400;
+      }
+      .center-left-shade {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 140px;
+        height: 120px;
+        z-index: 400;
+      }
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      border-top: 0px solid #00a0e9;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0px 0 100px 150px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .type-0 {
+    background: url(/images/main/bg.jpg) 0 0 no-repeat;
+
+    .box {
+      width: 100%;
+      height: 312px;
+      padding: 0;
+      margin: 18px 0;
+      background: rgba(0, 64, 106, .3);
+      border: 28px solid rgba(130, 248, 255, .3);
+      background-clip: padding-box;
+      border-image: url(/images/main/box_bg.png) 28 repeat;
+
+      &:hover {
+        border-image: url(/images/main/box_bg_hover.png) 28 repeat;
+      }
+
+      .box-content {
+        height: 100%;
+
+        h2 {
+          position: absolute;
+          top: -33px;
+          min-width: 200px;
+          height: 50px;
+          line-height: 60px;
+          margin: 0;
+          padding-left: 10px;
+          color: #97e4fd;
+          font-size: 18px;
+          font-weight: 500;
+          background: url(/images/main/box_t.png) top center / 100% no-repeat;
+          display: inline-block;
+          .text-overflow();
+
+          &::before {
+            position: relative;
+            top: 2px;
+            display: inline-block;
+            width: 20px;
+            height: 50px;
+            margin-right: 8px;
+            font-family: serif;
+            font-size: 24pt;
+            font-weight: 800;
+            line-height: 50px;
+            content: '\bb';
+          }
+        }
+
+        .content {
+          width: 100%;
+          height: ~'calc(100% - 15px)';
+          margin-top: 20px;
+          overflow: auto;
+        }
+      }
+
+      #kpi_resume {
+        .content {
+          left: -25px;
+          width: ~'calc(100% + 50px)';
+          .resume-img {
+            float: left;
+            clear: both;
+            width: 150px;
+            margin: 0 10px 0 20px;
+          }
+          .resume-description {
+            padding: 0 18px;
+            text-indent: 2em;
+            word-break: break-word;
+            word-wrap: break-word;
+            white-space: normal;
+          }
+        }
+      }
+      #kpi_power_trend {
+        .content {
+          overflow: inherit;
+
+          .power-trend-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: ~'calc(100% + 20px)';
+            height: 100% @hack-v-ie8-10;
+          }
+          .power-trend-tip {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            .power-trend-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_power_scale {
+        .content {
+          overflow: inherit;
+
+          .power-scale-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: ~'calc(100% + 20px)';
+            height: 100% @hack-v-ie8-10;
+          }
+          .power-scale-tip {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            .power-scale-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_equipment_distribution {
+        .content {
+          overflow: inherit;
+
+          .equipment-distribution-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: 100%;
+          }
+          .equipment-distribution-tip {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            .equipment-distribution-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_power_supply {
+        .content {
+          overflow: inherit;
+
+          .power-supply-chart {
+            left: -25px;
+            width: ~'calc(100% + 50px)';
+            width: 116% @hack-v-ie8-10;
+            height: ~'calc(100% + 20px)';
+            height: 100% @hack-v-ie8-10;
+          }
+          .power-supply-tip {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            height: 40px;
+            line-height: 35px;
+            .power-supply-tip-val {
+              font-size: 17pt;
+              margin: 0 5px;
+            }
+          }
+        }
+      }
+      #kpi_social_contribution {
+        .content {
+          width: 100%;
+          height: 100%;
+          font-size: 9pt;
+          display: table;
+          ul {
+            position: relative;
+            &::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              height: 1px;
+              display: table-row;
+              .liner-gradient(left; transparent 0%, #1fbaff 5%, #1fbaff 95%, transparent 100%);
+            }
+            li {
+              width: 15%;
+              line-height: 50px;
+              display: table-cell;
+              img, span {
+                text-align: center;
+                margin: 0 auto;
+                display: block;
+              }
+              i {
+                font-size: 9pt;
+                font-style: normal;
+              }
+              &.socialContribution-title {
+                width: 5%;
+                text-align: right;
+              }
+              &.socialContribution-value {
+                color: #00c6ff;
+                font-size: 16pt;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .top {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 110px;
+      background: url(/images/main/exhibition/top_bg.png) 0 0 no-repeat;
+      display: block;
+      z-index: 500;
+      .clipPath(0 0, 100% 0, 100% 80px, 1235px 80px, 1220px 100%, 718px 100%, 700px 80px, 0 80px, 0 100%;);
+
+      .top-left {
+        width: 704px;
+        height: 75px;
+        line-height: 45px;
+        padding: 15px 30px;
+        vertical-align: top;
+        display: inline-block;
+
+        span {
+          font-size: 14pt;
+          line-height: 50px;
+          vertical-align: top;
+          display: inline-block;
+        }
+        .total-power-value {
+          margin: 8px;
+          padding-right: 2px;
+          border-radius: 2px;
+          display: inline-block;
+          overflow: hidden;
+        }
+      }
+      .top-center {
+        width: 520px;
+        height: 100px;
+        color: #ffffff;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+
+        h1 {
+          height: 70px;
+          line-height: 70px;
+          font-size: 25pt;
+          cursor: pointer;
+        }
+        .top-current-time {
+          color: #b1ffff;
+          font-size: 15pt;
+
+          &::before {
+            position: absolute;
+            left: -20px;
+            content: '';
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+          }
+        }
+      }
+      .top-right {
+        width: 686px;
+        height: 75px;
+        line-height: 45px;
+        padding: 15px 30px 15px 230px;
+        vertical-align: top;
+        display: inline-block;
+
+        span {
+          font-size: 14pt;
+          line-height: 50px;
+          vertical-align: top;
+          display: inline-block;
+        }
+        .safe-running-days-value {
+          margin: 8px;
+          padding-right: 2px;
+          border-radius: 2px;
+          display: inline-block;
+          overflow: hidden;
+        }
+      }
+    }
+
+    .left {
+      float: left;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      padding-left: 30px;
+      width: 458px;
+      height: 100%;
+      background: url(/images/main/exhibition/left_bg.png) left 30px no-repeat;
+      //box-shadow: 0 0 100px 100px @mainBackground;
+      z-index: 2;
+    }
+
+    .right {
+      float: right;
+      position: absolute;
+      top: 72px;
+      right: 0;
+      padding-right: 30px;
+      width: 458px;
+      height: 100%;
+      background: url(/images/main/exhibition/right_bg.png) right 30px no-repeat;
+      //box-shadow: 0 0 100px 100px @mainBackground;
+      z-index: 2;
+    }
+
+    .center {
+      position: absolute;
+      left: 474px;
+      top: 90px;
+      //width: 100%;
+      width: 975px;
+      height: ~'calc(100% - 105px)';
+      height: 98% @hack-v-ie8-10;
+      background: #285e6f;
+      overflow: hidden @hack-v-ie8-10;
+      .clipPath(30px 0, 100% 0, 100% 100%, 26px 100%, 0 946px, 0 30px;);
+
+      .map-path {
+        position: absolute;
+        top: 40px;
+        left: 60px;
+        z-index: 450;
+        > ul {
+          > li.mp_item {
+            height: 0;
+            margin-left: -20px;
+            padding-left: 0.5em;
+            font-family: 'Glyphicons Halflings';
+            background: rgb(15, 62, 90);
+            background-clip: padding-box;
+            border-style: solid;
+            border-width: 25px 24px 10px 25px;
+            border-image: url(/images/main/exhibition/map_place_item_bg.png) 25 24 10 25 round;
+            display: inline-block;
+            cursor: pointer;
+
+            &.mp_selected {
+              cursor: auto;
+            }
+
+            span {
+              position: relative;
+              top: -20px;
+              height: 25px;
+              line-height: 25px;
+              display: inline-block;
+            }
+
+            &:first-child {
+              margin-left: 0;
+              padding-left: 0;
+              padding-right: 18px;
+              border-width: 24px 24px 10px 12px;
+              border-image: url(/images/main/exhibition/map_place_bg.png) 24 24 10 12 repeat;
+
+              span {
+                left: 18px;
+              }
+
+              &::before {
+                content: "\e062";
+                position: absolute;
+                top: -17px;
+                width: 12px;
+                height: 12px;
+                margin-right: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      .center-map {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #285e6f;
+        //box-shadow: inset 0 0 100px 100px @mainBackground;
+        //.clipPath(0 0, 697px 0, 715px 32px, 1221px 32px, 1238px 0, 100% 0, 100% 100%, 0 100%;);
+        .clipPath(30px 0, 224px 0, 242px 32px, 750px 32px, 766px 0, 100% 0, 100% 100%, 26px 100%, 0 946px, 0 30px;);
+        z-index: 0;
+
+        .domain-icon {
+          width: 55px;
+          height: 55px;
+          border-radius: 50%;
+        }
+        .domain-wrapper {
+          width: 50px;
+          height: 50px;
+          opacity: 1;
+          cursor: pointer;
+          margin: 0 auto;
+          position: relative;
+          -webkit-border-radius: 50%;
+          border-radius: 50%;
+          color: #ffffff;
+          .rgba(255, 180, 0, 0.78);
+          box-shadow: 0 0 10px rgba(255, 180, 0, 0.78);
+          text-shadow: 0 2px 5px #fff;
+          .title {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            span {
+              font-size: 16px;
+              display: inline-block;
+              text-align: center;
+              white-space: nowrap;
+            }
+          }
+          .glow {
+            background: #ff9600;
+            width: 0px;
+            height: 0px;
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
+            //border: 15px solid #ff4a50;
+            -webkit-animation: glowKeyFrame 5s ease-out infinite both;
+            animation: glowKeyFrame 5s ease-out infinite both;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+          }
+
+          @keyframes glowKeyFrame {
+            0% {
+              width: 0px;
+              height: 0px;
+              opacity: 0.8;
+              top: 25px;
+              left: 25px;
+            }
+            100% {
+              top: -25px;
+              left: -25px;
+              width: 100px;
+              height: 100px;
+              opacity: 0;
+            }
+          }
+        }
+
+        /*大屏电站图标样式 start*/
+        .awesome-marker {
+          width: 35px;
+          height: 46px;
+          i {
+            display: none;
+          }
+
+          //地面式
+          &.awesome-marker-icon-centralized-planning {
+            background: url('/images/main/exhibition/mapPoints/centralized_planning.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-centralized-building {
+            background: url('/images/main/exhibition/mapPoints/centralized_building.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-centralized-running {
+            background: url('/images/main/exhibition/mapPoints/centralized_running.png') no-repeat -1px 7px;
+          }
+
+          //分布式
+          &.awesome-marker-icon-distributed-planning {
+            background: url('/images/main/exhibition/mapPoints/distributed_planning.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-distributed-building {
+            background: url('/images/main/exhibition/mapPoints/distributed_building.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-distributed-running {
+            background: url('/images/main/exhibition/mapPoints/distributed_running.png') no-repeat -1px 7px;
+          }
+
+          //户用
+          &.awesome-marker-icon-household-planning {
+            background: url('/images/main/exhibition/mapPoints/household_planning.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-household-building {
+            background: url('/images/main/exhibition/mapPoints/household_building.png') no-repeat -1px 7px;
+          }
+          &.awesome-marker-icon-household-running {
+            background: url('/images/main/exhibition/mapPoints/household_running.png') no-repeat -1px 7px;
+          }
+        }
+        /*大屏电站图标样式 end*/
+
+        /*地图弹窗风格设置 start*/
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+          background: rgba(0, 64, 106, .95);
+          border: 1px solid #285f74;
+        }
+        .leaflet-popup-content-wrapper {
+          .leaflet-popup-content {
+            padding: 20px;
+            margin: -1px;
+            border-radius: 12px;
+
+            #exhibition_station_infoWin {
+              width: 800px;
+              min-height: 360px;
+
+              label {
+                line-height: 1.8;
+                font-size: 14px;
+                font-weight: normal;
+              }
+
+              .bold {
+                font-weight: 600;
+              }
+
+              #title {
+                .col-xs-12 {
+                  padding: 0;
+                  margin: 5px 0;
+                }
+              }
+
+              #content {
+                .info-picture {
+                  width: 500px;
+                  height: 300px;
+                }
+
+                .info-weather-msg {
+                  width: 500px;
+                  #info_dz_weather {
+                    height: 200px;
+                    font-size: 11px;
+                    color: #fff;
+                    padding: 10px;
+                    margin: 20px auto -8px;
+                    box-shadow: inset 0 0 50px #145784;
+                    border-radius: 0 8px;
+                    border: 1px solid #275a69;
+
+                    .weather-top {
+                      height: 30px;
+                      padding: 2px 10px;
+                    }
+                    .weather-main {
+                      width: 100%;
+                      margin: 0 auto;
+                      display: table;
+
+                      .weather-left {
+                        width: 25%;
+                        vertical-align: top;
+                        display: table-cell;
+
+                        .wl-img {
+                          img {
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto;
+                            display: block;
+                          }
+                        }
+                        .wl-temperature {
+                          font-size: 12pt;
+                          text-align: center;
+                        }
+                      }
+
+                      .weather-right {
+                        width: 75%;
+                        vertical-align: top;
+                        display: table-cell;
+
+                        .weather-right-day {
+                          float: left;
+                          width: 25%;
+                          height: 98%;
+                          border-left: 1px solid #2f547c;
+
+                          .wr-img {
+                            img {
+                              width: 45px;
+                              height: 45px;
+                              margin: 0 auto;
+                              display: block;
+                            }
+                          }
+                        }
+                      }
+
+                      .wm-msg {
+                        display: -webkit-box;
+                        margin: 0 auto;
+                        overflow: hidden;
+                        height: 22px;
+                        line-height: 22px;
+                        text-align: center;
+                        word-break: break-word;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                      }
+                    }
+                  }
+                }
+
+                .info-station-msg {
+                  height: 100%;
+                  margin-right: 15px;
+                  display: flex;
+                  flex-direction: column;
+
+                  #station_briefing {
+                    height: 248px;
+                    font-size: 10pt;
+                    line-height: 1.5;
+                    text-indent: 2em;
+                    flex: 1;
+                    overflow: auto;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .center-top-shade {
+        position: absolute;
+        top: -1px;
+        left: 224px;
+        width: 541px;
+        height: 32px;
+        background: url(/images/main/exhibition/center_top_shade.png) center no-repeat;
+        .background-size(100%, 100%);
+        z-index: 400;
+      }
+      .center-left-shade {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 140px;
+        height: 120px;
+        background: url(/images/main/exhibition/center_nav_shade.png) 0 0 no-repeat;
+        .clipPath(0 0, 125px 0, 140px 15px, 140px 24px, 100px 24px, 93px 22px, 44px 22px, 44px 44px, 20px 44px, 20px 75px, 28px 86px, 28px 140px, 0 108px, 0 30px;);
+        z-index: 400;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: -12px;
+          left: -12px;
+          width: 0;
+          height: 0;
+          border-width: 20px;
+          border-style: solid;
+          border-color: transparent #061727 transparent transparent;
+          .rotate(45deg);
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 28px;
+          top: 28px;
+          width: 0;
+          height: 0;
+          border-width: 12px;
+          border-style: solid;
+          border-color: transparent transparent transparent #49cde5;
+          .rotate(45deg);
+        }
+      }
+    }
+
+    .bottom {
+
+    }
+  }
+}

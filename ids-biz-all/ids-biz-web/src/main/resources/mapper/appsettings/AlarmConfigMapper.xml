@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.biz.web.appsettings.dao.AlarmConfigDao">
+    <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.alarm.AlarmModel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT"/>
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR"/>
+        <result column="signal_version" property="signalVersion" jdbcType="VARCHAR"/>
+        <result column="alarm_id" property="alarmId" jdbcType="INTEGER"/>
+        <result column="model_id" property="modelId" jdbcType="BIGINT"/>
+        <result column="cause_id" property="causeId" jdbcType="INTEGER"/>
+        <result column="dev_type_id" property="devTypeId" jdbcType="SMALLINT"/>
+        <result column="severity_id" property="severityId" jdbcType="TINYINT"/>
+        <result column="metro_unit" property="metroUnit" jdbcType="VARCHAR"/>
+        <result column="alarm_name" property="alarmName" jdbcType="VARCHAR"/>
+        <result column="alarm_sub_name" property="alarmSubName" jdbcType="VARCHAR"/>
+        <result column="sig_address" property="sigAddress" jdbcType="BIGINT"/>
+        <result column="bit_index" property="bitIndex" jdbcType="TINYINT"/>
+        <result column="alarm_cause" property="alarmCause" jdbcType="VARCHAR"/>
+        <result column="repair_suggestion" property="repairSuggestion" jdbcType="VARCHAR"/>
+        <result column="alarm_type" property="alarmType" jdbcType="TINYINT"/>
+        <result column="tele_type" property="teleType" jdbcType="TINYINT"/>
+        <result column="is_subscribed" property="isSubscribed" jdbcType="BIT"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
+        <result column="is_station_lev" property="isStationLev" jdbcType="BIT"/>
+        <result column="source_id" property="sourceId" jdbcType="TINYINT"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="BIGINT"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="stationCode">
+        SELECT s.station_code FROM ids_station_info_t s WHERE s.create_user_id
+    </sql>
+
+    <sql id="enterpriseId">
+        select u.enterprise_id from ids_sm_user_info_t u where u.id
+    </sql>
+
+    <select id="listInfoByUserId" resultMap="BaseResultMap">
+        SELECT * FROM ids_alarm_model_t AS a
+        <where>
+            <if test="params.userType == 'normal'">
+                (a.station_code IN (
+               		SELECT station.station_code FROM ids_station_info_t station,ids_sm_user_station_t ustation
+					WHERE station.station_code = ustation.station_code AND ustation.user_id = #{params.userId}
+                ) OR a.station_code IS NULL)
+            </if>
+            <if test="params.userType == 'enterprise'">
+                (a.station_code IN (
+                	SELECT station.station_code FROM ids_station_info_t station,ids_sm_user_info_t usert
+					WHERE station.enterprise_id = usert.enterprise_id AND usert.id == #{params.userId}
+				) OR a.station_code IS NULL)
+            </if>
+            
+            <if test="params.devTypeId != -1 and params.devTypeId != null">
+                AND a.dev_type_id = #{params.devTypeId}
+            </if>
+            <if test="params.version != '-1' and params.version != null">
+                AND a.model_version_code = #{params.version}
+            </if>
+            <if test="params.severityId != -1 and params.severityId != null">
+                AND a.severity_id = #{params.severityId}
+            </if>
+            <if test="params.alarmName != null and params.alarmName != ''">
+                <bind name="alarmName" value="'%' + params.alarmName + '%'"/>
+                AND a.alarm_name like #{alarmName}
+            </if>
+            <if test="params.alarmCause != null and params.alarmCause != ''">
+                <bind name="alarmCause" value="'%' + params.alarmCause + '%'"/>
+                AND a.alarm_cause like #{alarmCause}
+            </if>
+            <if test="params.repairSuggestion != null and params.repairSuggestion != ''">
+                <bind name="repairSuggestion" value="'%' + params.repairSuggestion + '%'"/>
+                AND a.repair_suggestion like #{repairSuggestion}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids</artifactId>
+		<groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+	  
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-dev-all</artifactId>
+    <packaging>pom</packaging>
+	
+    <modules>
+		<module>ids-dev-db</module>
+		<module>ids-dev-network</module>
+		<module>ids-dev-alarm</module>
+		<module>ids-dev-starter</module>
+		<module>ids-dev-api</module>
+		<module>ids-gatekeeper-server</module>
+		
+    </modules>
+
+	<dependencies>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-common-project</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+			<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-redis-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-common-interface</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+	</dependencies>
+	<!--build>
+		<resources>
+			<resource>
+				<directory>src/main/conf</directory>
+			</resource>
+		</resources>
+    </build-->
+	
+</project>
+

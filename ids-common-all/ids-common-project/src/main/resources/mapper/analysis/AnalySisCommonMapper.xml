@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.analysis.AnalysisCommonMapper" >
+  
+   <select id="getMaxCollectTime2Range" parameterType="java.util.Map" resultType="java.lang.Long" statementType="STATEMENT">
+      select max(collect_time) from ${table} 
+          <where>
+              <if test="null != stationCode">
+                  station_code = '${stationCode}'
+              </if>
+              and collect_time between ${beginTime} and ${endTime}
+          </where>
+  	</select>
+  	
+  <select id="getMaxValue2Range" parameterType="java.util.Map" resultType="java.lang.Double" statementType="STATEMENT">
+      select max(${column}) from ${table} 
+          <where>
+          	collect_time between ${beginTime} and ${endTime} and
+              <if test="null != stationCode">
+                  station_code = '${stationCode}'
+              </if>
+              <if test="null != deviceId">
+                  dev_id = ${deviceId}
+              </if>
+               
+          </where>
+  	</select>
+		
+	<select id="getSumValue2Range" parameterType="java.util.Map" resultType="java.lang.Double" statementType="STATEMENT">
+      select sum(${column}) from ${table} 
+          <where>
+              <if test="null != stationCode">
+                  station_code = '${stationCode}'
+              </if>
+              <if test="null != deviceId">
+                  dev_id = ${deviceId}
+              </if>
+              and collect_time between ${beginTime} and ${endTime}
+          </where>
+  	</select>
+  	
+  	<select id="getTransferSumVoltage2Range" parameterType="java.util.Map" resultType="java.lang.Double" statementType="STATEMENT">
+      select sum(ab_u) + sum(bc_u) + sum(ca_u) from ids_transformer_data_t 
+          <where>
+              <if test="null != stationCode">
+                  station_code = '${stationCode}'
+              </if>
+               <if test="null != deviceId">
+                  dev_id = ${deviceId}
+              </if>
+             and collect_time between ${beginTime} and ${endTime}
+          </where>
+  	</select>
+  	
+  	<select id="getInverterMaxPv2Range" parameterType="java.util.Map" resultType="java.lang.Double" statementType="STATEMENT">
+      select inv.dev_name,max(inv.pv1_i),max(inv.pv2_i),max(inv.pv3_i),max(inv.pv4_i),max(inv.pv5_i),max(inv.pv6_i),max(inv.pv7_i),
+		max(inv.pv8_i),max(inv.pv9_i),max(inv.pv10_i),max(inv.pv11_i),max(inv.pv12_i),max(inv.pv13_i),max(inv.pv14_i),max(inv.pv1_u),max(inv.pv2_u),
+		max(inv.pv3_u),max(inv.pv4_u),max(inv.pv5_u),max(inv.pv6_u),max(inv.pv7_u),max(inv.pv8_u),max(inv.pv9_u),max(inv.pv10_u),max(inv.pv11_u),
+		max(inv.pv12_u),max(inv.pv13_u),max(inv.pv14_u) from ids_inverter_string_data_t inv  
+          <where>
+              <if test="null != stationCode">
+                  station_code = '${stationCode}'
+              </if>
+              and collect_time between ${beginTime} and ${endTime}
+          </where>
+          GROUP BY inv.dev_name
+  	</select>
+  	
+  	<select id="queryVloAndCurrent" parameterType="java.util.Map" resultType="java.lang.Integer">
+      select count(*) from ids_inverter_string_data_t 
+          <where>
+              <if test="null != stationCode">
+                  station_code = #{stationCode}
+              </if>
+               <if test="null != deviceId">
+                  dev_id = ${deviceId}
+              </if>
+             and collect_time between ${beginTime} and ${endTime} and ab_u>400 and bc_u>400 and ca_u>400 and a_i=0 and b_i=0 and c_i=0
+          </where>
+  	</select>
+  	
+</mapper>

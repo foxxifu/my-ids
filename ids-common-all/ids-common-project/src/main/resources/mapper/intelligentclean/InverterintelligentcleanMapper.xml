@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.intelligentclean.InverterintelligentcleanMapper">
+	<resultMap id="IntelligentCleanParamMap" type="com.interest.ids.common.project.bean.intelligentclean.InverterintelligentcleanM">
+		<id column="dev_id" jdbcType="BIGINT" property="devId" />
+		<id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+		<id column="start_time" jdbcType="BIGINT" property="startTime" />
+		<result column="station_name" jdbcType="VARCHAR" property="stationName" />
+		<result column="array_name" jdbcType="VARCHAR" property="arrayName" />
+		<result column="array_code" jdbcType="VARCHAR" property="arrayCode" />
+		<result column="capacity" jdbcType="DECIMAL" property="capacity" />
+		<result column="base_pr" jdbcType="DECIMAL" property="basePr" />
+		<result column="current_pr" jdbcType="DECIMAL" property="currentPr" />
+		<result column="power_profit_thirty" jdbcType="DECIMAL" property="powerProfitThirty" />
+		<result column="power_profit_thirty_ratio" jdbcType="DECIMAL" property="powerProfitThirtyRatio" />
+		<result column="power_profit_sixty" jdbcType="DECIMAL" property="powerProfitSixty" />
+		<result column="power_profit_sixty_ratio" jdbcType="DECIMAL" property="powerProfitSixtyRatio" />
+		<result column="end_time" jdbcType="BIGINT" property="endTime" />
+	</resultMap>
+</mapper>

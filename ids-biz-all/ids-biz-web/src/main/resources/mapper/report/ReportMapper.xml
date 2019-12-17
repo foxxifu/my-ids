@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.biz.web.report.dao.ReportDao">
+    <!-- dev runtime alarm report -->
+    <resultMap id="DevFaultResultMap" type="com.interest.ids.biz.web.report.vo.DevFaultReportVO">
+        <result column="dev_type_id" property="devTypeId" jdbcType="BIGINT"/>
+        <!--<result column="" property="deviceTypeName" jdbcType="VARCHAR" />-->
+        <result column="happen_num" property="happenNum" jdbcType="INTEGER"/>
+        <result column="level_id" property="level" jdbcType="VARCHAR"/>
+        <result column="max_alarm_duration" property="maxTroubleDuration" jdbcType="VARCHAR"/>
+        <result column="max_alarm_num" property="maxTroubleName" jdbcType="VARCHAR"/>
+        <result column="alarm_duration" property="troubleDuration" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- station runtime report -->
+    <resultMap id="StationResultMap" type="com.interest.ids.biz.web.report.vo.StationReportVO">
+        <result column="all_use_power" property="allUserPower" jdbcType="INTEGER"/>
+        <result column="all_use_power_ratio" property="allUserPowerRatio" jdbcType="VARCHAR"/>
+        <result column="buy_power" property="buyPower" jdbcType="VARCHAR"/>
+        <result column="collect_time" property="collectTime" jdbcType="INTEGER"/>
+        <result column="equivalent_hour" property="equivalentHour" jdbcType="VARCHAR"/>
+        <result column="in_come" property="inCome" jdbcType="INTEGER"/>
+        <result column="ongrid_power" property="ongridPower" jdbcType="INTEGER"/>
+        <result column="pr" property="pr" jdbcType="INTEGER"/>
+        <result column="product_power" property="productPower" jdbcType="INTEGER"/>
+        <result column="theory_power" property="theoryPower" jdbcType="INTEGER"/>
+        <result column="radiation_intensity" property="radiationIntensity" jdbcType="INTEGER"/>
+        <result column="self_use_power" property="selfUsePower" jdbcType="INTEGER"/>
+        <result column="self_use_ratio" property="selfUseRatio" jdbcType="INTEGER"/>
+        <result column="station_code" property="stationCode" jdbcType="INTEGER"/>
+        <result column="station_name" property="stationName" jdbcType="INTEGER"/>
+        <result column="use_power" property="usePower" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 逆变器运行报表返回类型 -->
+    <resultMap id="InverterReport_ResultMap" type="com.interest.ids.biz.web.report.vo.InverterReportVO">
+        <result column="collect_time" jdbcType="BIGINT" property="collectTime"/>
+        <result column="station_name" jdbcType="VARCHAR" property="stationName"/>
+        <result column="device_id" jdbcType="BIGINT" property="deviceId"/>
+        <result column="dev_name" jdbcType="VARCHAR" property="devName"/>
+        <result column="product_power" jdbcType="DECIMAL" property="inverterPower"/>
+        <result column="efficiency" jdbcType="DECIMAL" property="efficiency"/>
+        <result column="peak_power" jdbcType="DECIMAL" property="peakPower"/>
+        <result column="aoc_ratio" jdbcType="DECIMAL" property="aocRatio"/>
+        <result column="total_aop" jdbcType="DECIMAL" property="aopRatio"/>
+        <result column="yield_deviation" jdbcType="DECIMAL" property="powerDeviation"/>
+        <result column="inverter_type" jdbcType="INTEGER" property="inverterType"/>
+        <result column="real_capacity" jdbcType="DECIMAL" property="installedCapacity"/>
+    </resultMap>
+    
+    <!-- 子阵运行报表返回类型 -->
+    <resultMap id="SubarrayReport_ResultMap" type="com.interest.ids.biz.web.report.vo.SubarrayReportVO">
+        <result column="collect_time" jdbcType="BIGINT" property="collectTime"/>
+        <result column="station_code" jdbcType="VARCHAR" property="stationCode"/>
+        <result column="station_name" jdbcType="VARCHAR" property="stationName"/>
+        <result column="matrix_id" jdbcType="BIGINT" property="matrixId"/>
+        <result column="subarray_name" jdbcType="VARCHAR" property="subarrayName"/>
+        <result column="real_capacity" jdbcType="DECIMAL" property="realCapacity"/>
+        <result column="product_power" jdbcType="DECIMAL" property="productPower"/>
+        <result column="peak_power" jdbcType="DECIMAL" property="peakPower"/>
+        <result column="perPower_ratio" jdbcType="DECIMAL" property="perPowerRatio"/>
+    </resultMap>
+    
+    <!-- 逆变器详细运行报表返回类型 -->
+    <resultMap id="InverterDetailReport_ResultMap" type="com.interest.ids.biz.web.report.vo.InverterDetailReportVO">
+        <result column="collect_time" jdbcType="BIGINT" property="collectTime"/>
+        <result column="station_code" jdbcType="VARCHAR" property="stationCode"/>
+        <!-- <result column="station_name" jdbcType="VARCHAR" property="stationName"/> -->
+        <result column="dev_id" jdbcType="BIGINT" property="devId"/>
+        <result column="dev_name" jdbcType="VARCHAR" property="devName"/>
+        
+        <result column="a_u" jdbcType="DECIMAL" property="au"/>
+        <result column="b_u" jdbcType="DECIMAL" property="bu"/>
+        <result column="c_u" jdbcType="DECIMAL" property="cu"/>
+        
+        <result column="a_i" jdbcType="DECIMAL" property="ai"/>
+        <result column="b_i" jdbcType="DECIMAL" property="bi"/>
+        <result column="c_i" jdbcType="DECIMAL" property="ci"/>
+        
+        <result column="pv1_u" jdbcType="DECIMAL" property="pv1u"/>
+        <result column="pv2_u" jdbcType="DECIMAL" property="pv2u"/>
+        <result column="pv3_u" jdbcType="DECIMAL" property="pv3u"/>
+        <result column="pv4_u" jdbcType="DECIMAL" property="pv4u"/>
+        <result column="pv5_u" jdbcType="DECIMAL" property="pv5u"/>
+        <result column="pv6_u" jdbcType="DECIMAL" property="pv6u"/>
+        <result column="pv7_u" jdbcType="DECIMAL" property="pv7u"/>
+        <result column="pv8_u" jdbcType="DECIMAL" property="pv8u"/>
+        <result column="pv9_u" jdbcType="DECIMAL" property="pv9u"/>
+        <result column="pv10_u" jdbcType="DECIMAL" property="pv10u"/>
+        <result column="pv11_u" jdbcType="DECIMAL" property="pv11u"/>
+        <result column="pv12_u" jdbcType="DECIMAL" property="pv12u"/>
+        <result column="pv13_u" jdbcType="DECIMAL" property="pv13u"/>
+        <result column="pv14_u" jdbcType="DECIMAL" property="pv14u"/>
+        
+        <result column="pv1_i" jdbcType="DECIMAL" property="pv1i"/>
+        <result column="pv2_i" jdbcType="DECIMAL" property="pv2i"/>
+        <result column="pv3_i" jdbcType="DECIMAL" property="pv3i"/>
+        <result column="pv4_i" jdbcType="DECIMAL" property="pv4i"/>
+        <result column="pv5_i" jdbcType="DECIMAL" property="pv5i"/>
+        <result column="pv6_i" jdbcType="DECIMAL" property="pv6i"/>
+        <result column="pv7_i" jdbcType="DECIMAL" property="pv7i"/>
+        <result column="pv8_i" jdbcType="DECIMAL" property="pv8i"/>
+        <result column="pv9_i" jdbcType="DECIMAL" property="pv9i"/>
+        <result column="pv10_i" jdbcType="DECIMAL" property="pv10i"/>
+        <result column="pv11_i" jdbcType="DECIMAL" property="pv11i"/>
+        <result column="pv12_i" jdbcType="DECIMAL" property="pv12i"/>
+        <result column="pv13_i" jdbcType="DECIMAL" property="pv13i"/>
+        <result column="pv14_i" jdbcType="DECIMAL" property="pv14i"/>
+        
+        <result column="temperature" jdbcType="DECIMAL" property="temperature"/>
+        <result column="grid_frequency" jdbcType="DECIMAL" property="gridFrequency"/>
+        <result column="active_power" jdbcType="DECIMAL" property="activePower"/>
+        <result column="day_capacity" jdbcType="DECIMAL" property="dayCapacity"/>
+        <result column="total_capacity" jdbcType="DECIMAL" property="totalCapacity"/>
+    </resultMap>
+    
+    <resultMap id="Devices_ResultMap" type="com.interest.ids.biz.web.report.vo.DeviceVO">
+    	<result column="id" jdbcType="BIGINT" property="devId"/>
+        <result column="dev_name" jdbcType="VARCHAR" property="devName"/>
+    </resultMap>
+
+    <sql id="stationCode">
+        SELECT s.station_code FROM ids_sm_user_station_t s WHERE s.user_id
+    </sql>
+
+    <sql id="enterpriseId">
+        select u.enterprise_id from ids_sm_user_info_t u where u.id
+    </sql>
+
+    <select id="listDevFault" resultMap="DevFaultResultMap">
+        SELECT
+        a.dev_type_id,
+        (SELECT
+        COUNT(1)
+        FROM
+        ids_cleared_alarm_t c
+        WHERE
+        c.dev_type_id = a.dev_type_id
+        AND c.level_id = a.level_id) AS happen_num,
+        a.level_id,
+        (SELECT
+        SUM(IFNULL(recover_time, UNIX_TIMESTAMP(NOW()) * 1000) - create_time)
+        FROM
+        ids_cleared_alarm_t c
+        WHERE
+        c.dev_type_id = a.dev_type_id
+        AND c.level_id = a.level_id) AS alarm_duration,
+        (SELECT
+        alarm_name
+        FROM
+        (SELECT
+        c.dev_type_id,
+        c.level_id,
+        c.alarm_name,
+        (IFNULL(c.recover_time, UNIX_TIMESTAMP(NOW()) * 1000) - c.create_time) AS duration
+        FROM
+        ids_cleared_alarm_t c
+        GROUP BY c.alarm_name) t
+        WHERE
+        t.dev_type_id = a.dev_type_id
+        AND t.level_id = a.level_id
+        ORDER BY t.duration DESC
+        LIMIT 1) AS max_alarm_duration,
+        (SELECT
+        alarm_name
+        FROM
+        (SELECT
+        c.dev_type_id, c.level_id, c.alarm_name, COUNT(1) AS counts
+        FROM
+        ids_cleared_alarm_t c
+        GROUP BY c.alarm_name) t
+        WHERE
+        t.dev_type_id = a.dev_type_id
+        AND t.level_id = a.level_id
+        ORDER BY t.counts DESC
+        LIMIT 1) AS max_alarm_num
+        FROM
+        ids_cleared_alarm_t a
+        <where>
+            <if test="params.userType == null">
+                a.station_code IN (
+                <include refid="stationCode"/>
+                = #{params.userId}
+                )
+            </if>
+            <if test="params.userType != 'system'">
+                AND a.enterprise_id = (
+                <include refid="enterpriseId"/>
+                = #{params.userId})
+            </if>
+            <if test="params.stationCodes != null">
+                AND a.station_code IN
+                <foreach collection="params.stationCodes" item="stationCode" open="(" separator="," close=")">
+                    #{stationCode}
+                </foreach>
+            </if>
+            <if test="params.devTypeId != null and params.devTypeId != -1">
+                AND a.dev_type_id = #{params.devTypeId}
+            </if>
+            <if test="params.time != null">
+                AND a.create_time = #{params.time}
+            </if>
+        </where>
+        GROUP BY a.dev_type_id, a.level_id
+    </select>
+
+    <select id="listStation" parameterType="com.interest.ids.biz.web.report.controller.params.ReportParams" resultMap="StationResultMap">
+    	<choose>
+    		<when test="timeDim == 'day' and reportDataType == 1">
+    			SELECT  station.station_name,s.station_code,s.collect_time,s.radiation_intensity,
+				s.product_power,s.power_profit AS in_come,s.theory_power
+    		</when>
+    		<otherwise>
+    			SELECT  station.station_name,s.station_code,s.collect_time,s.radiation_intensity,
+    			s.equivalent_hour,
+				s.performance_ratio AS pr,s.product_power,s.ongrid_power,s.power_profit AS in_come,
+				IFNULL((s.product_power - s.ongrid_power),0) AS self_use_power,
+        		IFNULL((s.product_power - s.ongrid_power) / s.product_power,0) AS self_use_ratio
+    		</otherwise>
+    	</choose>
+        FROM
+        <choose>
+            <when test="timeDim == 'day' and reportDataType == 2">
+            	ids_kpi_day_station_t
+            </when>
+            <when test="timeDim == 'day' and reportDataType == 1">
+            	ids_kpi_hour_station_t
+            </when>
+            <when test="timeDim == 'month' and reportDataType == 2">
+            	ids_kpi_month_station_t
+            </when>
+            <when test="timeDim == 'month' and reportDataType == 1">
+            	ids_kpi_day_station_t
+            </when>
+            <when test="timeDim == 'year' and reportDataType == 2">
+            	ids_kpi_year_station_t
+            </when>
+            <when test="timeDim == 'year' and reportDataType == 1">
+            	ids_kpi_month_station_t
+            </when>
+        </choose>
+        s,ids_station_info_t station
+        <where>
+        	s.station_code = station.station_code
+       		<if test="stationCodes != null">
+                AND s.station_code IN
+                <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+                    #{stationCode}
+                </foreach>
+           	</if>
+	        AND s.collect_time BETWEEN #{startTime} AND #{endTime}
+        </where>
+        ORDER BY s.collect_time ASC
+    </select>
+
+    <select id="getMaxTroubleName" resultType="java.lang.String">
+        SELECT c.alarm_name FROM ids_cleared_alarm_t c 
+        WHERE c.dev_type_id = #{devTypeId} AND c.level_id = #{levId}
+        GROUP BY c.alarm_name ORDER BY COUNT(1) DESC LIMIT 1
+    </select>
+
+    <!-- 查询逆变器运行报表 -->
+    <select id="selectInverterRpt" resultMap="InverterReport_ResultMap">
+        select sit.station_name, datat.device_id, datat.dev_name, datat.collect_time, datat.product_power, 
+        datat.peak_power, datat.efficiency, datat.inverter_type, datat.real_capacity as real_capacity
+        <if test="timeDim == 'day'">
+            ,datat.yield_deviation, datat.aop_ratio, datat.aoc_ratio
+        </if> 
+        from
+        <choose>
+            <when test="timeDim == 'day'">ids_kpi_day_inverter_t </when>
+            <when test="timeDim == 'month'">ids_kpi_month_inverter_t </when>
+            <when test="timeDim == 'year'">ids_kpi_year_inverter_t </when>
+        </choose>
+        datat inner join ids_station_info_t sit on datat.station_code = sit.station_code
+        <choose>
+       		<when test="stationCodes != null and stationCodes.size > 0">
+       			where datat.collect_time = #{time} and datat.station_code in 
+	        	<foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+	        		#{stationCode}
+	        	</foreach>
+       		</when>
+       		<otherwise>
+       			<choose>
+       				<when test="userType == 'system'">
+       					where datat.collect_time = #{time}
+       				</when>
+       				<when test="userType == 'enterprise'">
+       					where datat.collect_time = #{time} and sit.enterprise_id = #{enterpriseId}
+       				</when>
+       				<otherwise>
+       					inner join ids_sm_user_station_t ust on sit.station_code = ust.station_code and ust.user_id = #{userId}
+       					where datat.collect_time = #{time}
+       				</otherwise>
+       			</choose>
+       		</otherwise>
+       	</choose>
+        order by datat.station_code,datat.device_id
+        <if test="length != -1">
+            limit #{startIndex},#{length}
+        </if>
+    </select>
+
+    <!-- 查询逆变器运行报表总记录数 -->
+    <select id="countInverterReportResult" resultType="java.lang.Integer">
+        select count(1) from
+        <choose>
+            <when test="timeDim == 'day'">ids_kpi_day_inverter_t</when>
+            <when test="timeDim == 'month'">ids_kpi_month_inverter_t</when>
+            <when test="timeDim == 'year'">ids_kpi_year_inverter_t</when>
+        </choose>
+       	<choose>
+       		<when test="stationCodes != null and stationCodes.size > 0">
+       			where collect_time = #{time} and station_code in 
+	        	<foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+	        		#{stationCode}
+	        	</foreach>
+       		</when>
+       		<otherwise>
+       			<choose>
+       				<when test="userType == 'system'">
+       					where collect_time = #{time}
+       				</when>
+       				<when test="userType == 'enterprise'">
+       					datat inner join ids_station_info_t sit on datat.station_code = sit.station_code
+       					where collect_time = #{time} and sit.enterprise_id = #{enterpriseId}
+       				</when>
+       				<otherwise>
+       					datat inner join ids_sm_user_station_t ust on datat.station_code = ust.station_code and ust.user_id = #{userId}
+       					inner join ids_station_info_t sit on ust.station_code = sit.station_code
+       					where collect_time = #{time}
+       				</otherwise>
+       			</choose>
+       		</otherwise>
+       	</choose>
+    </select>
+    
+    <!-- 查询子阵运行报表 -->
+    <select id="selectSubarrayRpt" resultMap="SubarrayReport_ResultMap">
+	    select a.collect_time,a.station_code,b.station_name,a.matrix_id,b.subarray_name,a.real_capacity,a.product_power,a.peak_power,round(a.ehu,2) perPower_ratio from (
+		    select a.matrix_id,a.station_code,a.collect_time,sum(a.real_capacity) real_capacity,sum(a.product_power) product_power,sum(a.peak_power) peak_power,sum(a.product_power)/sum(a.real_capacity) ehu from (
+				select a.id,a.dev_name,a.station_code,a.matrix_id,b.collect_time,b.product_power,b.peak_power,b.real_capacity from (
+					select a.id,a.dev_name,a.station_code,a.matrix_id from (
+						select * from ids_dev_info_t 
+						where 1=1
+						and (dev_type_id=1 || dev_type_id=14)  
+						and station_code=#{stationCode}
+						and matrix_id is not null
+					) a
+				) a
+				left join (
+					select a.collect_time,a.station_code,a.device_id,a.product_power,a.peak_power,a.real_capacity from 
+					<choose>
+			            <when test="timeDim == 'day'">ids_kpi_day_inverter_t</when>
+			            <when test="timeDim == 'month'">ids_kpi_month_inverter_t</when>
+			            <when test="timeDim == 'year'">ids_kpi_year_inverter_t</when>
+			        </choose>
+					a
+					where 1=1
+					and a.collect_time=#{time}
+					and a.station_code=#{stationCode}
+				) b
+				on a.id=b.device_id
+				and a.station_code=b.station_code
+			) a
+			group by a.matrix_id
+			<if test="length != -1">
+	            limit #{startIndex},#{length}
+	        </if>
+	    ) a 
+		left join
+		( 
+		  select a.station_code,a.station_name,b.id,b.subarray_name from 
+		  (
+		    select * from ids_station_info_t
+		    where 1=1
+		    and station_code=#{stationCode}
+		  ) a
+		  left join ids_subarray_info_t b
+		  on a.station_code=b.station_code
+		) b
+		on a.station_code=b.station_code
+		and a.matrix_id=b.id
+    </select>
+    
+    <!-- 查询子阵运行报表总记录数 -->
+    <select id="countSubarrayReportResult" resultType="java.lang.Integer">
+    select count(*) from (
+		select * from ids_dev_info_t
+		where 1=1
+		and (dev_type_id=1 || dev_type_id=14)
+		and station_code=#{stationCode}
+		and matrix_id is not null
+		group by matrix_id
+	) a
+    </select>
+    
+    <!-- 查询逆变器详细运行报表（每天每隔5分钟数据） -->
+    <select id="selectInverterDetailRpt" resultMap="InverterDetailReport_ResultMap">
+   	  select 
+   	      dev_id,dev_name,station_code,collect_time,
+          day_capacity,total_capacity,a_u,b_u,c_u,a_i,b_i,c_i,
+          pv1_u,pv2_u,pv3_u,pv4_u,pv5_u,pv6_u,pv7_u,pv8_u,pv9_u,pv10_u,pv11_u,pv12_u,pv13_u,pv14_u,
+          pv1_i,pv2_i,pv3_i,pv4_i,pv5_i,pv6_i,pv7_i,pv8_i,pv9_i,pv10_i,pv11_i,pv12_i,pv13_i,pv14_i,
+   	      temperature,grid_frequency,active_power
+   	  from ids_inverter_string_data_t
+	  where 1=1
+	  and station_code=#{stationCode}
+	  and collect_time between #{beginTime} and #{endTime}
+	  and dev_id in 
+      <foreach collection="deviceIds" item="dev" open="(" separator="," close=")">
+         #{dev}
+      </foreach>
+	  order by dev_id asc,collect_time asc 
+    </select>
+    
+    <!-- 查询逆变器详细运行报表（每天每隔5分钟数据） -->
+    <select id="exportInverterDetailRpt" resultType="java.util.LinkedHashMap">
+   	  select 
+   	      dev_name,collect_time,day_capacity,total_capacity,active_power,temperature,grid_frequency,
+          a_u,b_u,c_u,a_i,b_i,c_i,
+          IFNULL(pv1_u,"") pv1_u,IFNULL(pv2_u,"") pv2_u,IFNULL(pv3_u,"") pv3_u,IFNULL(pv4_u,"") pv4_u,IFNULL(pv5_u,"") pv5_u,IFNULL(pv6_u,"") pv6_u,IFNULL(pv7_u,"") pv7_u,
+          IFNULL(pv8_u,"") pv8_u,IFNULL(pv9_u,"") pv9_u,IFNULL(pv10_u,"") pv10_u,IFNULL(pv11_u,"") pv11_u,IFNULL(pv12_u,"") pv12_u,IFNULL(pv13_u,"") pv13_u,IFNULL(pv14_u,"") pv14_u,
+          IFNULL(pv1_i,"") pv1_i,IFNULL(pv2_i,"") pv2_i,IFNULL(pv3_i,"") pv3_i,IFNULL(pv4_i,"") pv4_i,IFNULL(pv5_i,"") pv5_i,IFNULL(pv6_i,"") pv6_i,IFNULL(pv7_i,"") pv7_i,
+          IFNULL(pv8_i,"") pv8_i,IFNULL(pv9_i,"") pv9_i,IFNULL(pv10_i,"") pv10_i,IFNULL(pv11_i,"") pv11_i,IFNULL(pv12_i,"") pv12_i,IFNULL(pv13_i,"") pv13_i,IFNULL(pv14_i,"") pv14_i
+   	  from ids_inverter_string_data_t
+	  where 1=1
+	  and station_code=#{stationCode}
+	  and collect_time between #{beginTime} and #{endTime}
+	  and dev_id in 
+      <foreach collection="deviceIds" item="dev" open="(" separator="," close=")">
+         #{dev}
+      </foreach>
+	  order by dev_id asc,collect_time asc 
+    </select>
+    
+    <select id="selectDevices" resultMap="Devices_ResultMap">
+    	select id,dev_name from ids_dev_info_t
+    	where 1=1
+    	and station_code=#{stationCode}
+    	and dev_type_id in
+    	<foreach collection="devTypeIds" item="devTypeId" open="(" separator="," close=")">
+         #{devTypeId}
+      	</foreach>
+      	and is_logic_delete=#{isLogicDelete}
+    </select>
+    
+    <!-- 查询逆变器详细（每天五分钟数据）运行报表总记录数 -->
+    <select id="countInverterDetailReportResult" resultType="java.lang.Integer">
+      select count(0) from ids_inverter_string_data_t
+	  where 1=1
+	  and station_code=#{stationCode}
+	  and collect_time=#{collect_time}
+	  and dev_id in 
+      <foreach collection="deviceIds" item="dev" open="(" separator="," close=")">
+         #{dev}
+      </foreach>
+    </select>
+</mapper>

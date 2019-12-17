@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids-biz-all</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-biz-data</artifactId>
+    <packaging>jar</packaging>
+    <name>ids-biz-data</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-common-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-common-project</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-redis-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- third jars -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
+    </dependencies>
+</project>
+

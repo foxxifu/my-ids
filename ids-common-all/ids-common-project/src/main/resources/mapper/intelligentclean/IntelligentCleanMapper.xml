@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.intelligentclean.IntelligentCleanMapper">
+
+	<resultMap id="IntelligentCleanParamMap" type="com.interest.ids.common.project.bean.intelligentclean.IntelligentCleanParamT">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="param_key" jdbcType="VARCHAR" property="paramKey" />
+		<result column="param_name" jdbcType="VARCHAR" property="paramName" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="param_value" jdbcType="VARCHAR" property="paramValue" />
+		<result column="param_unit" jdbcType="VARCHAR" property="paramUnit" />
+		<result column="param_type" jdbcType="VARCHAR" property="paramType" />
+		<result column="param_order" jdbcType="BIT" property="paramOrder" />
+		<result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+		<result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId" />
+		<result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId" />
+		<result column="modify_date" jdbcType="DATE" property="modifyDate" />
+	</resultMap>
+	
+	<!-- 查询智能清洗计算参数配置列表 -->
+	<select id="getStationIntelligentCleanParams" parameterType="java.lang.String" resultMap="IntelligentCleanParamMap">
+		SELECT id,param_key,param_name,description,param_value,param_unit,param_type,param_order,
+		station_code,enterprise_id,modify_user_id,modify_date FROM ids_sm_intelligentclean_param_t 
+		WHERE station_code = #{value}
+	</select>
+	
+	<!-- 查询智能清洗计算参数配置列表 -->
+	<select id="getSystemIntelligentCleanParams" resultMap="IntelligentCleanParamMap">
+		SELECT id,param_key,param_name,description,param_value,param_unit,param_type,param_order,
+		station_code,enterprise_id,modify_user_id,modify_date FROM ids_sm_intelligentclean_param_t 
+		WHERE param_type = 'SYSTEM'
+	</select>
+	
+	<!-- 查询智能清洗计算参数配置中的值 -->
+	<select id="getParamValue" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT param_value FROM ids_sm_intelligentclean_param_t WHERE param_key = #{value}
+	</select>
+	
+	<!-- 查询电站下所有组串式逆变器 -->
+	<select id="getStationInverters" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT id FROM ids_dev_info_t WHERE dev_type_id = 1 AND station_code = #{value}
+	</select>
+	
+	<!-- 逆变器的最后清洗时间 -->
+	<select id="getInverterCleanDay" parameterType="java.lang.Long" resultType="java.lang.Long">
+		SELECT MAX(end_time) from ids_inverter_intelligentclean_h WHERE devId = #{value}
+	</select>
+	
+	<!-- 逆变器的运行时间 -->
+	<select id="getInverterMinRundate" parameterType="java.lang.Long" resultType="java.lang.Long">
+		SELECT MIN(collect_time) FROM ids_kpi_day_inverter_t WHERE devId = #{value}
+	</select>
+	
+	<!-- 查询前N天数据 -->
+	<select id="getCleaningCycleData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT inverterday.collect_time, inverterday.station_code, devId, dev_name, inverter_type, inverterday.real_capacity,
+	  	inverterday.product_power, discrete_rate, inverterday.equivalent_hour, peak_power, yield_deviation, aoc_ratio, aop_ratio
+	  	pv1_avg_i, pv2_avg_i, pv3_avg_i, pv4_avg_i, pv5_avg_i, pv6_avg_i, pv7_avg_i, pv8_avg_i,
+	  	pv9_avg_i, pv10_avg_i, pv11_avg_i, pv12_avg_i, pv13_avg_i, pv14_avg_i,
+	  	pv1_avg_u, pv2_avg_u, pv3_avg_u, pv4_avg_u, pv5_avg_u, pv6_avg_u, pv7_avg_u, pv8_avg_u,
+	  	pv9_avg_u, pv10_avg_u, pv11_avg_u, pv12_avg_u, pv13_avg_u, pv14_avg_u, statistics_time,
+		inverterday.product_power/(inverterday.real_capacity * stationday.radiation_intensity) efficiency
+		FROM ids_kpi_day_inverter_t inverterday,ids_kpi_day_station_t stationday
+		WHERE inverterday.collect_time = stationday.collect_time AND inverterday.station_code = stationday.station_code 
+		AND inverterday.collect_time BETWEEN #{startTime} AND #{endTime}
+		AND inverterday.product_power/(inverterday.real_capacity * stationday.radiation_intensity) 
+		BETWEEN #{leastPR} AND #{peakPR}
+		AND stationday.radiation_intensity <![CDATA[>=]]> #{irradiationThreshold}
+	</select>
+	
+	<select id="queryLastYearRadiation" parameterType="java.lang.Long" resultType="java.util.Map">
+		SELECT data1.time,radiationIntensity,daysNoNeedClean FROM
+		(SELECT 'thirtyDays' as time,IFNULL(SUM(radiation_intensity),0) radiationIntensity FROM ids_kpi_day_station_t 
+		WHERE station_code = #{stationCode} AND collect_time BETWEEN #{nowOfLastYear} AND #{thirtyDays}
+		GROUP BY station_code) data1,(SELECT 'thirtyDays' as time,count(1) as daysNoNeedClean FROM ids_station_weather_day_t a
+		WHERE a.collect_time BETWEEN #{nowOfLastYear} AND #{thirtyDays} AND a.station_code = #{stationCode} 
+		AND (a.weather_text_day in ('阵雨','雷阵雨','雷阵雨伴有冰雹','中雨','大雨','暴雨','大暴雨','特大暴雨','中雪','大雪','暴雪','沙尘暴','强沙尘暴')
+		OR a.weather_text_night in ('阵雨','雷阵雨','雷阵雨伴有冰雹','中雨','大雨','暴雨','大暴雨','特大暴雨','中雪','大雪','暴雪','沙尘暴','强沙尘暴')
+		)) data2 WHERE data1.time = data2.time
+		UNION
+		SELECT data1.time,radiationIntensity,daysNoNeedClean FROM
+		(SELECT 'sixtyDays' as time,IFNULL(SUM(radiation_intensity),0) radiationIntensity FROM ids_kpi_day_station_t 
+		WHERE station_code = #{stationCode} AND collect_time BETWEEN #{nowOfLastYear} AND #{sixtyDays}
+		GROUP BY station_code) data1,(SELECT 'sixtyDays' as time,count(1) as daysNoNeedClean FROM ids_station_weather_day_t a
+		WHERE a.collect_time BETWEEN #{nowOfLastYear} AND #{sixtyDays} AND a.station_code = #{stationCode} 
+		AND (a.weather_text_day in ('阵雨','雷阵雨','雷阵雨伴有冰雹','中雨','大雨','暴雨','大暴雨','特大暴雨','中雪','大雪','暴雪','沙尘暴','强沙尘暴')
+		OR a.weather_text_night in ('阵雨','雷阵雨','雷阵雨伴有冰雹','中雨','大雨','暴雨','大暴雨','特大暴雨','中雪','大雪','暴雪','沙尘暴','强沙尘暴')
+		)) data2 WHERE data1.time = data2.time
+	</select>
+	
+</mapper>

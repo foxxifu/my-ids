@@ -1,0 +1,22 @@
+.basemaps {
+    padding: 0;
+}
+
+.leaflet-right .basemaps {
+    right: 0;
+}
+
+.leaflet-bottom .basemaps {
+    bottom: 0;
+}
+
+.basemaps img {
+    cursor: pointer;
+    width: 64px;
+    height: 64px;
+    border: 2px solid #FFF;
+    margin: 0 2px;
+    border-radius: 50%;
+    border-color: orange;
+    box-shadow: 0 0 10px #000;
+}

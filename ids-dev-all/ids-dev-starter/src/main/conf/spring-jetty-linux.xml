@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="Server" class="org.eclipse.jetty.server.Server" init-method="start" destroy-method="stop">
+		<property name="connectors">
+			<list>
+                <bean id="connector" class="org.eclipse.jetty.server.ServerConnector">
+                    <constructor-arg ref="Server"/>
+                    <property name="port" value="8089"/>
+                </bean>
+			</list>
+		</property>
+		<property name="handler">
+			<bean id="handlers" class="org.eclipse.jetty.server.handler.HandlerList">
+				<property name="handlers">
+					<list>
+						<bean id="" class="org.eclipse.jetty.webapp.WebAppContext">
+							<property name="contextPath" value="/" />
+							<property name="descriptor" value="/opt/idsHome/ids-conf/dev-conf/web.xml" />
+							<property name="resourceBase" value=".\src\main\webapp" />
+							<property name="parentLoaderPriority" value="true" />
+							<property name="logUrlOnStart" value="true" />
+							<property name="maxFormContentSize" value="4000000"/>
+						</bean>
+						<bean class="org.eclipse.jetty.server.handler.DefaultHandler"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>

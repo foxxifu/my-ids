@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.commoninterface.dao.device.DevPvCapacityMMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.device.PvCapacityM" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="device_id" property="deviceId" jdbcType="BIGINT" />
+    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+    <result column="dev_name" property="devName" jdbcType="VARCHAR" />
+    <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER" />
+    <result column="pv1" property="pv1" jdbcType="SMALLINT" />
+    <result column="pv2" property="pv2" jdbcType="SMALLINT" />
+    <result column="pv3" property="pv3" jdbcType="SMALLINT" />
+    <result column="pv4" property="pv4" jdbcType="SMALLINT" />
+    <result column="pv5" property="pv5" jdbcType="SMALLINT" />
+    <result column="pv6" property="pv6" jdbcType="SMALLINT" />
+    <result column="pv7" property="pv7" jdbcType="SMALLINT" />
+    <result column="pv8" property="pv8" jdbcType="SMALLINT" />
+    <result column="pv9" property="pv9" jdbcType="SMALLINT" />
+    <result column="pv10" property="pv10" jdbcType="SMALLINT" />
+    <result column="pv11" property="pv11" jdbcType="SMALLINT" />
+    <result column="pv12" property="pv12" jdbcType="SMALLINT" />
+    <result column="pv13" property="pv13" jdbcType="SMALLINT" />
+    <result column="pv14" property="pv14" jdbcType="SMALLINT" />
+    <result column="pv15" property="pv15" jdbcType="SMALLINT" />
+    <result column="pv16" property="pv16" jdbcType="SMALLINT" />
+    <result column="pv17" property="pv17" jdbcType="SMALLINT" />
+    <result column="pv18" property="pv18" jdbcType="SMALLINT" />
+    <result column="pv19" property="pv19" jdbcType="SMALLINT" />
+    <result column="pv20" property="pv20" jdbcType="SMALLINT" />
+    <result column="pv21" property="pv21" jdbcType="SMALLINT" />
+    <result column="pv22" property="pv22" jdbcType="SMALLINT" />
+    <result column="pv23" property="pv23" jdbcType="SMALLINT" />
+    <result column="pv24" property="pv24" jdbcType="SMALLINT" />
+    <result column="num" property="num" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, device_id, station_code, enterprise_id, dev_name, dev_type_id, pv1, pv2, 
+    pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13, pv14, pv15, pv16, pv17, 
+    pv18, pv19, pv20, pv21, pv22, pv23, pv24
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ids_pv_capacity_t
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <select id="sumStationPVCapByList" resultType="java.util.Map">
+    select station_code, sum(pv1+pv2+pv3+pv4+pv5+pv6+pv7+pv8+pv9+pv10+pv11+pv12+pv13+pv14+pv15+pv16+pv17+pv18+pv19+pv20+pv21+pv22+pv23+pv24) as total_pv_cap
+    from ids_pv_capacity_t
+    where station_code in
+      <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+        #{stationCode}
+      </foreach>
+      and dev_type_id in
+      <foreach collection="deviceTypeIds" item="devTypeId" open="(" separator="," close=")">
+        #{devTypeId}
+      </foreach>
+    group by station_code
+  </select>
+
+  <select id="selectPvCapByType" resultMap="BaseResultMap">
+    select * from ids_pv_capacity_t
+    where station_code = #{stationCode} and dev_type_id = #{devTypeId}
+  </select>
+
+  <select id="selectPvCapBySIdsAndType" resultMap="BaseResultMap">
+    select * from ids_pv_capacity_t
+    where dev_type_id = #{devTypeId}
+      and station_code in
+        <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+          #{stationCode}
+        </foreach>
+  </select>
+
+  <!-- 查询单个设备的组串容量和 -->
+  <select id="selectTotalPvCapacityByDeviceId" parameterType="long" resultType="double">
+  	select sum(IFNULL(pv1,0) + IFNULL(pv2,0) + IFNULL(pv3,0) + IFNULL(pv4,0) + IFNULL(pv5,0) + IFNULL(pv6,0) + IFNULL(pv7,0) + 
+  	  IFNULL(pv8,0) + IFNULL(pv9, 0) + IFNULL(pv10,0) + IFNULL(pv11,0) + IFNULL(pv12,0) + IFNULL(pv13,0) + IFNULL(pv14,0) + IFNULL(pv15,0) 
+  	  + IFNULL(pv16,0) + IFNULL(pv17,0) + IFNULL(pv18,0) + IFNULL(pv19,0) + IFNULL(pv20,0) + IFNULL(pv21,0) + IFNULL(pv22,0) + IFNULL(pv23,0) + IFNULL(pv24,0)) as total_pv_cap
+    from ids_pv_capacity_t
+    where device_id = #{deviceId}
+  </select>
+  
+  <!-- 查询单个电站的组串容量和 -->
+  <select id="selectTotalPvCapacityByStationCode" parameterType="string" resultType="double">
+  	SELECT
+		sum(
+			IFNULL(pv1, 0) + IFNULL(pv2, 0) + IFNULL(pv3, 0) + IFNULL(pv4, 0) + IFNULL(pv5, 0) + IFNULL(pv6, 0) + 
+	    IFNULL(pv7, 0) + IFNULL(pv8, 0) + IFNULL(pv9, 0) + IFNULL(pv10, 0) + IFNULL(pv11, 0) + IFNULL(pv12, 0) + 
+	    IFNULL(pv13, 0) + IFNULL(pv14, 0) + IFNULL(pv15, 0) + IFNULL(pv16, 0) + IFNULL(pv17, 0) + IFNULL(pv18, 0) + 
+	    IFNULL(pv19, 0) + IFNULL(pv20, 0) + IFNULL(pv21,0) + IFNULL(pv22,0) + IFNULL(pv23,0) + IFNULL(pv24,0)
+		) AS total_pv_cap
+	FROM
+		ids_pv_capacity_t pv
+	INNER JOIN ids_dev_info_t dev ON pv.device_id = dev.id
+		AND dev.is_logic_delete = 0
+	WHERE
+		pv.station_code = #{stationCode}
+  </select>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.interest.ids.common.project.bean.device.PvCapacityM" >
+    update ids_pv_capacity_t
+    <set >
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="stationCode != null" >
+        station_code = #{stationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+      </if>
+      <if test="devName != null" >
+        dev_name = #{devName,jdbcType=VARCHAR},
+      </if>
+      <if test="devTypeId != null" >
+        dev_type_id = #{devTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null" >
+        num = #{num},
+      </if>
+        pv1 = #{pv1,jdbcType=SMALLINT},
+        pv2 = #{pv2,jdbcType=SMALLINT},
+        pv3 = #{pv3,jdbcType=SMALLINT},
+        pv4 = #{pv4,jdbcType=SMALLINT},
+        pv5 = #{pv5,jdbcType=SMALLINT},
+        pv6 = #{pv6,jdbcType=SMALLINT},
+        pv7 = #{pv7,jdbcType=SMALLINT},
+        pv8 = #{pv8,jdbcType=SMALLINT},
+        pv9 = #{pv9,jdbcType=SMALLINT},
+        pv10 = #{pv10,jdbcType=SMALLINT},
+        pv11 = #{pv11,jdbcType=SMALLINT},
+        pv12 = #{pv12,jdbcType=SMALLINT},
+        pv13 = #{pv13,jdbcType=SMALLINT},
+        pv14 = #{pv14,jdbcType=SMALLINT},
+        pv15 = #{pv15,jdbcType=SMALLINT},
+        pv16 = #{pv16,jdbcType=SMALLINT},
+        pv17 = #{pv17,jdbcType=SMALLINT},
+        pv18 = #{pv18,jdbcType=SMALLINT},
+        pv19 = #{pv19,jdbcType=SMALLINT},
+        pv20 = #{pv20,jdbcType=SMALLINT},
+        pv21 = #{pv21,jdbcType=SMALLINT},
+        pv22 = #{pv22,jdbcType=SMALLINT},
+        pv23 = #{pv23,jdbcType=SMALLINT},
+        pv24 = #{pv24,jdbcType=SMALLINT},
+    </set>
+    <where>
+        <if test="id != null">
+            id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="deviceId != null">
+          device_id  =#{deviceId}
+        </if>
+    </where>
+  </update>
+
+    <!-- 根据设备id查询组串容量 -->
+    <select id="selectPvCapacityMByDeviceId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        id,pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13, pv14, pv15, pv16, pv17, 
+        pv18, pv19, pv20, pv21, pv22, pv23, pv24,num
+        from ids_pv_capacity_t 
+        where device_id = #{value}
+    </select>
+    <select id="selectPvCapByDevIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        id,pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13, pv14, pv15, pv16, pv17, 
+        pv18, pv19, pv20, pv21, pv22, pv23, pv24,num
+        from ids_pv_capacity_t 
+        where device_id in 
+        <foreach collection="list" item="devId" open="(" separator="," close=")">
+          #{devId}
+        </foreach>
+      
+    </select>
+    <!-- 批量插入组串容量 -->
+  <insert id="insertinsertCapacity" parameterType="com.interest.ids.common.project.bean.device.DevicePvCapacity">
+        insert into ids_pv_capacity_t (num,device_id,station_code,enterprise_id,dev_name,dev_type_id,pv1,pv2,pv3,pv4,pv5,pv6,pv7,pv8,pv9,pv10,pv11,pv12,pv13,pv14,pv15,pv16,pv17,pv18,pv19,pv20, pv21, pv22, pv23, pv24)
+        values (#{num},#{deviceId},#{stationCode},#{enterpriseId},#{devName},#{devTypeId},
+        <foreach collection="pvs" item="p" separator="," close=")" index="index">
+            #{p}
+        </foreach>
+  </insert>
+  
+  <!-- 统计系统已接入的总容量 -->
+  <select id="countAllInstalledCapacity" resultType="java.lang.Double">
+  	select sum(IFNULL(pv1,0) + IFNULL(pv2,0) + IFNULL(pv3,0) + IFNULL(pv4,0) + IFNULL(pv5,0) + IFNULL(pv6,0) + IFNULL(pv7,0) + 
+  	  IFNULL(pv8,0) + IFNULL(pv9, 0) + IFNULL(pv10,0) + IFNULL(pv11,0) + IFNULL(pv12,0) + IFNULL(pv13,0) + IFNULL(pv14,0) + IFNULL(pv15,0) 
+  	  + IFNULL(pv16,0) + IFNULL(pv17,0) + IFNULL(pv18,0) + IFNULL(pv19,0) + IFNULL(pv20,0) + IFNULL(pv21,0) + IFNULL(pv22,0) + IFNULL(pv23,0) + IFNULL(pv24,0)) as total_pv_cap
+    from ids_pv_capacity_t pv 
+	JOIN ids_dev_info_t dev on pv.device_id = dev.id and dev.is_logic_delete = 0
+  </select>
+  
+  <select id="selectPvCapByIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select
+        id,pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13, pv14, pv15, pv16, pv17, 
+        pv18, pv19, pv20, pv21, pv22, pv23, pv24,num
+    from ids_pv_capacity_t 
+    where device_id in
+    	<foreach collection="devIds" item="devId" open="(" separator="," close=")">
+    		#{devId}
+    	</foreach>
+  </select>
+  
+  <select id="getMonitorPvCapNum" parameterType="java.util.Map" resultType="int">
+  	SELECT COUNT(id) FROM ids_pv_capacity_t WHERE id = #{id} AND device_id = #{deviceId} AND station_code = #{stationCode}
+  </select>
+  <!-- 根据设备id和电站编号删除对应的pv配置,删除ids_pv_capacity_t -->
+  <delete id="deleteMonitorCapPvConfig" parameterType="java.util.Map">
+  	DELETE FROM ids_pv_capacity_t WHERE device_id = #{deviceId} AND station_code=#{stationCode}
+  </delete>
+  <!-- 根据设备id和电站编号删除对应的pv配置,删除ids_device_pv_module_t -->
+  <delete id="deleteMonitorDevPvConfig" parameterType="java.util.Map">
+  	DELETE FROM ids_device_pv_module_t WHERE dev_id = #{deviceId} AND station_code=#{stationCode}
+  </delete>
+  
+  <select id="countCenterPvConfig" parameterType="java.util.Map" resultType="int">
+  	SELECT COUNT(id) FROM ids_center_vert_detail_t WHERE center_vert_id = #{deviceId} AND id IN(${ids})
+  </select>
+  <!-- 根据设备id删除对应的pv配置,删除ids_center_vert_detail_t -->
+   <delete id="deleteMonitorCenterPvConfig" parameterType="java.util.Map">
+  	DELETE FROM ids_center_vert_detail_t WHERE center_vert_id = #{deviceId}
+  </delete>
+</mapper>

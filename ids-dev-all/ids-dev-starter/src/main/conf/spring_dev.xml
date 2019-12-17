@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<!-- 当无法通过注解方式获取对象时，用此类 -->
+	<bean class="com.interest.ids.common.project.spring.context.SystemContext"/>
+    <bean class="com.interest.ids.common.project.utils.SpringBeanContext"/>
+	<bean class="com.interest.ids.common.project.spring.propholder.CustomPropertyConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="locations">
+        	<list>
+       			<value>classpath:config/redis.properties</value>
+        		<value>classpath:config/dev_starter.properties</value>
+        		<value>classpath:config/dev_db.properties</value>
+        		<value>classpath:config/dev_network.properties</value>  
+        	</list>
+        </property>
+	</bean>   
+	
+	<context:component-scan base-package="com.interest.ids.dev.starter.service.*,com.interest.ids.gatekeeper.server.*,com.interest.ids.biz.data.service.*" /> 
+	
+	<import resource="classpath*:spring/*.xml" /> 
+	
+</beans>

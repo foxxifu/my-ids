@@ -1,0 +1,40 @@
+@import (once) '~@/assets/css/variables';
+#stationParamConfig {
+  .el-dialog__wrapper{
+    .el-form-item.tr-border{
+      position: relative;
+      //border: 1px solid @dialog-form-border-color;
+      &:not(.bottom-border){
+        border-bottom: none;
+      }
+      margin:0;
+      .el-col{
+        padding: 3px;
+        &.label-right {
+          text-align: right;
+          padding-right: 10px;
+        }
+        &:not(.label-right), &.left-border{
+          border-left: 1px solid @dialog-form-border-color;
+        }
+      }
+    }
+  }
+}
+
+.stationParamConfig {
+  /deep/ .stationParamConfigForm{
+    /deep/ .el-form-item{
+      margin-bottom: 0px;
+    }
+    /deep/ .el-table .cell{
+      overflow: visible;
+    }
+
+    /deep/ .self-is-required:after{
+      content: '*';
+      color: #f56c6c;
+      margin-right: 4px;
+    }
+  }
+}

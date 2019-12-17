@@ -1,0 +1,241 @@
+@import (once, reference) 'variables';
+@import (once, reference) 'lib';
+
+/*********************************** 滚动条样式 start **********************************/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: @mainBackground;
+  opacity: 0;
+}
+
+::-webkit-scrollbar:window-inactive {
+  width: 8px;
+  height: 8px;
+  background-color: @mainBackground;
+}
+
+::-webkit-scrollbar-thumb {
+  margin-right: 2px;
+  background: -webkit-linear-gradient(left, transparent 0%, transparent 25%, @color-primary 25.5%, @color-primary 84.5%, transparent 85%, transparent 100%) no-repeat;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: -webkit-linear-gradient(top, transparent 0%, transparent 25%, @color-primary 25.5%, @color-primary 84.5%, transparent 85%, transparent 100%) no-repeat;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00a0e9;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: -webkit-radial-gradient(50% 50%, farthest-side, #00a0e9, #0A7BA3) no-repeat;
+}
+
+::-webkit-scrollbar-corner {
+  background: @mainBackground;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
+
+/*********************************** 滚动条样式 end **********************************/
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  //font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-size: 14px;
+  color: @mainColor;
+  background-color: @mainBackground;
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%; // forbidden mobile click black
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); // forbidden mobile click black
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  outline: none;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input {
+  margin: 0;
+  padding: 0;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section {
+  display: block;
+}
+
+body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  // background: url(~/assets/images/transition.png) center no-repeat;
+  background-color: #8fd2e4;
+  background-size: cover;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* custom */
+a {
+  text-decoration: none;
+  -webkit-backface-visibility: hidden;
+}
+
+li {
+  list-style: none;
+}
+
+input {
+  border: none;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+input,
+textarea {
+  padding-left: 10px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.clearfix {
+  &::before,
+  &::after {
+    display: table;
+    content: "";
+  }
+  &::after {
+    clear: both;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-ellipsis {
+  .txt-ellipsis();
+}
+
+// 添加下划线
+.search-bar {
+  border-bottom: 1px solid #CAE7EF;
+  padding: 5px 0;
+  margin: 0 auto 10px;
+  &:after, &:before {
+    content: '';
+    clear: both;
+    display: table;
+  }
+}
+
+.button-bar {
+  width: 100%;
+  position: relative;
+  display: block;
+  margin: 0 auto 10px;
+  &.left {
+    float: left;
+    text-align: left;
+  }
+  &.right {
+    float: right;
+    text-align: right;
+  }
+  &.inline {
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 5px;
+  }
+  &:after, &:before {
+    content: '';
+    clear: both;
+    overflow: hidden;
+    display: block;
+  }
+  .button-separate {
+    position: relative;
+    top: 10px;
+    width: 1px;
+    height: 20px;
+    line-height: 20px;
+    margin: 0 8px 0 0;
+    color: #08A8D8;
+    #gradient > .vertical-three-colors(transparent, #08A8D8, 50%, transparent);
+    display: inline-block;
+  }
+}
+
+.content-box {
+  clear: both;
+  position: relative;
+  display: block;
+  margin: 0 auto 10px;
+}

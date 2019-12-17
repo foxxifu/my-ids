@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.station.StationShareemiMapper">
+    <resultMap id="ShareEmiResultMap" type="com.interest.ids.common.project.bean.sm.StationShareemi">
+   		<id column="id" property="id" jdbcType="BIGINT" />
+        <result column="share_station_code" jdbcType="VARCHAR" property="shareStationCode"/>
+        <result column="share_device_id" jdbcType="BIGINT" property="shareDeviceId"/>
+        <result column="station_code" jdbcType="VARCHAR" property="stationCode"/>
+    </resultMap>
+
+    <resultMap type="HashMap" id="shareDeviceResultMap">
+        <result column="share_station_code" property="shareStationCode"/>
+        <result column="share_device_id" property="shareDeviceId"/>
+    </resultMap>
+    
+    <resultMap id="devInfoResultMap" type="com.interest.ids.common.project.bean.signal.DeviceInfo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+	    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+	    <result column="signal_version" property="signalVersion" jdbcType="VARCHAR" />
+	    <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER" />
+	    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+	    <result column="parent_esn_code" property="parentEsnCode" jdbcType="VARCHAR" />
+	    <result column="related_device_id" property="relatedDeviceId" jdbcType="BIGINT" />
+	    <result column="area_id" property="areaId" jdbcType="BIGINT" />
+	    <result column="matrix_id" property="matrixId" jdbcType="BIGINT" />
+	    <result column="phalanx_id" property="phalanxId" jdbcType="BIGINT" />
+	    <result column="dev_alias" property="devAlias" jdbcType="VARCHAR" />
+	    <result column="busi_code" property="devName" jdbcType="VARCHAR" />
+	    <result column="sn_code" property="snCode" jdbcType="VARCHAR" />
+	    <result column="pn" property="pn" jdbcType="VARCHAR" />
+	    <result column="assembly_type" property="assemblyType" jdbcType="VARCHAR" />
+	    <result column="kks_code" property="kksCode" jdbcType="VARCHAR" />
+	    <result column="power_code" property="powerCode" jdbcType="VARCHAR" />
+	    <result column="ne_version" property="neVersion" jdbcType="VARCHAR" />
+	    <result column="software_version" property="softwareVersion" jdbcType="VARCHAR" />
+	    <result column="device_ip" property="hostAddress" jdbcType="VARCHAR" />
+	    <result column="dev_port" property="devPort" jdbcType="INTEGER" />
+	    <result column="linked_host" property="linkHost" jdbcType="VARCHAR" />
+	    <result column="second_address" property="secondAddress" jdbcType="INTEGER" />
+	    <result column="baud_rate" property="baudRate" jdbcType="INTEGER" />
+	    <result column="endian" property="endian" jdbcType="TINYINT" />
+	    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+	    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+	    <result column="is_logic_delete" property="isLogicDelete" jdbcType="BIT" />
+	    <result column="old_esn" property="oldEsn" jdbcType="VARCHAR" />
+	    <result column="have_opt_child" property="haveOptChild" jdbcType="BIT" />
+	    <result column="loc_id" property="locId" jdbcType="VARCHAR" />
+	    <result column="recv_addr" property="recvAddr" jdbcType="INTEGER" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+	    <result column="protocol_code" property="protocolCode" jdbcType="VARCHAR" />
+		<result column="upgrade_file_name" property="upgradeFileName" jdbcType="VARCHAR" />
+		<result column="upgrade_process" property="upgradeProcess" jdbcType="INTEGER" />
+		<result column="upgrade_status" property="upgradeStatus" jdbcType="INTEGER" />
+  	</resultMap>
+    <!-- 根据电站编号查询所有共享设备的id -->
+    <select id="getSharedDeviceByStationCodes" parameterType="java.util.List" resultMap="shareDeviceResultMap">
+        select share_station_code,share_device_id from ids_station_shareemi_t 
+        where share_station_code in 
+        <foreach collection="list" item="item" close=")" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    
+    
+    <resultMap id="devInfoDtoResultMap" type="com.interest.ids.common.project.bean.device.DeviceInfoDto" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+    	<result column="dev_alias" property="devAlias" jdbcType="VARCHAR" />
+    	<result column="dev_name" property="devName" jdbcType="BIGINT" />
+    	<result column="emiType" property="emiType" jdbcType="VARCHAR" />
+    	<result column="signal_version" property="signalVersion" jdbcType="VARCHAR" />
+  	</resultMap>
+    <!-- 根据电站编号查询电站下面的所有的环境检测仪 -->
+    <select id="getEmiInfoByStationCode" parameterType="java.lang.String" resultMap="devInfoDtoResultMap">
+		SELECT dev.id,dev.signal_version,dev.dev_name,dev.dev_alias,'personal' as emiType FROM ids_dev_info_t dev
+		WHERE dev.station_code = #{stationCode} AND dev.dev_type_id = 10
+		UNION ALL
+		SELECT dev.id,dev.signal_version,dev.dev_alias,dev.dev_name,'shared' as emiType FROM ids_station_shareemi_t shareRmi,ids_dev_info_t dev
+		WHERE shareRmi.station_code = #{stationCode} AND dev.station_code = shareRmi.share_station_code 
+		AND dev.dev_type_id = 10
+    </select>
+    
+    <!-- 插入电站共享环境检测仪数据 -->
+    <insert id="insertDeviceShare" parameterType="com.interest.ids.common.project.bean.sm.StationShareemi"
+    	useGeneratedKeys="true" keyProperty="id">
+        insert into ids_station_shareemi_t (share_station_code,station_code,share_device_id)
+        values(#{shareStationCode},#{stationCode},#{shareDeviceId})
+    </insert>
+
+    <!--根据电站编号查询环境监测仪共享信息-->
+    <select id="selectStationSharedEMI" resultMap="ShareEmiResultMap">
+        select station_code, share_station_code, share_device_id
+        from ids_station_shareemi_t
+        where station_code in
+        <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+            #{stationCode}
+        </foreach>
+    </select>
+
+    <!--查询所有的环境监测仪共享信息-->
+    <select id="selectAllSharedEmis" resultMap="ShareEmiResultMap">
+        select station_code, share_station_code, share_device_id
+        from ids_station_shareemi_t
+        where station_code is not null and share_station_code is not null
+        and share_device_id is not null
+    </select>
+    
+	<!-- 通过电站编号查询该电站下是否绑定共享的环境检测仪，返回数量 -->
+	<select id="getShareRmiSize" parameterType="java.lang.String" resultType="java.lang.Integer">
+    	SELECT COUNT(1) FROM ids_station_shareemi_t WHERE station_code = #{value}
+	</select>
+  
+  	<update id="updateDeviceShare" parameterType="com.interest.ids.common.project.bean.sm.StationShareemi">
+        UPDATE ids_station_shareemi_t 
+        SET share_station_code = #{shareStationCode},share_device_id = #{shareDeviceId}
+        WHERE station_code = #{stationCode}
+  	</update>
+  	
+  	<delete id="deleteShareEmi" parameterType="java.util.List">
+        DELETE FROM ids_station_shareemi_t WHERE share_device_id in 
+        <foreach collection="devIdList" item="item" close=")" open="(" separator=",">
+            #{item}
+        </foreach>
+  	</delete>
+  	
+  	<delete id="deleteShareEmiBystationCode" parameterType="java.lang.String">
+        DELETE FROM ids_station_shareemi_t WHERE station_code = #{value}
+  	</delete>
+  	
+</mapper>

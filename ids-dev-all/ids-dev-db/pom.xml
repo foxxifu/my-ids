@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids-dev-all</artifactId>
+		<groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+	  
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-dev-db</artifactId>
+    <packaging>jar</packaging>
+    <name>ids-dev-db</name>
+	
+    <dependencies>
+	
+		<dependency>
+		    <groupId>com.interest</groupId>
+		    <artifactId>ids-dev-api</artifactId>
+		    <version>${project.version}</version>
+		</dependency>
+		
+		
+		<dependency>
+		    <groupId>org.quartz-scheduler</groupId>
+		    <artifactId>quartz</artifactId>
+		    <version>2.3.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.interest</groupId>
+		    <artifactId>apache-ftp-server</artifactId>
+		    <version>ISR-V001R006C00</version>
+		</dependency>
+		
+	
+	</dependencies>
+
+	
+</project>
+

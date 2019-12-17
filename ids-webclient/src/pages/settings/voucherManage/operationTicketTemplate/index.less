@@ -1,0 +1,29 @@
+@import "~@/assets/css/variables";
+
+.detail-main-box {
+  width: 1240px;
+  margin: 0 auto;
+  padding: 24px 50px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 6px 6px 15px #ccc;
+
+  input:not([type]), input[type='text'], textarea {
+    padding: 3px 6px;
+    color: #606266;
+    border-color: #5D7C92;
+    border-bottom: 1px solid #5D7C92;
+
+    &:hover, &:focus {
+      border-color: @linkHoverColor;
+    }
+
+    &[readonly] {
+      border-color: #a6a9ad;
+      &:hover, &:focus {
+        border-color: #5D7C92;
+      }
+    }
+  }
+}

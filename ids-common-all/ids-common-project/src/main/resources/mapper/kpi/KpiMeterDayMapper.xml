@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiMeterDayMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiMeterDayM">
+    <id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <id column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="dev_name" jdbcType="VARCHAR" property="devName" />
+    <result column="meter_type" jdbcType="TINYINT" property="meterType" />
+    <result column="ongrid_power" jdbcType="DECIMAL" property="ongridPower" />
+    <result column="buy_power" jdbcType="DECIMAL" property="buyPower" />
+    <result column="statistics_time" jdbcType="BIGINT" property="statisticsTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    collect_time, station_code, device_id, dev_name, meter_type, ongrid_power,
+    buy_power, statistics_time
+  </sql>
+
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into ids_kpi_day_meter_t(
+    <include refid="Base_Column_List"/>
+    ) values
+    <foreach collection="list" item="item" separator=",">
+      (
+        #{item.collectTime}, #{item.stationCode}, #{item.deviceId}, #{item.devName},
+        #{item.meterType}, #{item.ongridPower}, #{item.buyPower}, #{item.statisticsTime}
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="com.interest.ids.common.project.bean.KpiBaseModel" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_kpi_day_meter_t
+    where collect_time = #{collectTime,jdbcType=BIGINT}
+      and station_code = #{stationCode,jdbcType=VARCHAR}
+      and device_id = #{deviceId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+    delete from ids_kpi_day_meter_t
+    where collect_time in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.collectTime}
+    </foreach>
+    and station_code in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.stationCode}
+    </foreach>
+    and device_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.deviceId}
+    </foreach>
+  </delete>
+</mapper>

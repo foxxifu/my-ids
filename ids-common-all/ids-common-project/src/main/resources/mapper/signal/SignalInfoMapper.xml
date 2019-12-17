@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.signal.SignalInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.signal.SignalInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="device_id" property="deviceId" jdbcType="BIGINT" />
+    <result column="signal_name" property="signalName" jdbcType="VARCHAR" />
+    <result column="signal_alias" property="signalAlias" jdbcType="VARCHAR" />
+    <result column="signal_unit" property="signalUnit" jdbcType="VARCHAR" />
+    <result column="register_type" property="registerType" jdbcType="INTEGER" />
+    <result column="bit" property="bit" jdbcType="INTEGER" />
+    <result column="signal_version" property="signalVersion" jdbcType="VARCHAR" />
+    <result column="sig_group" property="sigGroup" jdbcType="INTEGER" />
+    <result column="sig_address" property="sigAddress" jdbcType="INTEGER" />
+    <result column="reg_num" property="regNum" jdbcType="SMALLINT" />
+    <result column="gain" property="gain" jdbcType="DECIMAL" />
+    <result column="offset" property="offset" jdbcType="DECIMAL" />
+    <result column="signal_type" property="signalType" jdbcType="INTEGER" />
+    <result column="model_id" property="modelId" jdbcType="BIGINT" />
+    <result column="data_type" property="dataType" jdbcType="INTEGER" />
+    <result column="is_alarm_flag" property="isAlarmFlag" jdbcType="BIT" />
+    <result column="is_alarm_val" property="isAlarmVal" jdbcType="BIT" />
+    <result column="is_limited" property="isLimited" jdbcType="BIT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <update id="updateSignalModelId">
+  	UPDATE ids_signal_info_t signalt,ids_signal_model_t model SET signalt.model_id = model.id  
+	WHERE model.signal_version = signalt.signal_version AND model.signal_name = signalt.signal_name 
+	AND signalt.model_id IS NULL
+  </update>
+  
+</mapper>

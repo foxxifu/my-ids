@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.DistrictMapper">
+    
+    <resultMap type="com.interest.ids.common.project.bean.sm.District" id="idAndNameResultMap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+    </resultMap>
+    
+    <resultMap type="com.interest.ids.common.project.bean.sm.District" id="districtResultMap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="initial" property="initial"/>
+        <result column="initials" property="initials"/>
+        <result column="pinyin" property="pinyin"/>
+        <result column="extra" property="extra"/>
+        <result column="suffix" property="suffix"/>
+        <result column="code" property="code"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="cuntry_code" property="cuntryCode"/>
+        <result column="order" property="order"/>
+    </resultMap>
+    
+    <sql id="Base_Defect_Column_List">
+        id,`name`,initial,initials,pinyin,extra,suffix,`code`,area_code,cuntry_code,`order`
+    </sql>
+    <!-- 根据id查询对于的名字 -->
+    <select id="selectDistrictByIds" parameterType="Long[]" resultMap="idAndNameResultMap">
+        select id,`name` from ids_district_t
+        where ids in 
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    
+    <select id="selectTopDistrict" resultMap="districtResultMap">
+        select 
+        <include refid="Base_Defect_Column_List"></include>
+        from ids_district_t 
+        where parent_id = 0
+        order by `order` asc
+    </select>
+    
+    <!-- 根据父id查询子区域 -->
+    <select id="selectChildDistrict" parameterType="java.lang.Long" resultMap="districtResultMap">
+        select 
+        <include refid="Base_Defect_Column_List"></include>
+        from ids_district_t 
+        where parent_id = #{value}
+        order by  `order` asc
+    </select>
+    
+    <!-- 根据id查询当前id的区域信息 -->
+    <select id="selectDistrictById" parameterType="java.lang.Long" resultMap="districtResultMap">
+        select 
+        <include refid="Base_Defect_Column_List"></include>
+        from ids_district_t 
+        where code = #{value}
+    </select>
+    <select id="findDisListByAreaCodes" parameterType="Object[]" resultMap="districtResultMap">
+    	select 
+        <include refid="Base_Defect_Column_List"></include>
+        from ids_district_t 
+        where code in 
+        <foreach collection="array" item="c" close=")" open="(" separator=",">
+        	#{c}
+        </foreach>
+    </select>
+</mapper>

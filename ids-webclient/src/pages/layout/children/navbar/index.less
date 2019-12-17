@@ -1,0 +1,57 @@
+@import (once, reference) '~@/assets/css/lib';
+
+.navbar {
+  flex: 0 0 44px;
+  height: 44px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  background-color: #EBEBEB;
+  border-bottom: solid 0 #0F5B71;
+
+  .navbar-icon {
+    color: @color-primary;
+    font-size: 15pt;
+  }
+
+  .app-levelbar.el-breadcrumb {
+    flex: 1;
+    font-size: 14px;
+    margin-left: 10px;
+    .no-redirect {
+      color: @text-active;
+      cursor: text;
+    }
+    .el-breadcrumb__item {
+      .el-breadcrumb__inner {
+        a {
+          color: @linkHoverColor;
+          &:hover {
+            color: @mainColor;
+          }
+          &.router-link-exact-active {
+            color: @mainColor;
+            &:hover {
+              color: @mainColor;
+            }
+          }
+          &.no-redirect {
+            color: @mainColor;
+          }
+        }
+      }
+    }
+  }
+
+  .navbar-info {
+    padding: 0 10px;
+    display: flex;
+    .company-info {
+      padding: 0 20px;
+      flex: 1;
+    }
+    .time {
+      font-weight: 500;
+    }
+  }
+}

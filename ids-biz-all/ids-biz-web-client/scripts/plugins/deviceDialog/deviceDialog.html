@@ -1,0 +1,62 @@
+<style type="text/css">
+#device_dialog_index_right {
+	width: 80%;
+	float: left;
+	position: relative;
+	left: 19px;
+}
+
+#device_dialog_index_left {
+	height: 517px;
+	position: relative;
+	border: 1px solid #AAFFD5;
+	width: 158px;
+	float: left;
+}
+
+#device_dialog_index_search {
+	padding-bottom: 25px;
+}
+
+#device_dialog_domainsTree {
+ overflow-y: auto ;
+}
+
+#device_dialog_domainsTree  li {
+	margin-left: 1px;
+}
+</style>
+<div id="device_dialog_index" class="iems-module">
+	<!-- 设备管理 -->
+	<div id="device_dialog_index_body">
+		<!-- 左侧域 -->
+		<div id="device_dialog_index_left">
+			<div id="device_dialog_devLocationTree">
+				<div class='domainInfoClass'>
+					<div class="domain-title i18n">Msg.deviceDialog.deviceLocation</div>
+					<ul class="ztree" id='device_dialog_domainsTree'></ul>
+				</div>
+			</div>
+		</div>
+		<div id="device_dialog_index_right">
+			<!-- 工具栏 -->
+			<div id="device_dialog_index_search" class="toolbar"></div>
+			<!-- 设备表 -->
+			<div id="device_dialog_devTable" class="contentbox"></div>
+		</div>
+	</div>
+	<table width="100%" class="SelectButtons ui-dialog-buttonpane">
+		<tr height="45px">
+			<td align="right" width="50%">
+				<button type="button" class="btn" id="deviceselectHhOk">
+					<span class="ui-button-text"><span class="i18n">Msg.main.hhsrc.comfirm</span></span>
+				</button> <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			</td>
+			<td align="left" width="49%">
+				<button type="button" class="btn" id="deviceselectHhCancel">
+					<span class="ui-button-text"><span class="i18n">Msg.main.hhsrc.cancel</span></span>
+				</button>
+			</td>
+		</tr>
+	</table>
+</div>

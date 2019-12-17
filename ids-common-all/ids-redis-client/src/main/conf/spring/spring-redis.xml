@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+ 	
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${maxTotal}"></property>
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<property name="minIdle" value="${minIdle}"></property>
+		<property name="maxWaitMillis" value="${maxWaitMillis}"></property>
+		<property name="testOnBorrow" value="${testOnBorrow}"></property>
+		<property name="testOnReturn" value="${testOnReturn}"></property>
+		<property name="testWhileIdle" value="${testWhileIdle}"></property>
+		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"></property>
+		<property name="numTestsPerEvictionRun" value="${numTestsPerEvictionRun}"></property>
+		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"></property>
+	</bean>
+
+	<bean id="redisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1" value="${hostName}" />
+		<constructor-arg index="2" value="${port}"  />
+		<constructor-arg index="3" value="${timeout}"	 />
+		<constructor-arg index="4" value="${auth}" />
+	</bean>
+
+	 <bean id="jedClient" class="com.interest.ids.redis.client.JedisClient" >
+		<property name="redisPool" ref="redisPool"></property>
+	</bean> 
+	
+	<bean id="signalCacheClient" class="com.interest.ids.redis.client.service.SignalCacheClient" >
+		<constructor-arg index="0" ref="redisPool" />
+	</bean>
+	
+	<bean id="connCacheClient" class="com.interest.ids.redis.client.service.ConnStatusCacheClient" >
+		<constructor-arg index="0" ref="redisPool" />
+	</bean>
+	
+	<bean id="unBindDeviceClient" class="com.interest.ids.redis.client.service.UnbindDeviceClient" >
+		<constructor-arg index="0" ref="redisPool" />
+	</bean>
+	
+	<bean id="defaultCacheClient" class="com.interest.ids.redis.client.DefaultCacheClient" >
+		<constructor-arg index="0" ref="redisPool" />
+	</bean>
+	
+	<bean id="sessionCache" class="com.interest.ids.redis.caches.SessionCache" >
+		<property name="jedClient" ref="jedClient"></property>
+	</bean>
+</beans>

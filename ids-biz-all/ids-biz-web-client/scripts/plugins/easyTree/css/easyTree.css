@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.easy_tree_parent {
+    position: relative;
+    width: 200px;
+}
+
+/*所有li的样式*/
+.easy_tree_parent ul li {
+    padding: 15px 10px;
+    list-style: none;
+    height: 55px;
+    min-width: 20px;
+    background-image: -webkit-linear-gradient(top, rgba(0, 64, 106, 0.2), rgba(1, 113, 187, 0.2)); /* Safari 5.1-6, Chrome 10+*/
+    background-image: -o-linear-gradient(top, rgba(0, 64, 106, 0.2), rgba(1, 113, 187, 0.2)); /*// Opera 12*/
+    background-image: linear-gradient(to bottom, rgba(0, 64, 106, 0.2), rgba(1, 113, 187, 0.2)); /*// Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+*/
+    background-repeat: repeat-x;
+}
+
+.easy_tree_mouseover ul li {
+    background-image: -webkit-linear-gradient(top, rgba(0, 64, 106, 0.8), rgba(1, 113, 187, 0.8)); /* Safari 5.1-6, Chrome 10+*/
+    background-image: -o-linear-gradient(top, rgba(0, 64, 106, 0.8), rgba(1, 113, 187, 0.8)); /*// Opera 12*/
+    background-image: linear-gradient(to bottom, rgba(0, 64, 106, 0.8), rgba(1, 113, 187, 0.8)); /*// Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+*/
+    background-repeat: repeat-x;
+}
+
+/*除去（有class[.easy_tree_select]）选中的对象，其他的对象当鼠标移动上去的时候的样式*/
+.easy_tree_parent ul li:not(.easy_tree_select):hover {
+    background: rgba(75, 114, 142, 0.6);
+}
+
+.easy_tree_is_close {
+    width: 50px;
+}
+
+.clear {
+    display: block;
+    overflow: hidden;
+}
+
+/*背景图片的样式*/
+.icon_a_back {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 30px;
+    padding: 1px;
+    background: url(../images/menuIcons.png) 0 0 no-repeat;
+}
+
+/*鼠标移动到树节点上的弹出的下级树节点的信息*/
+.easy_tree_mouseover {
+    float: left;
+    position: fixed;
+    top: 0px;
+    width: 0;
+    transition: width .2s;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    clear: both;
+    display: block;
+    z-index: 1;
+    /*background: red;*/
+}
+
+.easy_tree_mouseover::after {
+    content: '';
+    clear: both;
+}
+
+.easy_tree_mouseover li {
+    white-space: nowrap;
+}
+
+.easy_tree_show {
+    width: 200px;
+}
+
+.easy_tree_hide {
+    width: 0;
+}
+
+/**
+ * 当前选中了的树节点的样式
+ */
+.easy_tree_select {
+    background: rgba(75, 114, 142, 0.8);
+
+}
+
+.easy_tree_select > a {
+    background-position-x: -35px;
+}
+
+/**
+ * 树节点的提示信息
+ */
+.easy_tree_title {
+    display: block;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 168px;
+    height: 50px;
+    padding: 0 8px;
+    font-size: 11pt;
+    line-height: 50px;
+    text-align: right;
+}
+
+.easy_tree_menu {
+    height: 50px;
+}
+
+.hideen_btn {
+    top: 0;
+    right: 0;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    position: absolute;
+}
+
+.hideen_btn:after {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    font-family: serif;
+    font-size: 32pt;
+    font-weight: 800;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+    content: '\ab';
+}
+
+.easy_tree_close:after {
+    content: '\bb';
+}

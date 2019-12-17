@@ -1,0 +1,37 @@
+<!-- 点表导入的界面-->
+<div>
+    <div class="layout-bar">
+        <div id="setting_point_import_submit" class="left inline">
+            <!--<div class="prefabricated-form">
+                &lt;!&ndash;预置表单&ndash;&gt;
+                <form id="prefabricated"  action="data/import" method="post">
+                    &lt;!&ndash;预置&ndash;&gt;
+                    <input type="hidden" name="type" value="prefab">
+                    <select name="name"></select>
+                    <input type="button" class="btn" value="预置">
+                </form>
+            </div>-->
+            <div class="prefabricated-form upload-secend">
+                <!--非预置表单-->
+                <form id="noPrefabricated" action="biz/settings/signal/import" method="post" enctype="multipart/form-data">
+                    <!--非预置-->
+                    <input type="hidden" name="type" value="noPrefab">
+                    <div class="upload" >
+                        <input type='text' id='point_show_import_text' class="upload-url"/>
+                        <input type='button' class='upload-btn' value='浏览' />
+                        <input type="file" name="file" id="myShowTextFile"  class="file upload-input-file" />
+                    </div>
+                    <button type="button" class="btn">导入</button>
+                </form>
+            </div>
+        </div>
+        <!--操作按钮-->
+        <div id="setting_point_import_btns" class="right inline">
+            <!--<input type="button" class="btn" myType="adapter" value="适配"/>-->
+            <input type="button" class="btn" myType="del" value="删除"/>
+            <input type="button" class="btn" myType="import" value="导出"/>
+        </div>
+    </div>
+    <!--导入的点表list-->
+    <div id="setting_point_import_list" class="content-box"></div>
+</div>

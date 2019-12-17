@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:sharding="http://www.dangdang.com/schema/ddframe/rdb"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.dangdang.com/schema/ddframe/rdb 
+        http://www.dangdang.com/schema/ddframe/rdb/rdb.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 涉及事物不扫描　controller -->
+    <context:component-scan base-package="com.interest.ids.biz.web.appsettings.controller" use-default-filters="false">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <!-- 引入配置文件 -->
+    <bean class="com.interest.ids.common.project.spring.propholder.CustomPropertyConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:config/redis.properties</value>
+                <value>classpath*:datasource.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean id="dataSource" class="${datasource.type}" destroy-method="close">
+        <property name="driverClassName" value="${druid.driver-class-name}"/>
+        <property name="url" value="${druid.url}"/>
+        <property name="username" value="${druid.username}"/>
+        <property name="password" value="${druid.password}"/>
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${druid.initialSize}"></property>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${druid.maxActive}"></property>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${druid.minIdle}"></property>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${druid.maxWait}"></property>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"></property>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}"></property>
+        <property name="validationQuery" value="${druid.validationQuery}"></property>
+        <!--  -->
+        <property name="testWhileIdle" value="${druid.testWhileIdle}"></property>
+        <!--  -->
+        <property name="testOnBorrow" value="${druid.testOnBorrow}"></property>
+        <!--  -->
+        <property name="testOnReturn" value="${druid.testOnReturn}"></property>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}"></property>
+        <!--  -->
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+                  value="${druid.maxPoolPreparedStatementPerConnectionSize}"></property>
+        <property name="filters" value="${druid.filters}" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+
+    </bean>
+
+	<!-- sharding 分表配置 -->
+    <sharding:strategy id="tableStrategy" sharding-columns="collect_time"
+                       algorithm-class="com.interest.ids.common.project.sharding.RunTimeDataAlgorithm"/>
+                       
+    <sharding:strategy id="kpiTableStrategy" sharding-columns="collect_time"
+                       algorithm-class="com.interest.ids.common.project.sharding.KpiTableShardingStrategy"/>
+
+    <sharding:data-source id="shardingDataSource">
+        <sharding:sharding-rule data-sources="dataSource" default-data-source="dataSource">
+            <sharding:table-rules>
+                <sharding:table-rule logic-table="ids_inverter_string_data_t"
+                                     actual-tables="dataSource.ids_inverter_string_data_t_${1..366}"
+                                     table-strategy="tableStrategy"/>
+                <sharding:table-rule logic-table="ids_inverter_conc_data_t"
+                                     actual-tables="dataSource.ids_inverter_conc_data_t_${1..366}"
+                                     table-strategy="tableStrategy"/>
+                <sharding:table-rule logic-table="ids_meter_data_t" actual-tables="dataSource.ids_meter_data_t_${1..366}"
+                                     table-strategy="tableStrategy"/>
+                <sharding:table-rule logic-table="ids_combiner_dc_data_t"
+                                     actual-tables="dataSource.ids_combiner_dc_data_t_${1..366}"
+                                     table-strategy="tableStrategy"/>
+                                     
+                <sharding:table-rule logic-table="ids_kpi_hour_inverter_t"
+                                     actual-tables="dataSource.ids_kpi_hour_inverter_t_${1..37}"
+                                     table-strategy="kpiTableStrategy"/>
+                <sharding:table-rule logic-table="ids_kpi_hour_meter_t"
+                                     actual-tables="dataSource.ids_kpi_hour_meter_t_${1..37}"
+                                     table-strategy="kpiTableStrategy"/>
+                <sharding:table-rule logic-table="ids_kpi_hour_station_t"
+                                     actual-tables="dataSource.ids_kpi_hour_station_t_${1..37}"
+                                     table-strategy="kpiTableStrategy"/>
+            </sharding:table-rules>
+        </sharding:sharding-rule>
+    </sharding:data-source>
+
+    <!-- spring和MyBatis整合，不需要mybatis的配置映射文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="shardingDataSource"/>
+        <property name="configLocation" value="classpath:mybatis/mybatis.xml"/>
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations">
+            <array>
+                <value>classpath*:mapper/*/*.xml</value>
+            </array>
+        </property>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <!-- 这里的几个配置主要演示如何使用，如果不理解，一定要去掉下面的配置 -->
+                    <property name="properties">
+                        <value>
+                            helperDialect=mysql
+                            reasonable=true
+                            supportMethodsArguments=true
+                            params=count=countSql
+                            autoRuntimeDialect=true
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.interest.ids.common.project.mapper"/>
+        <!-- 3.2.2版本新特性，markerInterface可以起到mappers配置的作用，详细情况需要看Marker接口类 -->
+        <property name="markerInterface" value="com.interest.ids.common.project.utils.CommonMapper"/>
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.interest.ids.commoninterface.dao,
+        com.interest.ids.biz.web.alarm.dao,com.interest.ids.biz.web.report.dao,
+        com.interest.ids.biz.web.appsettings.dao,com.interest.ids.biz.web.operation,
+        com.interest.ids.biz.kpicalc.kpi.dao.impl,com.interest.ids.common.project.mapper,
+        com.interest.ids.biz.web.dataintegrity.dao"/>
+
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    
+     <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.interest.ids.common.project.mapper,com.interest.ids.biz.web.dataintegrity.dao"/>
+       
+        <property name="markerInterface" value="com.interest.ids.common.project.utils.CommonMapper"/>
+    </bean>
+
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+         <property name="dataSource" ref="shardingDataSource"/>
+    </bean>
+    <!-- 配置事务异常封装 -->
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <!-- 事务注解驱动，标注@Transactional的类和方法将具有事务性 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <import resource="classpath*:spring/*.xml"/>
+</beans>

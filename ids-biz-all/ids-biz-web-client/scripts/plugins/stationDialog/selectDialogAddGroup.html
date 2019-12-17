@@ -1,0 +1,284 @@
+<style type="text/css">
+#selectDialogAddGroup{
+	height: calc(100% - 2px);
+	/*border: 1px solid #C3CCDD;*/
+	min-width: 810px;
+}
+
+#selectDialogAddGroup ul{
+	list-style: none;
+}
+
+#selectDialogAddGroup .box{
+	/*outline: 1px solid #C3CCDDf;*/
+	height: calc(100% - 94px);
+	float: left;
+}
+
+#selectDialogAddGroup .tree{
+	width: 187px;
+	margin-right: 5px;
+	border: 1px solid #C3CCDD;
+	background: white;
+}
+
+#selectDialogAddGroup .stations{
+	/*min-width: 320px;*/
+	margin-right: 5px;
+	/*border-left: 1px solid #C3CCDD;
+	border-right: 1px solid #C3CCDD;
+	border-bottom: 1px solid #C3CCDD;*/
+	width: calc(100% - 367px);
+}
+
+#selectDialogAddGroup .selectItems{
+	min-width: 165px;
+	border: 1px solid #C3CCDD;
+	overflow: auto;
+}
+
+#selectDialogAddGroup .selectedStations{
+	height: calc(100% - 82px);
+	overflow: auto;
+	background: white;
+}
+
+#selectDialogAddGroup .station{
+	width: 118px;
+	padding-left: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	float: left;
+}
+
+#selectDialogAddGroup .del{
+	float: left;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(js/plugins/stationDialog/images/icons.png) -95px -126px;
+	margin: auto;
+}
+
+#selectDialogAddGroup .choose{
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(js/plugins/stationDialog/images/icons.png) -60px -143px;
+	margin: auto;
+}
+
+#selectDialogAddGroup .selectAll{
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(js/plugins/stationDialog/images/icons.png) -30px -126px;
+	margin: 0 auto;
+}
+
+#selectDialogAddGroup .delAll{
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(js/plugins/stationDialog/images/icons.png) -95px -126px;
+	margin: 0 auto;
+}
+
+#selectDialogAddGroup .selectedStationIcon{
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(js/plugins/stationDialog/images/icons.png) -110px -110px;
+}
+
+#selectDialogAddGroup .stationItem{
+	border-bottom: 1px solid #C3CCDD;
+	overflow: auto;
+	padding: 5px 0;
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	max-width: 165px;
+}
+
+#selectDialogAddGroup .stationItem:nth-child(2n){
+	background: #F9F9F9;
+}
+
+#selectDialogAddGroup .stationItem:nth-child(2n+1){
+	background: white;
+}
+
+#selectDialogAddGroup a{
+/* 	color:  #2893da; */
+}
+
+#selectDialogAddGroup a:hover {
+	color: #00ff36;
+	text-decoration: none;
+}
+
+#selectDialogAddGroup .hhTree{
+	height: calc(100% - 47px);
+	overflow: auto;
+	padding-top: 5px;
+}
+
+#selectDialogAddGroup ul.hhTree .icon{
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background-image: url("js/plugins/zTree/css/img/zTreeStandard.png");
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	cursor: pointer;
+	vertical-align: top;
+}
+
+#selectDialogAddGroup ul.hhTree .close{
+	background-position: -74px -72px;
+}
+
+#selectDialogAddGroup ul.hhTree .open{
+	background-position: -92px -72px;
+}
+
+#selectDialogAddGroup ul.hhTree .son{
+	display: inline-block;
+	width: 16px;
+	height: 16px;	
+}
+
+#selectDialogAddGroup ul.hhTree .line{
+	cursor: pointer;
+	white-space: nowrap;
+	display: inline-block;
+	line-height: 16px;
+	padding-right: 2px;
+}
+
+#selectDialogAddGroup ul.hhTree .root{
+	background: url("js/plugins/stationDialog/images/dept.png") 0 0 no-repeat;
+}
+
+#selectDialogAddGroup ul.hhTree .leaf{
+	background: url("js/plugins/stationDialog/images/depts.png") 0 0 no-repeat;
+}
+
+#selectDialogAddGroup ul.hhTree .detail{
+	white-space: nowrap;
+}
+
+#selectDialogAddGroup ul.hhTree .name{
+	display: inline-block;
+	vertical-align: top;
+	line-height: 16px;
+}
+
+#selectDialogAddGroup ul.hhTree .name:hover{
+	text-decoration: underline;
+}
+
+#selectDialogAddGroup ul.hhTree .selected{
+	outline: 1px #FFB951 solid;
+	background-color: #FFE6B0;
+}
+
+#selectDialogAddGroup .searchbar{
+	height: 40px;
+	line-height: 28px;
+	border-bottom: 2px solid #bababa;
+  	margin-bottom: 10px;
+}
+
+#selectDialogAddGroup .condition{
+	float : left;
+	margin-right: 10px;
+}
+</style>
+<div id="selectDialogAddGroup">
+	<div class="searchbar">
+		<!-- <form id="selectDialogAddGroup_searchbar"> -->
+			<div class="condition">
+				<label>
+					<span class="i18n">Msg.sm.psm.combineType</span>
+					<input name="combineType" type="text" id="selectDialogAddGroup_combineType" class="i18n" readonly="readonly" data-i18n-type="placeholder" placeholder="Msg.all" />
+				</label>
+			</div>
+			<div class="condition">
+				<label>
+					<span class="i18n">Msg.sm.psm.inverterType</span>
+					<input name="inverterType" type="text" id="selectDialogAddGroup_inverterType" class="i18n" readonly="readonly" data-i18n-type="placeholder" placeholder="Msg.all"/>
+				</label>
+			</div>
+			<div class="condition">
+				<label>
+					<span class="i18n">Msg.sm.psm.sname</span>
+					<input name="sname" type="text" class="i18n" id="selectDialogAddGroup_sname"/>
+				</label>
+			</div>
+			<div class="condition">
+				<button class="btn searchBtn btnThemeA" id="selectDialogAddGroup_sbtn"> 
+					<span class="btnL btnS"></span> 
+					<span class="btnC btnS i18n">Msg.search</span> 
+					<span class="btnR btnS"></span>
+				</button>
+			</div>
+		<!-- </form> -->
+	</div>
+	<div class="tree box">
+		<ul>
+			<li style="height: 40px;line-height: 40px;text-align: center;border-bottom: 1px solid #C3CCDD;font-weight: 700;background:#D7E9EF">
+				<span class="i18n">Msg.main.hhsrc.structure</span>
+			</li>
+		</ul>
+		<ul class="hhTree items ztree" id="station_ztree"></ul>
+	</div>
+	<div class="stations box">
+		<div id="selectHhStations"></div>
+	</div>
+	<div class="selectItems box">
+		<ul>
+			<li class="stationItem" style="text-align: center;font-weight: 700;background:#D7E9EF">	
+				<table style="margin: 0 auto;">
+					<tr>
+						<td><span class="selectedStationIcon"></span></td>
+						<td><span class="selectedNum">0</span></td>
+					</tr>
+				</table>
+			</li>
+		</ul>
+		<ul class="selectedStations">
+		</ul>
+		<ul>
+			 <li class="stationItem" style="border-bottom:none;border-top: 1px solid #C3CCDD;padding: 0;height: 40px;">
+			 	<table cellpadding='0' cellspacing='0' border=0 style="width:100%;text-align:center;height:100%">
+			 		<tr>
+			 			<td><a class="selectAll"><span class="i18n" ></span></a></td>
+			 			<td><a class="delAll"><span class="i18n" ></span></a></td>
+			 		</tr>
+			 	</table>
+			 </li>
+		</ul>
+	</div>
+
+
+	<table width="100%" class="SelectButtons ui-dialog-buttonpane">
+		<tr height="45px">
+			<td align="right" width="50%">
+				<button type="button" class="btn" id="selectHhOk">
+					<span class="ui-button-text"><span class="i18n" >Msg.main.hhsrc.comfirm</span></span>
+				</button>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			</td>
+			<td align="left" width="49%">
+				<button type="button" class="btn" id="selectHhCancel">
+					<span class="ui-button-text"><span class="i18n">Msg.main.hhsrc.cancel</span></span>
+				</button>
+			</td>
+		</tr>
+	</table>
+</div>

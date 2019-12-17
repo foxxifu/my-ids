@@ -1,0 +1,37 @@
+@import (once, reference) '~@/assets/css/lib';
+
+.account{
+  /deep/ .el-table.baseInfoTableData {
+    overflow: visible;
+    /deep/ .el-table__body-wrapper {
+      overflow: visible;
+      /deep/ .cell {
+        overflow: visible;
+        /deep/ .el-form-item{
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+
+  /deep/ .el-table.countTableData {
+    overflow: visible;
+    /deep/ .el-table__body-wrapper {
+      overflow: visible;
+      /deep/ .cell {
+        overflow: visible;
+        /deep/ .el-form-item{
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+
+  /deep/ .self-is-required:after {
+    content: '*';
+    color: #f56c6c;
+    margin-right: 4px;
+  }
+
+}
+

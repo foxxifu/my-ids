@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.kpi.InverterStringMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.InverterString" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="collect_time" property="collectTime" jdbcType="BIGINT" />
+    <id column="dev_id" property="devId" jdbcType="BIGINT" />
+    <id column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="dev_name" property="devName" jdbcType="VARCHAR" />
+    <result column="inverter_state" property="inverterState" jdbcType="INTEGER" />
+    <result column="valid" property="valid" jdbcType="VARCHAR" />
+    <result column="ab_u" property="abU" jdbcType="DECIMAL" />
+    <result column="bc_u" property="bcU" jdbcType="DECIMAL" />
+    <result column="ca_u" property="caU" jdbcType="DECIMAL" />
+    <result column="a_u" property="aU" jdbcType="DECIMAL" />
+    <result column="b_u" property="bU" jdbcType="DECIMAL" />
+    <result column="c_u" property="cU" jdbcType="DECIMAL" />
+    <result column="a_i" property="aI" jdbcType="DECIMAL" />
+    <result column="b_i" property="bI" jdbcType="DECIMAL" />
+    <result column="c_i" property="cI" jdbcType="DECIMAL" />
+    <result column="conversion_efficiency" property="conversionEfficiency" jdbcType="DECIMAL" />
+    <result column="temperature" property="temperature" jdbcType="DECIMAL" />
+    <result column="power_factor" property="powerFactor" jdbcType="DECIMAL" />
+    <result column="grid_frequency" property="gridFrequency" jdbcType="DECIMAL" />
+    <result column="active_power" property="activePower" jdbcType="DECIMAL" />
+    <result column="reactive_power" property="reactivePower" jdbcType="DECIMAL" />
+    <result column="day_capacity" property="dayCapacity" jdbcType="DECIMAL" />
+    <result column="mppt_power" property="mpptPower" jdbcType="DECIMAL" />
+    <result column="pv1_u" property="pv1U" jdbcType="DECIMAL" />
+    <result column="pv2_u" property="pv2U" jdbcType="DECIMAL" />
+    <result column="pv3_u" property="pv3U" jdbcType="DECIMAL" />
+    <result column="pv4_u" property="pv4U" jdbcType="DECIMAL" />
+    <result column="pv5_u" property="pv5U" jdbcType="DECIMAL" />
+    <result column="pv6_u" property="pv6U" jdbcType="DECIMAL" />
+    <result column="pv7_u" property="pv7U" jdbcType="DECIMAL" />
+    <result column="pv8_u" property="pv8U" jdbcType="DECIMAL" />
+    <result column="pv9_u" property="pv9U" jdbcType="DECIMAL" />
+    <result column="pv10_u" property="pv10U" jdbcType="DECIMAL" />
+    <result column="pv11_u" property="pv11U" jdbcType="DECIMAL" />
+    <result column="pv12_u" property="pv12U" jdbcType="DECIMAL" />
+    <result column="pv13_u" property="pv13U" jdbcType="DECIMAL" />
+    <result column="pv14_u" property="pv14U" jdbcType="DECIMAL" />
+    <result column="pv1_i" property="pv1I" jdbcType="DECIMAL" />
+    <result column="pv2_i" property="pv2I" jdbcType="DECIMAL" />
+    <result column="pv3_i" property="pv3I" jdbcType="DECIMAL" />
+    <result column="pv4_i" property="pv4I" jdbcType="DECIMAL" />
+    <result column="pv5_i" property="pv5I" jdbcType="DECIMAL" />
+    <result column="pv6_i" property="pv6I" jdbcType="DECIMAL" />
+    <result column="pv7_i" property="pv7I" jdbcType="DECIMAL" />
+    <result column="pv8_i" property="pv8I" jdbcType="DECIMAL" />
+    <result column="pv9_i" property="pv9I" jdbcType="DECIMAL" />
+    <result column="pv10_i" property="pv10I" jdbcType="DECIMAL" />
+    <result column="pv11_i" property="pv11I" jdbcType="DECIMAL" />
+    <result column="pv12_i" property="pv12I" jdbcType="DECIMAL" />
+    <result column="pv13_i" property="pv13I" jdbcType="DECIMAL" />
+    <result column="pv14_i" property="pv14I" jdbcType="DECIMAL" />
+    <result column="total_capacity" property="totalCapacity" jdbcType="DECIMAL" />
+    <result column="on_time" property="onTime" jdbcType="BIGINT" />
+    <result column="off_time" property="offTime" jdbcType="BIGINT" />
+    <result column="mppt_total_cap" property="mpptTotalCap" jdbcType="DECIMAL" />
+    <result column="mppt_1_cap" property="mppt1Cap" jdbcType="DECIMAL" />
+    <result column="mppt_2_cap" property="mppt2Cap" jdbcType="DECIMAL" />
+    <result column="mppt_3_cap" property="mppt3Cap" jdbcType="DECIMAL" />
+    <result column="mppt_4_cap" property="mppt4Cap" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="DECIMAL" />
+    <result column="ext2" property="ext2" jdbcType="DECIMAL" />
+    <result column="ext3" property="ext3" jdbcType="DECIMAL" />
+    <result column="ext4" property="ext4" jdbcType="DECIMAL" />
+    <result column="ext_str_1" property="extStr1" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 查询某段时间，指定电站的性能数据 -->
+  <select id="selectInverterStrings" resultMap="BaseResultMap">
+  	select * from ids_inverter_string_data_t
+  	where station_code = #{stationCode}
+  		and collect_time between #{startTime} and #{endTime}
+  </select>
+  
+  <!-- 查询某电站各支路最大电流、电压 -->
+  <select id="selectInverterPvMaxData" resultType="java.util.HashMap" statementType="STATEMENT">
+  	select dev_id,max(pv1_i) maxpvi1,max(pv2_i) maxpvi2,max(pv3_i) maxpvi3,max(pv4_i) maxpvi4,
+		max(pv5_i) maxpvi5,max(pv6_i) maxpvi6,max(pv7_i) maxpvi7,max(pv8_i) maxpvi8,max(pv9_i) maxpvi9,
+		max(pv10_i) maxpvi10,max(pv11_i) maxpvi11,max(pv12_i) maxpvi12,max(pv13_i) maxpvi13,max(pv14_i) maxpvi14,
+		max(pv1_u) maxpvu1,max(pv2_u) maxpvu2,max(pv3_u) maxpvu3,max(pv4_u) maxpvu4,max(pv5_u) maxpvu5,
+		max(pv6_u) maxpvu6,max(pv7_u) maxpvu7,max(pv8_u) maxpvu8,max(pv9_u) maxpvu9,max(pv10_u) maxpvu10,
+		max(pv11_u) maxpvu11,max(pv12_u) maxpvu12,max(pv13_u) maxpvu13,max(pv14_u) maxpvu14 
+  	from ${tableName}
+  	where station_code = &apos;${stationCode}&apos;
+  		and collect_time between ${startTime} and ${endTime}
+  	group by device_id
+  </select>
+  
+  <select id="selectLastDayCapBySpecifTime" resultType="java.lang.Double">
+  	SELECT
+		max(day_capacity) - min(day_capacity) AS day_cap
+	FROM
+		ids_inverter_string_data_t
+	WHERE
+		dev_id = #{devId} AND collect_time BETWEEN #{startTime} AND #{endTime}; 
+  </select>
+</mapper>

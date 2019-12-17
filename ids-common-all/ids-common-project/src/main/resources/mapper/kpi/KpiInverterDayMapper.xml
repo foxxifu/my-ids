@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiInverterDayMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiInverterDayM">
+    <id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <id column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="dev_name" jdbcType="VARCHAR" property="devName" />
+    <result column="inverter_type" jdbcType="TINYINT" property="inverterType" />
+    <result column="real_capacity" jdbcType="DECIMAL" property="realCapacity" />
+    <result column="product_power" jdbcType="DECIMAL" property="productPower" />
+    <result column="discrete_rate" jdbcType="DECIMAL" property="discreteRate" />
+    <result column="equivalent_hour" jdbcType="DECIMAL" property="equivalentHour" />
+    <result column="peak_power" jdbcType="DECIMAL" property="peakPower"/>
+    <result column="efficiency" jdbcType="DECIMAL" property="efficiency"/>
+    <result column="yield_deviation" jdbcType="DECIMAL" property="yieldDeviation" />
+    <result column="aoc_ratio" jdbcType="DECIMAL" property="aocRatio" />
+    <result column="aop_ratio" jdbcType="DECIMAL" property="aopRatio" />
+    <result column="pv1_avg_i" jdbcType="DECIMAL" property="pv1AvgI" />
+    <result column="pv2_avg_i" jdbcType="DECIMAL" property="pv2AvgI" />
+    <result column="pv3_avg_i" jdbcType="DECIMAL" property="pv3AvgI" />
+    <result column="pv4_avg_i" jdbcType="DECIMAL" property="pv4AvgI" />
+    <result column="pv5_avg_i" jdbcType="DECIMAL" property="pv5AvgI" />
+    <result column="pv6_avg_i" jdbcType="DECIMAL" property="pv6AvgI" />
+    <result column="pv7_avg_i" jdbcType="DECIMAL" property="pv7AvgI" />
+    <result column="pv8_avg_i" jdbcType="DECIMAL" property="pv8AvgI" />
+    <result column="pv9_avg_i" jdbcType="DECIMAL" property="pv9AvgI" />
+    <result column="pv10_avg_i" jdbcType="DECIMAL" property="pv10AvgI" />
+    <result column="pv11_avg_i" jdbcType="DECIMAL" property="pv11AvgI" />
+    <result column="pv12_avg_i" jdbcType="DECIMAL" property="pv12AvgI" />
+    <result column="pv13_avg_i" jdbcType="DECIMAL" property="pv13AvgI" />
+    <result column="pv14_avg_i" jdbcType="DECIMAL" property="pv14AvgI" />
+    <result column="pv1_avg_u" jdbcType="DECIMAL" property="pv1AvgU" />
+    <result column="pv2_avg_u" jdbcType="DECIMAL" property="pv2AvgU" />
+    <result column="pv3_avg_u" jdbcType="DECIMAL" property="pv3AvgU" />
+    <result column="pv4_avg_u" jdbcType="DECIMAL" property="pv4AvgU" />
+    <result column="pv5_avg_u" jdbcType="DECIMAL" property="pv5AvgU" />
+    <result column="pv6_avg_u" jdbcType="DECIMAL" property="pv6AvgU" />
+    <result column="pv7_avg_u" jdbcType="DECIMAL" property="pv7AvgU" />
+    <result column="pv8_avg_u" jdbcType="DECIMAL" property="pv8AvgU" />
+    <result column="pv9_avg_u" jdbcType="DECIMAL" property="pv9AvgU" />
+    <result column="pv10_avg_u" jdbcType="DECIMAL" property="pv10AvgU" />
+    <result column="pv11_avg_u" jdbcType="DECIMAL" property="pv11AvgU" />
+    <result column="pv12_avg_u" jdbcType="DECIMAL" property="pv12AvgU" />
+    <result column="pv13_avg_u" jdbcType="DECIMAL" property="pv13AvgU" />
+    <result column="pv14_avg_u" jdbcType="DECIMAL" property="pv14AvgU" />
+    <result column="statistics_time" jdbcType="BIGINT" property="statisticsTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    collect_time, station_code, device_id, dev_name, inverter_type, real_capacity,
+    product_power, discrete_rate, equivalent_hour, peak_power, efficiency, yield_deviation, aoc_ratio, aop_ratio,
+    pv1_avg_i, pv2_avg_i, pv3_avg_i, pv4_avg_i, pv5_avg_i, pv6_avg_i, pv7_avg_i, pv8_avg_i,
+    pv9_avg_i, pv10_avg_i, pv11_avg_i, pv12_avg_i, pv13_avg_i, pv14_avg_i,
+    pv1_avg_u, pv2_avg_u, pv3_avg_u, pv4_avg_u, pv5_avg_u, pv6_avg_u, pv7_avg_u, pv8_avg_u,
+    pv9_avg_u, pv10_avg_u, pv11_avg_u, pv12_avg_u, pv13_avg_u, pv14_avg_u, statistics_time
+  </sql>
+
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into ids_kpi_day_inverter_t(
+    <include refid="Base_Column_List"/>
+    ) values
+    <foreach collection="list" item="item" separator=",">
+      (
+        #{item.collectTime}, #{item.stationCode}, #{item.deviceId}, #{item.devName},
+        #{item.inverterType}, #{item.realCapacity}, #{item.productPower}, #{item.discreteRate},
+        #{item.equivalentHour}, #{item.peakPower}, #{item.efficiency}, #{item.yieldDeviation}, #{item.aocRatio}, #{item.aopRatio},
+        #{item.pv1AvgI}, #{item.pv2AvgI}, #{item.pv3AvgI}, #{item.pv4AvgI}, #{item.pv5AvgI}, #{item.pv6AvgI}, #{item.pv7AvgI},
+        #{item.pv8AvgI}, #{item.pv9AvgI}, #{item.pv10AvgI}, #{item.pv11AvgI}, #{item.pv12AvgI}, #{item.pv13AvgI}, #{item.pv14AvgI},
+        #{item.pv1AvgU}, #{item.pv2AvgU}, #{item.pv3AvgU}, #{item.pv4AvgU}, #{item.pv5AvgU}, #{item.pv6AvgU}, #{item.pv7AvgU},
+        #{item.pv8AvgU}, #{item.pv9AvgU}, #{item.pv10AvgU}, #{item.pv11AvgU}, #{item.pv12AvgU}, #{item.pv13AvgU}, #{item.pv14AvgU},
+        #{item.statisticsTime}
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="com.interest.ids.common.project.bean.KpiBaseModel" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_kpi_day_inverter_t
+    where collect_time = #{collectTime,jdbcType=BIGINT}
+      and station_code = #{stationCode,jdbcType=VARCHAR}
+      and device_id = #{deviceId,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 查询等效利用小时排前几的逆变器 -->
+  <select id="selectPprTopNumInverter" resultMap="BaseResultMap">
+  	SELECT station_code, device_id, MAX(equivalent_hour) as equivalent_hour
+	FROM ids_kpi_day_inverter_t
+	WHERE collect_time BETWEEN #{startTime} AND #{endTime}
+	GROUP BY station_code, device_id
+	HAVING equivalent_hour > 0
+	ORDER BY station_code, equivalent_hour DESC;
+  </select>
+  
+  <select id="selectPprTopNumInvDayKpi" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ids_kpi_day_inverter_t
+    where station_code = #{stationCode} and 
+    	collect_time between #{startTime} and #{endTime}
+    	and device_id in 
+    	<foreach collection="devIds" item="item" open="(" separator="," close=")">
+	      #{item.deviceId}
+	    </foreach>
+  </select>
+
+  <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+    delete from ids_kpi_day_inverter_t
+    where collect_time in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.collectTime}
+    </foreach>
+    and station_code in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.stationCode}
+    </foreach>
+    and device_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.deviceId}
+    </foreach>
+  </delete>
+</mapper>

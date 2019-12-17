@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration threshold="debug">
+
+   <appender name="devWeb" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/devWeb.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   
+    <appender name="devDb" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/devDb.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   
+   <appender name="devAlarm" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/devAlarm.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   
+   <appender name="devNetWork" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/devNet.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   
+    <appender name="ftpServer" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/ftpServer.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   
+   <appender name="modbus" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/modbus.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   
+   <appender name="iec" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/iec.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+   <appender name="mqtt" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true"/>
+      <param name="BufferedIO" value="false"/>
+      <param name="MaxFileSize" value="20MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <param name="File" value="${log_dev}/mqtt.log"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+      </layout>
+   </appender> 
+  
+   
+    <logger name="com.interest.ids.dev.starter">
+        <level value="info" />
+        <appender-ref ref="devWeb" />
+    </logger>
+    
+    <logger name="com.interest.ids.dev.db">
+        <level value="info" />
+        <appender-ref ref="devDb" />
+    </logger>
+    
+     <logger name="com.interest.ids.dev.alarm">
+        <level value="info" />
+        <appender-ref ref="devAlarm" />
+    </logger>
+    
+    <logger name="org.apache.ftpserver">
+        <level value="info" />
+        <appender-ref ref="ftpServer" />
+    </logger>
+
+     <logger name="com.interest.ids.dev.network.service">
+        <level value="info" />
+        <appender-ref ref="devNetWork" />
+    </logger>
+    
+     <logger name="com.interest.ids.dev.network.handler">
+        <level value="info" />
+        <appender-ref ref="devNetWork" />
+    </logger>
+    
+    <logger name="com.interest.ids.dev.network.modbus">
+        <level value="info" />
+        <appender-ref ref="modbus" />
+    </logger>
+    <logger name="com.interest.ids.dev.network.mqtt">
+        <level value="info" />
+        <appender-ref ref="mqtt" />
+    </logger>
+     <logger name="com.interest.ids.gatekeeper">
+        <level value="info" />
+        <appender-ref ref="ftpServer" />
+    </logger>
+    
+     <logger name="com.interest.ids.dev.network.iec">
+        <level value="info" />
+        <appender-ref ref="iec" />
+    </logger>
+    
+    
+     <!--  <appender name="Screen" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="DEBUG" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n"/>
+        </layout>
+    </appender>
+    <logger name="com">  
+		<level value="debug" />
+		<appender-ref ref="Screen" />  
+	</logger> 
+	<logger name="org">  
+		<level value="INFO" /> 
+		<appender-ref ref="Screen" />  
+	</logger>
+	<logger name="org.eclipse.jetty">
+		<level value="INFO" />
+		<appender-ref ref="server" />
+	</logger>   -->
+   
+</log4j:configuration>

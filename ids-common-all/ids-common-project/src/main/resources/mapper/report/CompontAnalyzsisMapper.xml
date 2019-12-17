@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.report.CompontAnalyzsisMapper">
+	<resultMap id="matrixMonth" type="java.util.Map">
+		<id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+		<result column="matrix_id" jdbcType="BIGINT" property="matrixId" />
+		<result column="analysis_time" jdbcType="BIGINT" property="analysisTime" />
+		<result column="matrix_name" jdbcType="VARCHAR" property="matrixName" />
+		<result column="installed_capacity" property="installedCapacity" />
+		<result column="pv_num" property="pvNum" />
+		<result column="product_power" property="productPower" />
+		<result column="trouble_pv_num" property="troublePvNum" />
+		<result column="trouble_lost_power" property="troubleLostPower" />
+		<result column="ineff_pv_num" property="ineffPvNum" />
+		<result column="ineff_lost_power" property="ineffLostPower" />
+		<result column="hid_pv_num" property="hidPvNum" />
+		<result column="hid_lost_power" property="hidLostPower" />
+		
+		<result column="dev_id" property="devId" />
+		<result column="pv_code" property="pvCode" />
+		<result column="dev_alias" property="devAlias" />
+		<result column="pv_capacity" property="pvCapacity" />
+		<result column="trouble_last_time" property="troubleLastTime" />
+		<result column="ineff_last_time" property="ineffLastTime" />
+		<result column="hid_last_time" property="hidLastTime" />
+		
+		<result column="analysis_state" property="analysisState"/>
+		<result column="lost_power" property="lostPower"/>
+	</resultMap>
+	
+	<!-- 查询电站月度组件总数量 -->
+	<select id="selectStationMouthAnalysisCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(DISTINCT matrix_id) from ids_analysis_matrix_month_t where station_code = #{stationCode}
+		<if test="null != countTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		<if test="null != countYearTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		GROUP BY matrix_id
+	</select>
+	
+	<!-- 根据电站的编号查询电站月度分析数据 -->
+	<select id="selectStationMouthAnalysis" parameterType="java.util.Map" resultMap="matrixMonth">
+		SELECT
+			matrix_id, MAX(matrix_name) matrix_name, 
+			MAX(installed_capacity) installed_capacity, 
+			SUM(pv_num) pv_num,
+			SUM(product_power) product_power, SUM(trouble_pv_num) trouble_pv_num, 
+			SUM(trouble_lost_power) trouble_lost_power,
+			SUM(ineff_lost_power) ineff_lost_power, SUM(ineff_pv_num) ineff_pv_num,
+			SUM(hid_lost_power) hid_lost_power, SUM(hid_pv_num) hid_pv_num
+		from ids_analysis_matrix_month_t 
+		where station_code = #{stationCode}
+		<if test="null != countTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		<if test="null != countYearTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		GROUP BY matrix_id
+		order by analysis_time asc
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!--查询电站级月度chart数据 -->
+	<resultMap type="java.util.Map" id="charDataMap">
+		<result column="troublePvNum" property="troublePvNum"/>
+		<result column="troublePvCount" property="troublePvCount"/>
+		<result column="ineffPvNum" property="ineffPvNum"/>
+		<result column="ineffPvCount" property="ineffPvCount"/>
+		<result column="hidPvNum" property="hidPvNum"/>
+		<result column="hidPvCount" property="hidPvCount"/>
+	</resultMap>
+	<select id="selectStationMouthChartData" parameterType="java.util.Map" resultMap="charDataMap">
+		select 
+			SUM(trouble_pv_num) troublePvNum,SUM(trouble_lost_power) troublePvCount,
+			SUM(ineff_pv_num) ineffPvNum, SUM(ineff_lost_power) ineffPvCount,
+			SUM(hid_pv_num) hidPvNum, SUM(hid_lost_power) hidPvCount
+		from 
+			ids_analysis_matrix_month_t
+		where 
+			station_code = #{stationCode}
+		<if test="null != countTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		<if test="null != countYearTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+	</select>
+	
+	<!-- 查询电站子阵级别的月度分析总记录数 -->
+	<select id="selectCompontAnalysisMouthCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(dev_id)) from ids_analysis_pv_month_t where matrix_id = #{matrixId}
+		and analysis_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 查询子阵月报分析数据 -->
+	<select id="selectCompontAnalysisMouth" parameterType="java.util.Map" resultMap="matrixMonth">
+		<!-- SELECT
+		  dev_alias,
+		  matrix_name,
+		  sum(pv_capacity) pv_capacity,
+		  SUM(trouble_lost_power) trouble_lost_power,
+		  SUM(ineff_lost_power) ineff_lost_power,
+		  SUM(hid_lost_power) hid_lost_power
+		FROM
+		  ids_analysis_pv_month_t
+		WHERE matrix_id = #{matrixId}
+		and analysis_time between #{startTime} and #{endTime}
+		GROUP BY dev_id
+		limit #{start},#{pageSize} -->
+		SELECT
+		    iapm.dev_id,
+			MAX(iapm.dev_alias) dev_alias,
+			MAX(iapm.matrix_name) matrix_name,
+			SUM(iapm.pv_capacity)/1000 pv_capacity,
+			SUM(iapm.trouble_lost_power) trouble_lost_power,
+			SUM(iapm.ineff_lost_power) ineff_lost_power,
+			SUM(iapm.hid_lost_power) hid_lost_power
+		FROM
+			ids_analysis_pv_month_t iapm
+		WHERE
+			iapm.matrix_id = #{matrixId}
+		AND iapm.analysis_time BETWEEN #{startTime} and #{endTime}
+		GROUP BY iapm.dev_id
+		limit #{start},#{pageSize}
+	</select>
+	<select id="monthPvCountNumOfState" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			iamd.dev_id devId,
+			iamd.analysis_state analysisState,
+			COUNT(DISTINCT iamd.pv_code) pvNum
+		FROM
+			ids_analysis_pv_day_t iamd
+		WHERE
+			iamd.analysis_time BETWEEN #{startTime} and #{endTime}
+		AND iamd.matrix_id = 1
+		GROUP BY
+			iamd.dev_id,
+			iamd.analysis_state
+	</select>
+	
+	<select id="selectCompontAnalysisMouthByStation" parameterType="java.util.Map" resultMap="matrixMonth">
+		select 
+			sum(trouble_lost_power) trouble_lost_power,
+			sum(ineff_lost_power) ineff_lost_power,
+			sum(hid_lost_power) hid_lost_power
+		 from ids_analysis_matrix_month_t where station_code = #{stationCode}
+		<if test="null != countTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		<if test="null != countYearTime">
+			and analysis_time between #{startTime} and #{endTime}
+		</if>
+		order by analysis_time asc
+	</select>
+	<!-- 获取年的各个月的统计数据信息 -->
+	<select id="selectCompontAnalysisYearChartByStation" parameterType="java.util.Map" resultMap="matrixMonth">
+		select
+		    analysis_time, 
+			sum(trouble_lost_power) trouble_lost_power,
+			sum(ineff_lost_power) ineff_lost_power,
+			sum(hid_lost_power) hid_lost_power
+		 from ids_analysis_matrix_month_t where station_code = #{stationCode}
+			and analysis_time between #{startTime} and #{endTime}
+			group by analysis_time
+			order by analysis_time asc
+	</select>
+	<!-- 电站年报分析统计 -->
+	<select id="selectStationYearAnalysisCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(DISTINCT matrix_id) from ids_analysis_matrix_year_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		GROUP BY matrix_id
+	</select>
+	
+	<!-- 电站年报分析数据 -->
+	<select id="selectStationYearAnalysis" parameterType="java.util.Map" resultMap="matrixMonth">
+		SELECT
+			matrix_id, MAX(matrix_name) matrix_name, 
+			MAX(installed_capacity) installed_capacity, 
+			SUM(DISTINCT pv_num) pv_num,
+			SUM(product_power) product_power, SUM(trouble_pv_num) trouble_pv_num, 
+			SUM(trouble_lost_power) trouble_lost_power,
+			SUM(ineff_lost_power) ineff_lost_power, SUM(ineff_pv_num) ineff_pv_num,
+			SUM(hid_lost_power) hid_lost_power, SUM(hid_pv_num) hid_pv_num
+		from ids_analysis_matrix_year_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		order by matrix_id
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!-- 查询推荐日期 -->
+	<select id="selectComponetCountTime" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select analysis_time from ids_analysis_pv_day_t where matrix_id = #{value}
+		order by analysis_time desc
+		limit 0,10
+	</select>
+	
+	
+	<!-- 查询子阵日统计分析，，，， 注意：：： 这里的pvCodeCount 是一个示意，并不是他是可以代表3中状态的数据，这里就只是一种而已,具体是哪一种由analysis_state来确定-->
+	<select id="getMatrixAnalysisDay" parameterType="java.util.Map" resultMap="matrixMonth">
+		select 
+		  COUNT(DISTINCT pv_code, dev_id) pvCodeCount,
+			analysis_state,sum(lost_power) lost_power
+		from ids_analysis_pv_day_t 
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+		group by analysis_state
+	</select>
+	
+	<!-- 查询组串诊断日分析 -->
+	<resultMap type="java.util.Map" id="compontMap">
+		<result column="dev_alias" property="devAlias"/>
+		<result column="pv_code" property="pvCode"/>
+		<result column="pv_capacity" property="pvCapacity"/>
+	</resultMap>
+	<!-- 组件日分析数据报告条数统计 -->
+	<select id="selectCompontAnalysisDayCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select 
+			count(distinct(dev_id))
+		from 
+			ids_analysis_pv_day_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+	</select>
+	<!-- <select id="getCompontAnalysisDay" parameterType="java.util.Map" resultMap="compontMap">
+		select 
+			dev_alias,
+			MAX(CASE pv_code WHEN 1 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv1, 
+			MAX(CASE pv_code WHEN 2 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv2, 
+			MAX(CASE pv_code WHEN 3 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv3, 
+			MAX(CASE pv_code WHEN 4 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv4, 
+			MAX(CASE pv_code WHEN 5 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv5, 
+			MAX(CASE pv_code WHEN 6 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv6, 
+			MAX(CASE pv_code WHEN 7 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv7, 
+			MAX(CASE pv_code WHEN 8 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv8, 
+			MAX(CASE pv_code WHEN 9 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv9, 
+			MAX(CASE pv_code WHEN 10 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv10, 
+			MAX(CASE pv_code WHEN 11 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv11, 
+			MAX(CASE pv_code WHEN 12 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv12, 
+			MAX(CASE pv_code WHEN 13 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv13, 
+			MAX(CASE pv_code WHEN 14 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv14, 
+			MAX(CASE pv_code WHEN 15 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv15, 
+			MAX(CASE pv_code WHEN 16 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv16, 
+			MAX(CASE pv_code WHEN 17 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv17, 
+			MAX(CASE pv_code WHEN 18 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv18, 
+			MAX(CASE pv_code WHEN 19 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv19, 
+			MAX(CASE pv_code WHEN 20 THEN CONCAT(pv_code,'@', lost_power,'@',analysis_state) END) pv20
+		from                                    
+			ids_analysis_pv_day_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+		group by dev_id
+		order by pv_code
+		limit #{start},#{pageSize}
+	</select> -->
+	
+	<select id="getCompontAnalysisDay" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+      		dev_id devId,
+			MAX(dev_alias) devAlias,
+			analysis_state analysisState,
+			SUM(lost_power) lostPower,
+      		pv_code pvCode
+		from                                    
+			ids_analysis_pv_day_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+		group by dev_id,analysis_state,pv_code
+		order by pv_code
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!-- 组件日分析电站数据统计 -->
+	<select id="selectStationDayAnalysisCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(DISTINCT matrix_id) from ids_analysis_matrix_day_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		GROUP BY matrix_id
+	</select>
+	
+	<!-- 电站日统计chart数据 -->
+	<select id="selectStationDayAnalysis" parameterType="java.util.Map" resultMap="matrixMonth">
+		select 
+			sum(trouble_lost_power) trouble_lost_power,
+			sum(trouble_pv_num) trouble_pv_num,
+			sum(ineff_lost_power) ineff_lost_power,
+			sum(ineff_pv_num) ineff_pv_num,
+			sum(hid_lost_power) hid_lost_power,
+			sum(hid_pv_num) hid_pv_num
+		from ids_analysis_matrix_day_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		order by analysis_time asc
+	</select>
+	
+	<!-- 电站日统计table数据 -->
+	<select id="selectStationDayAnalysisByPage" parameterType="java.util.Map" resultMap="matrixMonth">
+	    SELECT
+			matrix_id, MAX(matrix_name) matrix_name, 
+			MAX(installed_capacity) installed_capacity, 
+			SUM(pv_num) pv_num,
+			SUM(product_power) product_power, SUM(trouble_pv_num) trouble_pv_num, 
+			SUM(trouble_lost_power) trouble_lost_power,
+			SUM(ineff_lost_power) ineff_lost_power, SUM(ineff_pv_num) ineff_pv_num,
+			SUM(hid_lost_power) hid_lost_power, SUM(hid_pv_num) hid_pv_num
+		from ids_analysis_matrix_day_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		GROUP BY matrix_id
+		order by analysis_time asc
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!-- 年报子阵数据条数统计 -->
+	<select id="selectCompontAnalysisYearCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select 
+			count(distinct(matrix_id))
+		from 
+			ids_analysis_matrix_month_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 年报电站数据 -->
+	<select id="selectCompontAnalysisYear" parameterType="java.util.Map" resultMap="matrixMonth">
+		select 
+			*
+		from 
+			ids_analysis_matrix_month_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!-- 查询最大的pv数 -->
+	<select id="selectMaxPv" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT MAX(num) FROM `ids_pv_capacity_t` pv LEFT JOIN ids_analysis_pv_day_t pv_dev ON pv_dev.dev_id = pv.`device_id` 
+		WHERE  pv_dev.`matrix_id`=#{matrixId} and analysis_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 统计逆变器的个数 -->
+	<select id="selectInverterDiscreteRateCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(device_id)) from ids_kpi_day_inverter_t 
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 获取逆变器chartData数据 -->
+	<resultMap type="java.util.Map" id="inverterDiscreteRateMap">
+		<result column="discrete_rate" property="discreteRate"/>
+		<result column="number" property="number"/>
+		
+		<result column="dev_alias" property="devAlias"/>
+		<result column="product_power" property="productPower"/>
+		<result column="efficiency" property="efficiency"/>
+		<result column="equivalent_hour" property="equivalentHour"/>
+		<result column="peak_power" property="peakPower"/>
+		<result column="discrete_rate" property="discreteRate"/>
+		<result column="isAnalysis" property="isAnalysis"/>
+		<result column="avg_u" property="avgU"/>
+		<result column="pv1" property="pv1"/>
+		<result column="pv2" property="pv2"/>
+		<result column="pv3" property="pv3"/>
+		<result column="pv4" property="pv4"/>
+		<result column="pv5" property="pv5"/>
+		<result column="pv6" property="pv6"/>
+		<result column="pv7" property="pv7"/>
+		<result column="pv8" property="pv8"/>
+		<result column="pv9" property="pv9"/>
+		<result column="pv10" property="pv10"/>
+		<result column="pv11" property="pv11"/>
+		<result column="pv12" property="pv12"/>
+		<result column="pv13" property="pv13"/>
+		<result column="pv14" property="pv14"/>
+		<result column="pv15" property="pv15"/>
+		<result column="pv16" property="pv16"/>
+		<result column="pv17" property="pv17"/>
+		<result column="pv18" property="pv18"/>
+		<result column="pv19" property="pv19"/>
+		<result column="pv20" property="pv20"/>
+	</resultMap>
+	<select id="selectInverterDiscreteRateChartData" parameterType="java.util.Map" resultMap="inverterDiscreteRateMap">
+		select 
+			(case  
+				when discrete_rate is null then 'error'
+				when discrete_rate = -1 then 'noAnalysis' 
+				when discrete_rate &gt;=0 and discrete_rate  &lt; 5 then 'ge0lt5'
+				when  discrete_rate &gt;= 5 and discrete_rate &lt; 10 then 'ge5lt10'
+				when discrete_rate &gt;=10 and discrete_rate &lt; 20 then 'ge10lt20'
+				when discrete_rate &gt;= 20 then 'ge20' END
+			) discrete_rate, count(1) number 
+		from ids_kpi_day_inverter_t
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+		group by (case  
+				when discrete_rate is null then 'error'
+				when discrete_rate = -1 then 'noAnalysis' 
+				when discrete_rate &gt;=0 and discrete_rate  &lt; 5 then 'ge0lt5'
+				when  discrete_rate &gt;= 5 and discrete_rate &lt; 10 then 'ge5lt10'
+				when discrete_rate &gt;=10 and discrete_rate &lt; 20 then 'ge10lt20'
+				when discrete_rate &gt;= 20 then 'ge20' END
+			) 
+	</select>
+	
+	<!-- 获取逆变器tableData数据 -->
+	<select id="selectInverterDiscreteRateTableData" parameterType="java.util.Map" resultMap="inverterDiscreteRateMap">
+		select 
+			dev_name dev_alias,
+			product_power,
+			efficiency,
+			equivalent_hour,
+			peak_power,
+			discrete_rate,
+			(CASE WHEN discrete_rate=-1 THEN '1' WHEN discrete_rate IS  NULL THEN '2' ELSE '0' END) isAnalysis,
+			concat(ROUND(pv1_avg_i,2),'/',ROUND(pv1_avg_u,2)) pv1,
+			concat(ROUND(pv2_avg_i,2),'/',ROUND(pv2_avg_u,2)) pv2,
+			concat(ROUND(pv3_avg_i,2),'/',ROUND(pv3_avg_u,2)) pv3,
+			concat(ROUND(pv4_avg_i,2),'/',ROUND(pv4_avg_u,2)) pv4,
+			concat(ROUND(pv5_avg_i,2),'/',ROUND(pv5_avg_u,2)) pv5,
+			concat(ROUND(pv6_avg_i,2),'/',ROUND(pv6_avg_u,2)) pv6,
+			concat(ROUND(pv7_avg_i,2),'/',ROUND(pv7_avg_u,2)) pv7,
+			concat(ROUND(pv8_avg_i,2),'/',ROUND(pv8_avg_u,2)) pv8,
+			concat(ROUND(pv9_avg_i,2),'/',ROUND(pv9_avg_u,2)) pv9,
+			concat(ROUND(pv10_avg_i,2),'/',ROUND(pv10_avg_u,2)) pv10,
+			concat(ROUND(pv11_avg_i,2),'/',ROUND(pv11_avg_u,2)) pv11,
+			concat(ROUND(pv12_avg_i,2),'/',ROUND(pv12_avg_u,2)) pv12,
+			concat(ROUND(pv13_avg_i,2),'/',ROUND(pv13_avg_u,2)) pv13,
+			concat(ROUND(pv14_avg_i,2),'/',ROUND(pv14_avg_u,2)) pv14
+		from ids_kpi_day_inverter_t
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+		order by collect_time desc
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!-- 统计直流汇率箱的个数 -->
+	<select id="selectCombinerdcDiscreteRateCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(device_id)) from ids_kpi_day_combinerdc_t 
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 获取直流汇率箱chartData数据 -->
+	<select id="selectCombinerdcDiscreteRateChartData" parameterType="java.util.Map" resultMap="inverterDiscreteRateMap">
+		select 
+				(case  
+					when discrete_rate is null then 'error'
+					when discrete_rate = -1 then 'noAnalysis' 
+					when discrete_rate &gt;=0 and discrete_rate  &lt; 5 then 'ge0lt5'
+					when  discrete_rate &gt;= 5 and discrete_rate &lt; 10 then 'ge5lt10'
+					when discrete_rate &gt;=10 and discrete_rate &lt; 20 then 'ge10lt20'
+					when discrete_rate &gt;= 20 then 'ge20' END
+				) discrete_rate, count(1) number 
+			from ids_kpi_day_combinerdc_t
+			where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+			group by (case  
+					when discrete_rate is null then 'error'
+					when discrete_rate = -1 then 'noAnalysis' 
+					when discrete_rate &gt;=0 and discrete_rate  &lt; 5 then 'ge0lt5'
+					when  discrete_rate &gt;= 5 and discrete_rate &lt; 10 then 'ge5lt10'
+					when discrete_rate &gt;=10 and discrete_rate &lt; 20 then 'ge10lt20'
+					when discrete_rate &gt;= 20 then 'ge20' END
+				) 
+	</select>
+	
+	<!-- 获取直流汇率箱tableData数据 -->
+	<select id="selectCombinerdcDiscreteRateTableData" parameterType="java.util.Map" resultMap="inverterDiscreteRateMap">
+		select 
+			dev_name dev_alias,
+			equivalent_hour,
+			discrete_rate,
+			(CASE WHEN discrete_rate=-1 THEN '1' WHEN discrete_rate IS  NULL THEN '2' ELSE '0' END) isAnalysis,
+			avg_u,
+			pv1_avg_i pv1,
+			pv2_avg_i pv2,
+			pv3_avg_i pv3,
+			pv4_avg_i pv4,
+			pv5_avg_i pv5,
+			pv6_avg_i pv6,
+			pv7_avg_i pv7,
+			pv8_avg_i pv8,
+			pv9_avg_i pv9,
+			pv10_avg_i pv10,
+			pv11_avg_i pv11,
+			pv12_avg_i pv12,
+			pv13_avg_i pv13,
+			pv14_avg_i pv14,
+			pv15_avg_i pv15,
+			pv16_avg_i pv16,
+			pv17_avg_i pv17,
+			pv18_avg_i pv18,
+			pv19_avg_i pv19,
+			pv20_avg_i pv20
+		from ids_kpi_day_combinerdc_t
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+		order by collect_time desc
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!-- 查询直流汇率箱和逆变器的最大pv数 -->
+	<select id="getInverterMaxPv" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select max(pv.num) 
+		from ids_pv_capacity_t pv,
+		<if test="null != type and type=='inverter'">
+			ids_kpi_day_inverter_t kpi_day
+		</if>
+		<if test="null != type and type=='combinerdc'">
+			ids_kpi_day_combinerdc_t kpi_day
+		</if>
+		where 
+			pv.device_id = kpi_day.device_id
+		and kpi_day.station_code = #{stationCode}
+		and kpi_day.collect_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 导出电站月度分析报告数据 -->
+	<select id="exportStationMouthData" parameterType="java.util.Map" resultMap="matrixMonth">
+		select * from ids_analysis_matrix_month_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		order by analysis_time asc
+	</select>
+	
+	<!-- 导出子阵月度分析报告数据 -->
+	<select id="exportSubarrayMouthData" parameterType="java.util.Map" resultMap="matrixMonth">
+		SELECT
+		  dev_alias,
+		  matrix_name,
+		  sum(pv_capacity) pv_capacity,
+		  SUM(trouble_lost_power) trouble_lost_power,
+		  SUM(ineff_lost_power) ineff_lost_power,
+		  SUM(hid_lost_power) hid_lost_power
+		FROM
+		  ids_analysis_pv_month_t
+		WHERE matrix_id = #{matrixId}
+		and analysis_time between #{startTime} and #{endTime}
+		GROUP BY dev_id
+	</select>
+	
+	<!-- 导出电站年度分析报告数据 -->
+	<select id="exportStationYearData" parameterType="java.util.Map" resultMap="matrixMonth">
+		<!-- select * from ids_analysis_matrix_year_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		order by matrix_id -->
+		SELECT
+			matrix_id, MAX(matrix_name) matrix_name, 
+			MAX(installed_capacity) installed_capacity, 
+			SUM(DISTINCT pv_num) pv_num,
+			SUM(product_power) product_power, SUM(trouble_pv_num) trouble_pv_num, 
+			SUM(trouble_lost_power) trouble_lost_power,
+			SUM(ineff_lost_power) ineff_lost_power, SUM(ineff_pv_num) ineff_pv_num,
+			SUM(hid_lost_power) hid_lost_power, SUM(hid_pv_num) hid_pv_num
+		from ids_analysis_matrix_year_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		order by matrix_id
+	</select>
+	
+	<!-- 导出子阵年度分析报告数据 -->
+	<select id="exportSubarrayYearData" parameterType="java.util.Map" resultMap="matrixMonth">
+		select 
+			*
+		from 
+			ids_analysis_matrix_month_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+	</select>
+	
+	<!-- 导出电站日度分析报告数据 -->
+	<select id="exportStationDayData" parameterType="java.util.Map" resultMap="matrixMonth">
+		select * from ids_analysis_matrix_day_t where station_code = #{stationCode}
+		and analysis_time between #{startTime} and #{endTime}
+		order by analysis_time asc
+	</select>
+	
+	<!-- 导出子阵日度分析报告数据 -->
+	<select id="exportSubarrayDayData" parameterType="java.util.Map" resultMap="compontMap">
+		select 
+			dev_alias,
+			MAX(CASE pv_code WHEN 1 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv1, 
+			MAX(CASE pv_code WHEN 2 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv2, 
+			MAX(CASE pv_code WHEN 3 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv3, 
+			MAX(CASE pv_code WHEN 4 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv4, 
+			MAX(CASE pv_code WHEN 5 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv5, 
+			MAX(CASE pv_code WHEN 6 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv6, 
+			MAX(CASE pv_code WHEN 7 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv7, 
+			MAX(CASE pv_code WHEN 8 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv8, 
+			MAX(CASE pv_code WHEN 9 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv9, 
+			MAX(CASE pv_code WHEN 10 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv10, 
+			MAX(CASE pv_code WHEN 11 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv11, 
+			MAX(CASE pv_code WHEN 12 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv12, 
+			MAX(CASE pv_code WHEN 13 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv13, 
+			MAX(CASE pv_code WHEN 14 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv14, 
+			MAX(CASE pv_code WHEN 15 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv15, 
+			MAX(CASE pv_code WHEN 16 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv16, 
+			MAX(CASE pv_code WHEN 17 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv17, 
+			MAX(CASE pv_code WHEN 18 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv18, 
+			MAX(CASE pv_code WHEN 19 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv19, 
+			MAX(CASE pv_code WHEN 20 THEN CONCAT(pv_code,'@', pv_capacity,'@',analysis_state) END) pv20
+		from                                    
+			ids_analysis_pv_day_t
+		where 
+			matrix_id = #{matrixId}
+			and analysis_time between #{startTime} and #{endTime}
+		group by dev_id
+		order by pv_code
+	</select>
+	
+	<!-- 导出逆变器分析报告数据 -->
+	<select id="exportCcatterData" parameterType="java.util.Map" resultMap="inverterDiscreteRateMap">
+		select 
+			dev_name dev_alias,
+			product_power,
+			efficiency,
+			equivalent_hour,
+			peak_power,
+			discrete_rate,
+			(CASE WHEN discrete_rate=-1 THEN '未分析' WHEN discrete_rate IS  NULL THEN '异常' ELSE '已分析' END) isAnalysis,
+			concat(pv1_avg_i,'/',pv1_avg_u) pv1,
+			concat(pv2_avg_i,'/',pv2_avg_u) pv2,
+			concat(pv3_avg_i,'/',pv3_avg_u) pv3,
+			concat(pv4_avg_i,'/',pv4_avg_u) pv4,
+			concat(pv5_avg_i,'/',pv5_avg_u) pv5,
+			concat(pv6_avg_i,'/',pv6_avg_u) pv6,
+			concat(pv7_avg_i,'/',pv7_avg_u) pv7,
+			concat(pv8_avg_i,'/',pv8_avg_u) pv8,
+			concat(pv9_avg_i,'/',pv9_avg_u) pv9,
+			concat(pv10_avg_i,'/',pv10_avg_u) pv10,
+			concat(pv11_avg_i,'/',pv11_avg_u) pv11,
+			concat(pv12_avg_i,'/',pv12_avg_u) pv12,
+			concat(pv13_avg_i,'/',pv13_avg_u) pv13,
+			concat(pv14_avg_i,'/',pv14_avg_u) pv14
+		from ids_kpi_day_inverter_t
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+		order by collect_time desc
+	</select>
+	
+	<!-- 导出直流汇率箱分析报告数据 -->
+	<select id="exportScatterDCData" parameterType="java.util.Map" resultMap="inverterDiscreteRateMap">
+		select 
+			dev_name dev_alias,
+			equivalent_hour,
+			discrete_rate,
+			avg_u,
+			(CASE WHEN discrete_rate=-1 THEN '未分析' WHEN discrete_rate IS  NULL THEN '异常' ELSE '已分析' END) isAnalysis,
+			pv1_avg_i pv1,
+			pv2_avg_i pv2,
+			pv3_avg_i pv3,
+			pv4_avg_i pv4,
+			pv5_avg_i pv5,
+			pv6_avg_i pv6,
+			pv7_avg_i pv7,
+			pv8_avg_i pv8,
+			pv9_avg_i pv9,
+			pv10_avg_i pv10,
+			pv11_avg_i pv11,
+			pv12_avg_i pv12,
+			pv13_avg_i pv13,
+			pv14_avg_i pv14,
+			pv15_avg_i pv15,
+			pv16_avg_i pv16,
+			pv17_avg_i pv17,
+			pv18_avg_i pv18,
+			pv19_avg_i pv19,
+			pv20_avg_i pv20
+		from ids_kpi_day_combinerdc_t
+		where station_code = #{stationCode} and collect_time between #{startTime} and #{endTime}
+		order by collect_time desc
+	</select>
+</mapper>

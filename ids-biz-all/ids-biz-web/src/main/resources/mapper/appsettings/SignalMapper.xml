@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.biz.web.appsettings.dao.SignalDao">
+    <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.signal.SignalVersionInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="signal_version" property="signalVersion" jdbcType="VARCHAR"/>
+        <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT"/>
+        <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER"/>
+        <result column="vender_name" property="venderName" jdbcType="VARCHAR"/>
+        <result column="protocol_code" property="protocolCode" jdbcType="VARCHAR"/>
+        <result column="model_code" property="modelCode" jdbcType="VARCHAR"/>
+        <result column="model_version" property="modelVersion" jdbcType="VARCHAR"/>
+        <result column="file_version" property="fileVersion" jdbcType="VARCHAR"/>
+        <result column="is_multipurpose" property="isMultipurpose" jdbcType="TINYINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="yc_alarm_flag" property="ycAlarmFlag" jdbcType="BIT"/>
+        <result column="alarm_flag_addr" property="alarmFlagAddr" jdbcType="INTEGER"/>
+        <result column="ava_flag_vals" property="avaFlagVals" jdbcType="VARCHAR"/>
+        <result column="data_table_name" property="dataTableName" jdbcType="VARCHAR"/>
+        <result column="data_model_table_name" property="dataModelTableName" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="VersionResultMap" type="map">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="signal_version" property="version" jdbcType="VARCHAR"/>
+        <result column="name" property="signalDataName" jdbcType="VARCHAR"/>
+        <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="protocol_code" property="protocolCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="SignalModelVo" type="com.interest.ids.biz.web.appsettings.vo.SignalModelVo">
+        <result column="vender_name" property="venderName"/>
+        <result column="dev_type_id" property="devTypeId"/>
+        <result column="signal_version" property="signalVersion"/>
+        <result column="signal_name" property="signalName"/>
+        <result column="model_id" property="modelId"/>
+        <result column="signal_type" property="signalType"/>
+        <result column="station_code" property="stationCode"/>
+        <result column="alarm_type" property="alarmType"/>
+        <result column="level_id" property="levelId"/>
+    </resultMap>
+
+    <sql id="enterpriseId">
+        select u.enterprise_id from ids_sm_user_info_t u where u.id
+    </sql>
+
+    <select id="listSignalInfo" parameterType="com.interest.ids.common.project.bean.Pagination" resultMap="VersionResultMap">
+        SELECT v.id, v.name, v.signal_version, dev_type_id, v.create_date, v.protocol_code
+        FROM ids_signal_version_t v
+        WHERE v.name is not null
+      	<if test="userType == 'normal'">
+      		AND (v.station_code IN (
+			SELECT station_code FROM ids_sm_user_station_t WHERE user_id = #{userId}
+			) OR v.station_code IS NULL)
+      	</if>
+      	<if test="userType == 'enterprise'">
+      		AND (v.station_code IN (
+			SELECT station_code FROM ids_station_info_t station,ids_sm_user_info_t usert 
+			WHERE station.enterprise_id = usert.enterprise_id AND usert.id = #{userId})
+			OR v.station_code IS NULL)
+      	</if>
+    </select>
+
+    <update id="updateIsAlarmFlagById">
+        UPDATE ids_signal_info_t SET is_alarm_flag = #{type}, signal_type = 9 WHERE 
+        device_id in (select id from ids_dev_info_t where station_code = #{stationCode}) and model_id IN
+        <foreach collection="modelIds" item="modelId" open="(" separator="," close=")">
+            #{modelId}
+        </foreach>
+    </update>
+    
+    <update id="updateAlarmToYx">
+        UPDATE ids_signal_info_t SET is_alarm_flag = #{type}, signal_type = 2 WHERE 
+        device_id in (select id from ids_dev_info_t where station_code = #{stationCode}) and model_id IN
+        <foreach collection="modelIds" item="modelId" open="(" separator="," close=")">
+            #{modelId}
+        </foreach>
+    </update>
+    
+    <select id="getSignalModel" resultMap="SignalModelVo">
+        SELECT devversion.vender_name,dev.dev_type_id,signalinfo.signal_version,
+        signalinfo.signal_name,signalinfo.model_id,signalinfo.signal_type,dev.station_code,
+		alarmmodel.tele_type alarm_type,alarmmodel.severity_id level_id
+		FROM ids_signal_version_t version,ids_dev_info_t dev
+		,ids_signal_version_t devversion,ids_signal_info_t signalinfo LEFT JOIN ids_alarm_model_t alarmmodel
+		ON alarmmodel.signal_version = signalinfo.signal_version 
+		AND signalinfo.model_id = alarmmodel.model_id
+		WHERE version.station_code = dev.station_code AND dev.id = signalinfo.device_id 
+		AND dev.id in (SELECT id FROM ids_dev_info_t WHERE parent_signal_version_id = #{vo.signalVersionId}
+		OR id IN (SELECT id FROM ids_dev_info_t WHERE parent_id = 
+		(SELECT id FROM ids_dev_info_t WHERE parent_signal_version_id = #{vo.signalVersionId})))
+		AND signalinfo.signal_version = devversion.signal_version AND version.id = #{vo.signalVersionId}
+		<if test="vo.signalType != null and vo.signalType != ''">
+			and signalinfo.signal_type = #{vo.signalType}
+		</if>
+		<if test="vo.devTypeId != null and vo.devTypeId != ''">
+			and dev.dev_type_id = #{vo.devTypeId}
+		</if>
+		<if test="vo.signalName != null and vo.signalName != ''">
+			and signalinfo.signal_name like concat(concat("%",#{vo.signalName}),"%")
+		</if>
+		<if test="vo.signalVersion != null and vo.signalVersion != ''">
+			and signalinfo.signal_version like concat(concat("%",#{vo.signalVersion}),"%")
+		</if>
+		GROUP BY signalinfo.model_id,signalinfo.signal_version
+    </select>
+    
+    <select id="selectSignalDev" parameterType="java.lang.String" resultType="java.util.Map">
+        select DISTINCT dev.dev_type_id,dev.signal_version,dev.protocol_code,version.vender_name,dev.dev_name,station.station_name
+		from ids_dev_info_t dev,ids_signal_version_t version,ids_station_info_t station
+		WHERE dev.signal_version = version.signal_version AND dev.station_code = station.station_code
+		AND (dev.parent_signal_version_id = #{id} OR dev.parent_id = (SELECT dev2.id FROM ids_dev_info_t dev2 WHERE dev2.signal_version = #{signalVersion} 
+		AND dev2.station_code = station.station_code AND station.is_monitor = '0')) ORDER BY dev.id
+    </select>
+   
+    <select id="selectSignalInfo" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT CONCAT('[',dev.dev_name,']',signalinfo.signal_name) dev_signal_name,signalinfo.signal_type,
+		IFNULL(signalinfo.signal_unit,'N/A') signal_unit,signalinfo.gain,signalinfo.signal_address,signalinfo.`offset`,
+		dev.dev_name,signalinfo.signal_name
+		FROM ids_signal_info_t signalinfo,ids_signal_version_t version,ids_dev_info_t dev
+		WHERE signalinfo.signal_version = version.signal_version AND dev.id = signalinfo.device_id
+		AND (version.id = #{value} OR version.parent_id = #{value})
+		AND signalinfo.device_id IN (SELECT id FROM ids_dev_info_t WHERE parent_signal_version_id = #{value} 
+		OR parent_id = (SELECT id FROM ids_dev_info_t WHERE parent_signal_version_id = #{value}))
+	</select>
+	 <!-- zme -->
+    <select id="selectMqttSignalDev" parameterType="java.lang.String" resultType="java.util.Map">
+    	SELECT DISTINCT version.dev_type_id,version.signal_version,version.protocol_code,version.vender_name
+		FROM ids_signal_version_t version
+		WHERE version.signal_version = #{signalVersion}
+    </select>
+    <select id="selectMqttSignalInfo" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT DISTINCT model.signal_name,model.signal_type,model.data_type,IFNULL(model.signal_unit,'N/A') signal_unit,model.gain,model.signal_address,model.register_num,model.offset
+		FROM ids_signal_model_t model
+		WHERE model.signal_version = #{signalVersion}
+    </select>
+    <select id="selectMqttAlarm" parameterType="java.lang.String" resultType="java.util.Map">
+    	SELECT DISTINCT alarm.alarm_name,alarm.severity_id,alarm.alarm_type,alarm.sig_address,alarm.bit_index,alarm.alarm_cause,alarm.repair_suggestion
+		FROM ids_alarm_model_t alarm
+		WHERE alarm.signal_version = #{signalVersion}
+    </select>
+    <!-- zme -->
+	<select id="queryMqttUsers" resultType="java.util.Map">
+		SELECT `id`, `username`,`password`,`salt`,`is_superuser`,`clientid` FROM `mqtt_user`
+	</select>
+    
+</mapper>

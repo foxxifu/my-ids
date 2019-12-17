@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.intelligentclean.StationWeatherMapper">
+
+	<resultMap id="StationWeatherMap" type="com.interest.ids.common.project.bean.intelligentclean.StationWeatherM">
+		<id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+		<id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+		<result column="weather_text_day" jdbcType="VARCHAR" property="weatherTextDay" />
+		<result column="weather_text_night" jdbcType="VARCHAR" property="weatherTextNight" />
+	</resultMap>
+	
+	<!-- 查询电站天气通过电站编号和时间 -->
+	<select id="getStationWeather" parameterType="java.util.Map" resultMap="StationWeatherMap">
+		SELECT station_code,collect_time,weather_text_day,weather_text_night FROM ids_station_weather_day_t 
+		WHERE station_code = #{stationCode} AND collect_time = #{collectTime}
+	</select>	
+	
+	<!-- 新增电站天气 -->
+	<insert id="insertStationWeather" parameterType="com.interest.ids.common.project.bean.intelligentclean.StationWeatherM">
+		insert into ids_station_weather_day_t (station_code,collect_time,weather_text_day,weather_text_night)
+		values (#{stationCode},#{collectTime},#{weatherTextDay},#{weatherTextNight})
+	</insert>
+	
+	<!-- 删除一年前的数据 -->
+	<delete id="deleteOneYearData" parameterType="java.lang.Long">
+		DELETE FROM ids_station_weather_day_t WHERE collect_time BETWEEN 0 AND #{value}
+	</delete>
+</mapper>

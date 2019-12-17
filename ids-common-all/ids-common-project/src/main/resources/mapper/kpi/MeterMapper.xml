@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.kpi.MeterMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.Meter" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="collect_time" property="collectTime" jdbcType="BIGINT" />
+    <id column="device_id" property="deviceId" jdbcType="BIGINT" />
+    <id column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="dev_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="valid" property="valid" jdbcType="VARCHAR" />
+    <result column="meter_type" property="meterType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="grid_u" property="meterU" jdbcType="DECIMAL" />
+    <result column="grid_i" property="meterI" jdbcType="DECIMAL" />
+    <result column="ab_u" property="abU" jdbcType="DECIMAL" />
+    <result column="bc_u" property="bcU" jdbcType="DECIMAL" />
+    <result column="ca_u" property="caU" jdbcType="DECIMAL" />
+    <result column="a_u" property="aU" jdbcType="DECIMAL" />
+    <result column="b_u" property="bU" jdbcType="DECIMAL" />
+    <result column="c_u" property="cU" jdbcType="DECIMAL" />
+    <result column="a_i" property="aI" jdbcType="DECIMAL" />
+    <result column="b_i" property="bI" jdbcType="DECIMAL" />
+    <result column="c_i" property="cI" jdbcType="DECIMAL" />
+    <result column="active_power" property="activePower" jdbcType="DECIMAL" />
+    <result column="power_factor" property="powerFactor" jdbcType="DECIMAL" />
+    <result column="active_cap" property="activeCapacity" jdbcType="DECIMAL" />
+    <result column="reactive_power" property="reactivePower" jdbcType="DECIMAL" />
+    <result column="reverse_active_cap" property="reverseActiveCap" jdbcType="DECIMAL" />
+    <result column="forward_reactive_cap" property="forwardReactiveCap" jdbcType="DECIMAL" />
+    <result column="reverse_reactive_cap" property="reverseReactiveCap" jdbcType="DECIMAL" />
+    <result column="active_power_a" property="activePowerA" jdbcType="DECIMAL" />
+    <result column="active_power_b" property="activePowerB" jdbcType="DECIMAL" />
+    <result column="active_power_c" property="activePowerC" jdbcType="DECIMAL" />
+    <result column="reactive_power_a" property="reactivePowerA" jdbcType="DECIMAL" />
+    <result column="reactive_power_b" property="reactivePowerB" jdbcType="DECIMAL" />
+    <result column="reactive_power_c" property="reactivePowerC" jdbcType="DECIMAL" />
+    <result column="total_apparent_power" property="totalApparentPower" jdbcType="DECIMAL" />
+    <result column="grid_frequency" property="gridFrequency" jdbcType="DECIMAL" />
+    <result column="reverse_active_peak" property="reverseActivePeak" jdbcType="DECIMAL" />
+    <result column="reverse_active_power" property="reverseActivePower" jdbcType="DECIMAL" />
+    <result column="reverse_active_valley" property="reverseActiveValley" jdbcType="DECIMAL" />
+    <result column="reverse_active_top" property="reverseActiveTop" jdbcType="DECIMAL" />
+    <result column="positive_active_peak" property="positiveActivePeak" jdbcType="DECIMAL" />
+    <result column="positive_active_power" property="positiveActivePower" jdbcType="DECIMAL" />
+    <result column="positive_active_valley" property="positiveActiveValley" jdbcType="DECIMAL" />
+    <result column="positive_active_top" property="positiveActiveTop" jdbcType="DECIMAL" />
+    <result column="reverse_reactive_peak" property="reverseReactivePeak" jdbcType="DECIMAL" />
+    <result column="reverse_reactive_power" property="reverseReactivePower" jdbcType="DECIMAL" />
+    <result column="reverse_reactive_valley" property="reverseReactiveValley" jdbcType="DECIMAL" />
+    <result column="reverse_reactive_top" property="reverseReactiveTop" jdbcType="DECIMAL" />
+    <result column="positive_reactive_peak" property="positiveReactivePeak" jdbcType="DECIMAL" />
+    <result column="positive_reactive_power" property="positiveReactivePower" jdbcType="DECIMAL" />
+    <result column="positive_reactive_valley" property="positiveReactiveValley" jdbcType="DECIMAL" />
+    <result column="positive_reactive_top" property="positiveReactiveTop" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="DECIMAL" />
+    <result column="ext2" property="ext2" jdbcType="DECIMAL" />
+    <result column="ext_str_1" property="extStr1" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

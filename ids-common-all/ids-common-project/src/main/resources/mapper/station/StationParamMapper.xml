@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.station.StationParamMapper">
+	<resultMap id="Base_Result_Map" type="com.interest.ids.common.project.bean.sm.StationParam">
+		<result column="id" jdbcType="BIGINT" property="id"/>
+		<result column="param_key" jdbcType="VARCHAR" property="paramKey"/>
+		<result column="param_name" jdbcType="VARCHAR" property="paramName"/>
+		<result column="description" jdbcType="VARCHAR" property="description"/>
+		<result column="param_value" jdbcType="VARCHAR" property="paramValue"/>
+		<result column="param_unit" jdbcType="VARCHAR" property="paramUnit"/>
+		<result column="param_order" jdbcType="TINYINT" property="paramOrder"/>
+		<result column="station_code" jdbcType="VARCHAR" property="stationCode"/>
+		<result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId"/>
+		<result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+		<result column="modify_user_name" jdbcType="BIGINT" property="modifyUserName"/>
+	</resultMap>
+	
+    <sql id="Base_Column_List">
+        id, param_key,param_name,description,param_value,
+        param_unit,param_order,station_code,
+        enterprise_id,modify_user_id,modify_date
+    </sql>
+    <!--新加站点配置信息 -->
+    <insert id="insertStationParam"
+        parameterType="com.interest.ids.common.project.bean.sm.StationParam">
+        insert into ids_sm_station_param_t
+        (param_key,param_name,description,param_value,param_unit,param_order,station_code,enterprise_id,modify_user_id,modify_date)
+        values(#{paramKey},#{paramName},#{description},#{paramValue},#{paramUnit},#{paramOrder},#{stationCode},#{enterpriseId},#{modifyUserId},#{modifyDate})
+    </insert>
+
+    <!-- 根据id查询站点配置 -->
+    <select id="selectStationParamById" parameterType="java.lang.Long"
+        resultMap="Base_Result_Map">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_station_param_t
+        where id = #{value}
+    </select>
+
+    <!-- 根据id跟新站点配置 -->
+    <update id="updateStationParamById"
+        parameterType="com.interest.ids.common.project.bean.sm.StationParam">
+        update ids_sm_station_param_t
+        <set>
+            <if test="paramKey != null">
+                param_key = #{paramKey},
+            </if>
+            <if test="paramName != null">
+                param_name = #{paramName},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="paramValue != null">
+                param_value = #{paramValue},
+            </if>
+            <if test="paramUnit != null">
+                param_unit = #{paramUnit},
+            </if>
+            <if test="paramOrder != null">
+                param_order = #{paramOrder},
+            </if>
+            <if test="stationCode != null">
+                station_code = #{stationCode},
+            </if>
+            <if test="enterpriseId != null">
+                enterprise_id = #{enterpriseId},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据station_code查询站点信息 -->
+    <select id="selectStationParamByStationCode" parameterType="java.lang.String"
+        resultMap="Base_Result_Map">
+        select
+        param.id,param.param_key,param.param_name,param.description,param.param_value,param.param_unit,
+		param.param_order,param.station_code,param.enterprise_id,param.modify_user_id,param.modify_date,
+		userinfo.user_name modify_user_name
+        from ids_sm_station_param_t param LEFT JOIN ids_sm_user_info_t userinfo ON userinfo.id = param.modify_user_id
+        where param.station_code = #{value} or param.station_code is null
+        order by param.param_order
+    </select>
+    
+    <!-- 根据电站编号及参数key查询唯一的参数信息 -->
+    <select id="selectStationParamByStationCodeAndKey" resultMap="Base_Result_Map">
+    	select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_station_param_t
+        where station_code = #{stationCode}
+        	and param_key = #{paramKey}
+    </select>
+    
+    <!-- 查询各电站相同参数信息 -->
+    <select id="selectStationParamMap" resultMap="Base_Result_Map">
+    	select * from ids_sm_station_param_t
+    	where param_key = #{paramKey}
+    		and station_code in 
+   			<foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+   				#{stationCode}
+   			</foreach>
+    </select>
+    
+        <!-- 查询系统配置 -->
+    <select id="selectSystemParamMap" resultMap="Base_Result_Map">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_station_param_t
+        where station_code is null and param_key = #{paramKey}
+        order by param_order
+    </select>
+    
+    <!-- 根据电站的编码和参数的名称统计参数的个数 -->
+    <select id="selectParamByCodeAndName" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(id) from ids_sm_station_param_t
+        where station_code = #{stationCode} and param_name = #{paramName}
+    </select>
+    <!-- 根据电站编号和参数编号查询一个数据，如果电站没有配置就取默认的 -->
+    <select id="selectParamByStaioncodeAndparamKey" resultType="java.lang.String">
+    	SELECT IFNULL(t.param_value2,t.param_value1) from 
+		(
+		SELECT
+			def.param_value AS param_value1,
+			sta.param_value AS param_value2
+		FROM
+			( SELECT * FROM ids_sm_station_param_t WHERE param_key = #{paramCode} AND station_code IS NULL) def
+		LEFT JOIN ( SELECT * FROM ids_sm_station_param_t WHERE param_key = #{paramCode} AND station_code = #{stationCode}) sta 
+		ON def.param_key = sta.param_key
+		) t
+    </select>
+</mapper>

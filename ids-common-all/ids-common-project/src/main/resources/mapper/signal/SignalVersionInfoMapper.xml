@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.signal.SignalVersionInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.signal.SignalVersionInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="signal_version" property="signalVersion" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+    <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER" />
+    <result column="vender_name" property="venderName" jdbcType="VARCHAR" />
+    <result column="protocol_code" property="protocolCode" jdbcType="VARCHAR" />
+    <result column="model_version" property="modelVersion" jdbcType="VARCHAR" />
+    <result column="file_version" property="fileVersion" jdbcType="VARCHAR" />
+    <result column="data_model_name" property="dataModelName" jdbcType="VARCHAR" />
+    <result column="yc_alarm_flag" property="ycAlarmFlag" jdbcType="BIT" />
+    <result column="alarm_flag_addr" property="alarmFlagAddr" jdbcType="INTEGER" />
+    <result column="ava_flag_vals" property="avaFlagVals" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getParentId" resultType="java.lang.Long">
+    SELECT MAX(parent_id) pid FROM ids_signal_version_t;
+  </select>
+  
+  <!-- 新增返回主键 -->
+	<insert id="insertAndGetId" useGeneratedKeys="true" keyProperty="id"
+		parameterType="com.interest.ids.common.project.bean.signal.SignalVersionInfo">
+		INSERT INTO ids_signal_version_t
+		(name, signal_version,enterprise_id,station_code,dev_type_id, vender_name, 
+		protocol_code, interface_version,type,create_date)
+		VALUES
+		(#{name}, #{signalVersion}, #{enterpriseId}, #{stationCode}, #{devTypeId},
+		#{venderName}, #{protocolCode}, #{interfaceVersion}, #{type}, #{createDate});
+	</insert>
+</mapper>

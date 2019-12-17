@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiRealTimeMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiRealTimeM" >
+    <id column="collect_time" property="collectTime" jdbcType="BIGINT" />
+    <id column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+    <result column="radiation_intensity" property="radiationIntensity" jdbcType="VARCHAR" />
+    <result column="product_power" property="productPower" jdbcType="DECIMAL" />
+    <result column="day_cap" property="dayCap" jdbcType="DECIMAL" />
+    <result column="active_power" property="activePower" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="BaseColumn">
+  	collect_time, station_code, enterprise_id, radiation_intensity, 
+  	product_power, day_cap, active_power, day_income, total_income
+  </sql>
+  
+  <insert id="batchInsertRealTimeKpiData" parameterType="java.util.List">
+  	insert into ids_station_realtime_data_t
+  		(<include refid="BaseColumn"/>)
+  	values
+  		<foreach collection="realTimeKpis" item="item" separator=",">
+  			(
+  				#{item.collectTime}, #{item.stationCode}, #{item.enterpriseId}, #{item.radiationIntensity},
+  				#{item.productPower}, #{item.dayCap}, #{item.activePower},#{item.dayIncome}, #{item.totalIncome}
+  			)
+  		</foreach>
+  </insert>
+  
+  <delete id="deleteSmallerRealTimeData" parameterType="com.interest.ids.common.project.bean.kpi.KpiRealTimeM">
+  	DELETE FROM ids_station_realtime_data_t WHERE station_code = #{stationCode} AND collect_time  <![CDATA[<]]> #{collectTime}
+  </delete>
+  
+  <delete id="deleteDatabefore3Days">
+ 	DELETE FROM ids_station_realtime_data_h WHERE collect_time IN (
+	SELECT deleteData.collect_time FROM (SELECT h.collect_time FROM ids_station_realtime_data_h h,
+	(SELECT MAX(collect_time) AS collect_time FROM ids_station_realtime_data_t t ) a
+		WHERE h.collect_time <![CDATA[<]]> a.collect_time - 15552000000
+	) deleteData );
+  </delete>
+  
+</mapper>

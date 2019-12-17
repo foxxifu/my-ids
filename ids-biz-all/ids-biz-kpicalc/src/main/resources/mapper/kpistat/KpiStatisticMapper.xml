@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.biz.kpicalc.kpi.dao.impl.KpiStatisticMapper">
+
+   <select id="listDevicesByStationCoedsAndDevTypes" resultType="java.lang.Long">
+        select
+          id
+        from ids_dev_info_t
+        where station_code in
+              <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+                  #{stationCode}
+              </foreach>
+          and dev_type_id in
+              <foreach collection="devTypeIds" item="devTypeId" index="index" open="(" separator="," close=")">
+                  #{devTypeId}
+              </foreach>
+    </select>
+
+    <select id="queryLastHourPowerMax" resultType="java.util.Map" statementType="STATEMENT">
+        select
+            device_id,${columnName}
+        from ${tableName}
+        where collect_time = ${lastHour}
+            and device_id in
+                <foreach collection="deviceIds" item="deviceId" index="index" open="(" separator="," close=")">
+                    ${deviceId}
+                </foreach>
+    </select>
+
+    <select id="listDataByKpiConfig" parameterType="map" resultType="java.util.Map" statementType="STATEMENT">
+        select
+            collect_time,station_code,
+            <foreach collection="columns" item="column" index="index" separator=",">
+                ${column}
+            </foreach>
+        from ${tableName}
+        where collect_time between ${startTime} and ${endTime}
+            and station_code in
+                <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+                    &apos;${stationCode}&apos;
+                </foreach>
+    </select>
+    
+    <select id="countDevicesByDeviceType" resultType="java.lang.Integer">
+        select count(1) as count
+        from ids_dev_info_t
+        where is_logic_delete = 0
+            and station_code in
+            <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+                #{stationCode}
+            </foreach>
+            and dev_type_id in
+            <foreach collection="deviceTypeIds" item="deviceTypeId" index="index" open="(" separator="," close=")">
+                #{deviceTypeId}
+            </foreach>
+    </select>
+
+    <select id="countDevicesByStationGroup" resultType="java.util.Map">
+        select station_code, count(1) as count
+        from ids_dev_info_t
+        where is_logic_delete = 0
+            and station_code in
+            <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+                #{stationCode}
+            </foreach>
+            and dev_type_id in
+            <foreach collection="deviceTypeIds" item="deviceTypeId" index="index" open="(" separator="," close=")">
+                #{deviceTypeId}
+            </foreach>
+    </select>
+
+    <select id="queryRadiantOverLimitOnTime" parameterType="java.util.Map" resultType="java.util.Map" statementType="STATEMENT">
+        select dev_id as device_id, collect_time
+        from ${tableName}
+        where irradiation_intensity > ${limitRadiant}
+            and collect_time between ${startTime} and ${endTime}
+            and dev_id in
+                <foreach collection="deviceIds" item="deviceId" open="(" separator="," close=")">
+                    ${deviceId}
+                </foreach>
+    </select>
+
+    <select id="queryDelStationDevice" resultType="java.lang.Long">
+        select id
+        from ids_dev_info_t
+        where is_logic_delete = 1
+            and station_code in 
+                <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+                    #{stationCode}
+                </foreach>
+            and dev_type_id in
+                <foreach collection="deviceTypeIds" item="deviceTypeId" open="(" separator="," close=")">
+                    #{deviceTypeId}
+                </foreach>
+    </select>
+
+    <select id="queryUnificationSignal" resultType="java.util.Map">
+        select column_name, order_num
+        from ids_normalized_model_t
+        where dev_type = #{deviceTypeId}
+            and column_name in
+                <foreach collection="columnNames" item="columnName" open="(" separator="," close=")">
+                    #{columnName}
+                </foreach>
+    </select>
+
+    <select id="queryFinalDeviceDayCap" resultType="java.util.Map">
+        select t1.collect_time, t1.dev_id, t1.day_capacity from 
+        (
+            select collect_time, dev_id, day_capacity from ids_inverter_string_data_t
+            where station_code = #{stationCode}
+                and collect_time BETWEEN #{startTime} AND #{endTime}
+        ) t1
+        INNER JOIN
+        (
+            select dev_id, max(collect_time) max_time from ids_inverter_string_data_t
+            where station_code = #{stationCode}
+                and collect_time BETWEEN #{startTime} AND #{endTime}
+                and day_capacity > 0
+            group by dev_id
+        ) t2 on t1.collect_time = t2.max_time and t1.dev_id = t2.dev_id
+        UNION
+        select t3.collect_time, t3.dev_id, t3.day_capacity from
+            (
+                select collect_time, dev_id, day_capacity from ids_inverter_conc_data_t
+                where station_code = #{stationCode}
+                    and collect_time BETWEEN #{startTime} AND #{endTime}
+            ) t3
+            INNER JOIN
+            (
+                select dev_id, max(collect_time) max_time from ids_inverter_conc_data_t
+                where station_code = #{stationCode}
+                 and collect_time BETWEEN #{startTime} AND #{endTime}
+                 and day_capacity > 0
+                group by dev_id
+            ) t4
+            on t3.collect_time = t4.max_time and t3.dev_id = t4.dev_id
+    </select>
+
+    <!-- 电站当天最后有效累计KPI数据 -->
+    <resultMap id="StationKpiResultMap" type="com.interest.ids.common.project.bean.kpi.KpiStationDayM">
+        <result column="station_code" property="stationCode"/>
+        <result column="product_power" property="productPower"/>
+        <result column="total_irradiation" property="radiationIntensity"/>
+    </resultMap>
+    <select id="queryFinalStationDayData" resultMap="StationKpiResultMap">
+        SELECT st.station_code, (IFNULL(invs.invs_day_cap, 0) + IFNULL(invc.invc_day_cap,0)) as product_power,
+                IFNULL(emi.total_irradiation,0) AS total_irradiation
+        FROM ids_station_info_t st
+        LEFT JOIN
+        (
+            SELECT t1.station_code AS invs_sid, SUM(t1.day_capacity ) AS invs_day_cap
+            FROM ids_inverter_string_data_t t1
+            INNER JOIN
+            (
+                SELECT station_code, dev_id, max(collect_time) max_time FROM ids_inverter_string_data_t
+                WHERE collect_time BETWEEN #{startTime} AND #{endTime} AND day_capacity > 0
+                GROUP BY station_code, dev_id
+            ) t2
+            ON t1.station_code = t2.station_code AND t1.collect_time = t2.max_time AND t1.dev_id = t2.dev_id
+            GROUP BY t1.station_code
+        ) invs
+        ON st.station_code = invs.invs_sid
+        LEFT JOIN
+        (
+            SELECT t1.station_code AS invc_sid , SUM(t1.day_capacity ) as invc_day_cap
+            FROM ids_inverter_conc_data_t t1
+            INNER JOIN
+            (
+                SELECT station_code, dev_id, max(collect_time) max_time FROM ids_inverter_conc_data_t
+                WHERE  collect_time BETWEEN #{startTime} AND #{endTime} AND day_capacity > 0
+                GROUP BY station_code, dev_id
+            ) t2
+            ON t1.station_code = t2.station_code AND t1.collect_time = t2.max_time AND t1.dev_id = t2.dev_id
+            GROUP BY t1.station_code
+        ) invc
+        ON st.station_code = invc.invc_sid
+        LEFT JOIN
+        (
+            SELECT t1.station_code AS emi_sid , SUM(t1.total_irradiation) AS total_irradiation
+            FROM ids_emi_data_t t1
+            INNER JOIN
+            (
+                SELECT station_code, dev_id, max(collect_time) max_time FROM ids_emi_data_t
+                WHERE  collect_time BETWEEN #{startTime} AND #{endTime} AND total_irradiation > 0
+                GROUP BY station_code, dev_id
+            ) t2
+            ON t1.station_code = t2.station_code AND t1.collect_time = t2.max_time AND t1.dev_id = t2.dev_id
+            GROUP BY t1.station_code
+        ) emi
+        ON st.station_code = emi.emi_sid
+        <where>
+            <if test="stationCodes != null and stationCodes.size > 0">
+                st.station_code IN
+                <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+                    #{stationCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    
+    <resultMap type="com.interest.ids.common.project.bean.sm.KpiReviseT" id="KPIREVISEMAP">
+    	<id column="id" property="id"/>
+    	<result column="station_name" property="stationName"/>
+    	<result column="station_code" property="stationCode"/>
+    	<result column="kpi_key" property="kpiKey"/>
+    	<result column="revise_type" property="reviseType"/>
+    	<result column="replace_value" property="replaceValue"/>
+    	<result column="time_dim" property="timeDim"/>
+    	<result column="revise_date" property="reviseDate"/>
+    	<result column="offset_value" property="offsetValue"/>
+    	<result column="ratio_value" property="ratioValue"/>
+    	<result column="old_value" property="oldValue"/>
+    	<result column="enterprise_id" property="enterpriseId"/>
+    	<result column="revise_status" property="reviseStatus"/>
+    </resultMap>
+    <!-- 查询KPI修正记录 -->
+    <select id="selectKpiRevise" resultMap="KPIREVISEMAP">
+    	select * from ids_kpi_revise_t
+    	where time_dim = #{timeDim} and revise_date = #{reviseTime}
+    		and station_code in
+    		<foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+                    #{stationCode}
+            </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Errors>
+	<Error>
+		<code>101</code>
+		<detail message="empf.platform.common.errorDetailLoadError" suggestion="empf.platform.common.errorDetailLoadErrorSug"/>
+    </Error>
+    
+    <Error>
+		<code>102</code>
+		<detail message="empf.platform.common.errorCodeNotDef" suggestion="empf.platform.common.errorCodeNotDefSug"/>
+    </Error>
+    
+    <Error>
+		<code>103</code>
+		<detail message="xml load is error {0}" suggestion="please check the xml"/>
+    </Error>
+    
+    <Error>
+		<code>104</code>
+		<detail message="xml save is error {0}" suggestion="please check the xml"/>
+    </Error>
+    
+    <Error>
+		<code>105</code>
+		<detail message="il8n msg file not found{0}" suggestion="please check the file"/>
+    </Error>
+    
+    <Error>
+		<code>106</code>
+		<detail message="il8n msg key not define{0}" suggestion="please check the key"/>
+    </Error>
+    
+     <Error>
+		<code>107</code>
+		<detail message="xml export error {0}" suggestion="please check the xml export log"/>
+    </Error>
+    
+     <Error>
+		<code>108</code>
+		<detail message="CSV export error {0}" suggestion="please check the xml export log"/>
+    </Error>
+</Errors>

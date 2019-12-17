@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids-biz-all</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-biz-report</artifactId>
+    <packaging>jar</packaging>
+    <name>ids-biz-report</name>
+
+</project>
+

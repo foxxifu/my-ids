@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.signal.DevInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.interest.ids.common.project.bean.signal.DeviceInfo">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+		<result column="enterprise_id" property="enterpriseId"
+			jdbcType="BIGINT" />
+		<result column="signal_version" property="signalVersion"
+			jdbcType="VARCHAR" />
+		<result column="dev_type_id" property="devTypeId" jdbcType="INTEGER" />
+		<result column="parent_signal_version_id" property="parentSignalVersionId"
+			jdbcType="BIGINT" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+		<result column="parent_sn" property="parentSn" jdbcType="VARCHAR" />
+		<result column="related_dev_id" property="relatedDeviceId"
+			jdbcType="BIGINT" />
+		<result column="area_id" property="areaId" jdbcType="BIGINT" />
+		<result column="matrix_id" property="matrixId" jdbcType="BIGINT" />
+		<result column="phalanx_id" property="phalanxId" jdbcType="BIGINT" />
+		<result column="dev_alias" property="devAlias" jdbcType="VARCHAR" />
+		<result column="dev_name" property="devName" jdbcType="VARCHAR" />
+		<result column="sn_code" property="snCode" jdbcType="VARCHAR" />
+		<result column="pn" property="pn" jdbcType="VARCHAR" />
+		<result column="kks_code" property="kksCode" jdbcType="VARCHAR" />
+		<result column="ne_version" property="neVersion" jdbcType="VARCHAR" />
+		<result column="dev_ip" property="devIp" jdbcType="VARCHAR" />
+		<result column="dev_port" property="devPort" jdbcType="INTEGER" />
+		<result column="linked_host" property="linkedHost" jdbcType="VARCHAR" />
+		<result column="second_address" property="secondAddress"
+			jdbcType="INTEGER" />
+		<result column="longitude" property="longitude" jdbcType="DECIMAL" />
+		<result column="latitude" property="latitude" jdbcType="DECIMAL" />
+		<result column="is_logic_delete" property="isLogicDelete"
+			jdbcType="BIT" />
+		<result column="old_esn" property="oldEsn" jdbcType="VARCHAR" />
+		<result column="have_opt_child" property="haveOptChild"
+			jdbcType="BIT" />
+		<result column="loc_id" property="locId" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="modified_date" property="modifiedDate"
+			jdbcType="TIMESTAMP" />
+		<result column="protocol_code" property="protocolCode"
+			jdbcType="VARCHAR" />
+		<result column="upgrade_file_name" property="upgradeFileName" jdbcType="VARCHAR" />
+		<result column="upgrade_process" property="upgradeProcess" jdbcType="INTEGER" />
+		<result column="upgrade_status" property="upgradeStatus" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="condtionMap"
+		type="com.interest.ids.common.project.bean.device.DeviceInfoDto">
+		<result column="id" property="id" />
+		<result column="parent_id" property="parentId" />
+		<result column="station_name" property="stationName" />
+		<result column="dev_alias" property="devAlias" />
+		<result column="dev_type_id" property="devTypeId" />
+		<result column="signal_version" property="signalVersion" />
+		<result column="sn_code" property="snCode" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+		<result column="dev_ip" property="devIp" />
+		<result column="dev_port" property="devPort" />
+		<result column="second_address" property="secondAddress" />
+		<result column="station_code" property="stationCode" />
+		<result column="station_addr" property="stationAddr" />
+		<result column="dev_name" property="devName" />
+		<result column="enterprise_id" property="enterpriseId" />
+		<result column="station_code" property="stationCode" />
+		<result column="num" property="num" />
+		<result column="vender_name" property="venderName" />
+		<result column="protocol_code" property="protocolCode"
+			jdbcType="VARCHAR" />
+		<result column="is_monitor_dev" property="isMonitorDev" />
+		<result column="parent_sn" property="parentEsnCode"/>
+	</resultMap>
+
+	<resultMap id="ChildDevMap"
+		type="com.interest.ids.common.project.bean.device.DeviceDetail">
+		<result column="id" property="id" />
+		<result column="dev_alias" property="devAlias" />
+		<result column="signal_version" property="signalVersion" />
+		<result column="pv_num" property="pvNum" />
+		<result column="vender_name" property="venderName" />
+		<result column="installed_capacity" property="installedCapacity" />
+	</resultMap>
+
+	<resultMap type="Map" id="moduleResultMap">
+		<result column="manufacturer" property="manufacturer" />
+		<result column="module_type" property="moduleType" />
+		<result column="max_power_temp_coef" property="maxPowerTempCoef" />
+		<result column="module_production_date" property="moduleProductionDate"
+			jdbcType="BIGINT" />
+	</resultMap>
+	<resultMap id="DevUpgradeMap" type="com.interest.ids.common.project.bean.device.DevUpgradeDto">
+		<result column="dev_id" property="devId"></result>
+		<result column="station_name" property="stationName"></result>
+		<result column="dev_name" property="devName"></result>
+		<result column="dev_type_id" property="devTypeId"></result>
+		<result column="upgrade_process" property="upgradeProcess"></result>
+		<result column="signal_version" property="signalVersion"></result>
+	</resultMap>
+	<sql id="condtion">
+		<if test="stationName != null and stationName != '' ">
+			and station.station_name like '%${stationName}%'
+		</if>
+		<if test="stationCode != null and stationCode != '' ">
+			and station.station_code = #{stationCode}
+		</if>
+		<if test="devTypeId != null and devTypeId != -1">
+			and dev.dev_type_id = #{devTypeId}
+		</if>
+		<if test="devAlias != null and devAlias != ''">
+			and dev.dev_alias like concat('%',#{devAlias},'%')
+		</if>
+		<if test="snCode != null and snCode != '' ">
+			and dev.sn_code like '%${snCode}%'
+		</if>
+		<if test="signalVersion != null and signalVersion != '' ">
+			and dev.signal_version like '%${signalVersion}%'
+		</if>
+		AND dev.is_logic_delete = 0
+	</sql>
+
+	<!-- 新增返回主键 -->
+	<insert id="insertAndGetId" useGeneratedKeys="true" keyProperty="id"
+		parameterType="com.interest.ids.common.project.bean.signal.DeviceInfo">
+		INSERT INTO ids_dev_info_t
+		(enterprise_id, station_code,
+		signal_version, dev_type_id, dev_name,sn_code,parent_sn,
+		dev_alias, dev_ip,
+		protocol_code, create_date, parent_id,second_address,
+		parent_signal_version_id,phalanx_id,matrix_id)
+		VALUES
+		(#{enterpriseId},
+		#{stationCode}, #{signalVersion}, #{devTypeId},
+		#{devName},#{snCode},#{parentSn}, #{devAlias}, #{devIp}, #{protocolCode}, #{createDate}, #{parentId},#{secondAddress},
+		#{parentSignalVersionId}, #{phalanxId}, #{matrixId});
+	</insert>
+
+	<!--<insert id="insertAndGetId" parameterType="com.interest.ids.common.project.bean.signal.DeviceInfo"> -->
+	<!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> -->
+	<!--SELECT LAST_INSERT_ID() -->
+	<!--</selectKey> -->
+	<!--insert into ids_dev_info_t (dev_name,dev_ip,protocol_code,create_date) -->
+	<!--values (#{devName},#{devIp},#{protocolCode},#{createDate}}); -->
+	<!--</insert> -->
+
+	<select id="selectDeviceBySidsAndDeviceTypeIds" resultMap="BaseResultMap">
+		select * from ids_dev_info_t where is_logic_delete = 0 and
+		station_code in
+		<foreach collection="stationCodes" item="stationCode" open="("
+			separator="," close=")">
+			#{stationCode}
+		</foreach>
+		and dev_type_id in
+		<foreach collection="deviceTypeIds" item="devTypeId" open="("
+			separator="," close=")">
+			#{devTypeId}
+		</foreach>
+	</select>
+
+	<select id="selectDeviceBySidsAndDeviceIds" resultMap="BaseResultMap">
+		select * from ids_dev_info_t where is_logic_delete = 0 and
+		station_code in
+		<foreach collection="stationCodes" item="stationCode" open="("
+			separator="," close=")">
+			#{stationCode}
+		</foreach>
+		and id in
+		<foreach collection="deviceIds" item="deviceId" open="("
+			separator="," close=")">
+			#{deviceId}
+		</foreach>
+	</select>
+
+	<select id="selectDevicesByStaionCodeAndDeviceType" resultType="java.util.Map">
+		select station_code, id as device_id from ids_dev_info_t
+		where
+		is_logic_delete = 0
+		and station_code in
+		<foreach collection="stationCodes" item="stationCode" open="("
+			separator="," close=")">
+			#{stationCode}
+		</foreach>
+		and dev_type_id = #{deviceTypeId}
+	</select>
+
+	<select id="selectDeviceByDeviceIds" resultMap="BaseResultMap">
+		select * from ids_dev_info_t where is_logic_delete = 0 and device_id
+		in
+		<foreach collection="deviceIds" item="deviceId" open="("
+			separator="," close=")">
+			#{deviceId}
+		</foreach>
+	</select>
+
+	<select id="selectStationDevices" resultType="java.util.Map">
+		select station_code, id as device_id from ids_dev_info_t
+		where
+		is_logic_delete = 0 and dev_type_id = #{devTypeId}
+		and station_code in
+		<foreach collection="stationCodes" item="stationCode" open="("
+			separator="," close=")">
+			#{stationCode}
+		</foreach>
+	</select>
+
+	<!-- 根据电站编号集，查询设备列表 -->
+	<select id="selectDevicesWithStationCodes" parameterType="collection"
+		resultMap="BaseResultMap">
+		select * from ids_dev_info_t where is_logic_delete = 0
+		<if test="collection != null and collection.size > 0">
+			and station_code in
+			<foreach collection="collection" item="stationCode" open="("
+				separator="," close=")">
+				#{stationCode}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 查询所有未被逻辑删除的设备 -->
+	<select id="selectAllDeviceInfoMs" resultMap="BaseResultMap">
+		select * from
+		ids_dev_info_t where is_logic_delete = 0
+	</select>
+
+	<!-- 根据条件查询设备相关信息 -->
+	<select id="selectDeviceByCondtion"
+		parameterType="com.interest.ids.common.project.bean.device.DeviceInfoDto"
+		resultMap="condtionMap">
+		<choose>
+			<when test="type_ == 'system'">
+				select dev.id id, station.station_name
+				station_name,station.station_code station_code,
+				dev.dev_alias dev_alias,dev.dev_type_id dev_type_id,
+				dev.signal_version signal_version,dev.sn_code sn_code,
+				dev.longitude longitude,dev.latitude latitude,dev.parent_id,dev.is_monitor_dev
+				from ids_dev_info_t dev, ids_station_info_t station
+				where dev.station_code = station.station_code
+			</when>
+			<when test="type_ == 'enterprise'">
+				select
+				dev.id id,station.station_name station_name,station.station_code
+				station_code,
+				dev.dev_alias dev_alias,dev.dev_type_id dev_type_id,dev.signal_version
+				signal_version,
+				dev.sn_code sn_code,dev.longitude longitude,dev.latitude
+				latitude,dev.parent_id,dev.is_monitor_dev
+				from ids_dev_info_t dev, ids_station_info_t station
+				where
+				dev.station_code = station.station_code and station.enterprise_id =
+				#{enterpriseId}
+			</when>
+			<otherwise>
+				select
+				dev.id id,station.station_name station_name,
+				station.station_code station_code,dev.dev_alias dev_alias,
+				dev.dev_type_id dev_type_id,dev.signal_version signal_version,
+				dev.sn_code sn_code,dev.longitude longitude,dev.latitude
+				latitude,dev.parent_id,dev.is_monitor_dev
+				from ids_dev_info_t dev,
+				ids_sm_user_station_t user_station, ids_station_info_t station
+				where
+				dev.station_code = user_station.station_code
+				and station.station_code = user_station.station_code
+				and user_station.user_id = #{userId}
+			</otherwise>
+		</choose>
+		<if test="areaCode != null and areaCode !=''">
+			and station.domain_id in (
+			select id from ids_sm_domain_info_t where id=#{domainId} or path =
+			#{areaCode} or path like concat(#{areaCode},'@','%%')
+			)
+		</if>
+		<include refid="condtion"></include>
+	</select>
+
+	<!-- 根据设备id查询设备详情 -->
+	<select id="selectDeviceById" parameterType="java.lang.Long"
+		resultMap="condtionMap">
+		select dev.id id,dev.parent_sn parent_sn,station.station_name
+		station_name,station.station_code station_code,
+		station.station_addr,
+		dev.dev_alias dev_alias,dev.dev_name dev_name,dev.dev_type_id
+		dev_type_id,
+		dev.signal_version signal_version,dev.sn_code
+		sn_code,dev.longitude longitude,
+		dev.latitude latitude,dev.dev_ip
+		dev_ip,dev.dev_port dev_port,dev.parent_id,
+		dev.second_address
+		second_address,dev.enterprise_id
+		enterprise_id,dev.protocol_code,dev.is_monitor_dev
+		from ids_dev_info_t
+		dev, ids_station_info_t station
+		where dev.station_code =
+		station.station_code and dev.id = #{value}
+	</select>
+
+	<!-- 根据条件统计记录总数 -->
+	<select id="selectAllCount"
+		parameterType="com.interest.ids.common.project.bean.device.DeviceInfoDto"
+		resultType="java.lang.Integer">
+		<choose>
+			<when test="type_ == 'system'">
+				select count(*) from ids_dev_info_t dev
+				,ids_station_info_t station
+				where dev.station_code =
+				station.station_code
+			</when>
+			<when test="type_ == 'enterprise'">
+				select count(*) from ids_dev_info_t dev
+				,ids_station_info_t station,ids_sm_user_info_t user
+				where
+				dev.station_code = station.station_code
+				and station.enterprise_id =
+				user.enterprise_id
+				and user.id = #{userId}
+			</when>
+			<otherwise>
+				select count(*) from ids_dev_info_t dev
+				,ids_sm_user_station_t
+				user_station,ids_station_info_t station
+				where
+				dev.station_code = user_station.station_code
+				and station.station_code
+				= user_station.station_code
+				and user_station.user_id = #{userId}
+			</otherwise>
+		</choose>
+		<if test="areaCode != null and areaCode !=''">
+			and (station.area_code = #{areaCode} or station.area_code
+			like concat(#{areaCode},'@','%%'))
+		</if>
+		<include refid="condtion"></include>
+	</select>
+
+	<!-- 查询设备的厂家名称 -->
+	<select id="selectVenderName" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select DISTINCT vender_name from ids_signal_version_t where
+		signal_version = #{value}
+	</select>
+
+	<!-- 查询组串相关信息 -->
+	<select id="selectModuleInfo" parameterType="java.lang.Long"
+		resultMap="moduleResultMap">
+		SELECT
+		manufacturer,module_type,max_power_temp_coef,module_production_date
+		FROM ids_pv_module_t module,ids_device_pv_module_t pv_module
+		WHERE
+		module.id = pv_module.pv_model_id AND pv_module.dev_id = #{value}
+		limit 0,1
+	</select>
+	<!-- 根据SN号查询设备信息 -->
+	<select id="getDeviceInfoBySN" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT * FROM ids_dev_info_t WHERE sn_code = #{value} AND
+		is_logic_delete = '0'
+	</select>
+	<!-- 查询设备类型对应的moduleVersionCode -->
+	<select id="getModuleVersionCodeList" resultType="java.util.Map">
+		SELECT DISTINCT
+		dev_type_id devTypeId,signal_version
+		signalVersion,protocol_code
+		protocolCode FROM
+		ids_signal_version_t WHERE protocol_code = 'HWMODBUS'
+	</select>
+
+	<!-- 保存设备信息 -->
+	<insert id="insertDevInfos" useGeneratedKeys="true" keyProperty="id"
+		parameterType="java.util.List">
+		INSERT INTO ids_dev_info_t
+		(station_code,enterprise_id,signal_version,dev_type_id,dev_name,
+		dev_alias,parent_sn,sn_code,ne_version,
+		dev_ip,dev_port,linked_host,second_address,create_date,protocol_code,parent_id,parent_signal_version_id,phalanx_id,matrix_id)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.stationCode},#{item.enterpriseId},#{item.signalVersion},#{item.devTypeId},#{item.devName},
+			#{item.devAlias},#{item.parentSn},#{item.snCode},#{item.neVersion},
+			#{item.devIp},#{item.devPort},#{item.linkedHost},#{item.secondAddress},#{item.createDate},
+			#{item.protocolCode},#{item.parentId},#{item.parentSignalVersionId},#{item.phalanxId},#{item.matrixId})
+		</foreach>
+	</insert>
+
+	<select id="getDevicesByStationCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT * FROM ids_dev_info_t WHERE station_code = #{value}
+		AND is_logic_delete = '0'
+	</select>
+
+	<!-- 更新设备信息 -->
+	<update id="updateDevInfos"
+		parameterType="com.interest.ids.common.project.bean.signal.DeviceInfo">
+		update ids_dev_info_t set station_code =
+		#{stationCode},enterprise_id = #{enterpriseId},
+		signal_version =
+		#{signalVersion},dev_type_id = #{devTypeId},dev_alias = #{devAlias},
+		dev_name = #{devName},parent_sn = #{parentSn},sn_code =
+		#{snCode},ne_version = #{neVersion},
+		dev_ip = #{devIp},dev_port =
+		#{devPort},linked_host = #{linkedHost}, second_address =
+		#{secondAddress},
+		create_date = #{createDate},protocol_code =
+		#{protocolCode},modified_date = #{modifiedDate}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 更新设备信息 -->
+	<update id="updateDeviceById"
+		parameterType="com.interest.ids.common.project.bean.signal.DeviceInfo">
+		update ids_dev_info_t
+		<set>
+			<if test="null != devAlias and devAlias != ''">
+				dev_alias = #{devAlias},
+			</if>
+			<if test="null != snCode and snCode != ''">
+				sn_code = #{snCode},
+			</if>
+			<if test="null != devIp and devIp != ''">
+				dev_ip = #{devIp},
+			</if>
+			<if test="null != latitude">
+				latitude = #{latitude},
+			</if>
+			<if test="null != longitude">
+				longitude = #{longitude},
+			</if>
+			<if test="null != devPort">
+				dev_port = #{devPort},
+			</if>
+			<if test="null != secondAddress">
+				second_address = #{secondAddress}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<delete id="deleteDeviceInfos" parameterType="java.lang.Long">
+		DELETE FROM ids_dev_info_t WHERE id in
+		<foreach collection="array" item="code" open="(" close=")"
+			separator=",">
+			#{code}
+		</foreach>
+	</delete>
+
+	<!-- 按设备类型统计电站下的设备的个数 -->
+	<resultMap type="java.util.Map" id="countDevByType">
+		<result column="dev_type_id" property="devTypeId" />
+		<result column="devCount" property="devCount" />
+	</resultMap>
+	<select id="countDeviceByStationCode" parameterType="java.lang.String"
+		resultMap="countDevByType">
+		SELECT dev_type_id,COUNT(id) devCount FROM `ids_dev_info_t`
+		where station_code = #{value} GROUP BY dev_type_id
+	</select>
+	<!-- 按设备类型统计设备的厂商和数量 -->
+	<select id="getDeviceVenders" parameterType="java.lang.String"
+		resultMap="condtionMap">
+		SELECT
+		dev.dev_type_id dev_type_id,dev.signal_version
+		signal_version,signal_version.`vender_name` vender_name,COUNT(dev.id)
+		num
+		FROM
+		`ids_dev_info_t` dev,
+		ids_signal_version_t signal_version
+		WHERE
+		dev.`signal_version` = signal_version.`signal_version`
+		and dev.station_code = #{value}
+		GROUP BY
+		dev.`dev_type_id`,signal_version.`vender_name`
+	</select>
+
+	<!-- 统计电站下的直流汇率箱的个数 -->
+	<select id="countDCJS" parameterType="java.lang.String"
+		resultType="java.lang.Long">
+		select count(*) from ids_dev_info_t where station_code =
+		#{value} and dev_type_id = 15
+	</select>
+
+	<resultMap type="com.interest.ids.common.project.bean.alarm.DeviceAlamDto"
+		id="devAlarms">
+		<result column="alarm_name" property="alarmName" />
+		<result column="level_id" property="levelId" />
+		<result column="first_happen_time" property="startTime" />
+		<result column="alarm_type" property="alarmType" />
+		<result column="recover_time" property="recoverTime" />
+		<result column="dev_alias" property="devAlias" />
+		<result column="dev_type_id" property="devTypeId" />
+		<result column="sn_code" property="snCode" />
+		<result column="alarm_cause" property="alarmCause" />
+		<result column="repair_suggestion" property="repairSuggestion" />
+		<result column="dev_id" property="devId" />
+		<result column="status_id" property="statusId" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+	</resultMap>
+
+	<!-- 根据条件查询设备的告警数据条数 -->
+	<select id="countAlarmByDevId"
+		parameterType="com.interest.ids.common.project.bean.alarm.DeviceAlamDto"
+		resultType="java.lang.Long">
+		select
+		count(dev.id)
+		from
+		ids_alarm_t alarm,
+		ids_dev_info_t dev,
+		ids_alarm_model_t alarm_model
+		where
+		dev.id = alarm.dev_id
+		and alarm.alarm_id = alarm_model.alarm_id
+		and dev.id = #{devId}
+		<if test="null != alarmName and alarmName != ''">
+			and alarm.alarm_name like concat('%',#{alarmName},'%')
+		</if>
+		<if test="levelId != null">
+			and alarm.level_id = #{levelId}
+		</if>
+		<if test="null != startTime">
+			and alarm.first_happen_time <![CDATA[>=]]>
+			#{startTime}
+		</if>
+		<if test="null != endTime">
+			and alarm.first_happen_time <![CDATA[<=]]>
+			#{endTime}
+		</if>
+	</select>
+	<!-- 根据条件查询设备的信息和设备的告警信息 -->
+	<select id="selectDevAlarm"
+		parameterType="com.interest.ids.common.project.bean.alarm.DeviceAlamDto"
+		resultMap="devAlarms">
+		select
+		alarm.alarm_name alarm_name,
+		alarm.level_id level_id,
+		alarm.first_happen_time first_happen_time,
+		"1" AS alarm_type,
+		alarm.recover_time recover_time,
+		alarm.status_id,
+		dev.dev_alias dev_alias,
+		dev.dev_type_id dev_type_id,
+		dev.sn_code sn_code,
+		dev.id dev_id,
+		dev.longitude,
+		dev.latitude,
+		alarm_model.alarm_cause alarm_cause,
+		alarm_model.repair_suggestion repair_suggestion
+		from
+		ids_alarm_t alarm,
+		ids_dev_info_t dev,
+		ids_alarm_model_t alarm_model
+		where
+		dev.id = alarm.dev_id
+		and alarm.alarm_id = alarm_model.alarm_id
+		and dev.id = #{devId}
+		<if test="null != alarmName and alarmName != ''">
+			and alarm.alarm_name like concat('%',#{alarmName},'%')
+		</if>
+		<if test="levelId != null">
+			and alarm.level_id = #{levelId}
+		</if>
+		<if test="null != startTime">
+			and alarm.first_happen_time <![CDATA[>=]]>
+			#{startTime}
+		</if>
+		<if test="null != endTime">
+			and alarm.first_happen_time <![CDATA[<=]]>
+			#{endTime}
+		</if>
+		order by first_happen_time desc
+		limit #{index},#{pageSize}
+	</select>
+
+	<resultMap
+		type="com.interest.ids.common.project.bean.device.DeviceProfileDto"
+		id="DeviceInfoDto">
+		<result column="dev_type_id" property="devTypeId" />
+		<result column="dev_count" property="devCount" />
+	</resultMap>
+	<select id="selectDevProfile" resultMap="DeviceInfoDto">
+		SELECT
+		dev.dev_type_id,
+		count(0) AS dev_count
+		FROM
+		ids_dev_info_t dev
+		<choose>
+			<when test="stationCode == null or stationCode == ''">
+				<choose>
+					<when test="userType == 'normal'">
+						INNER JOIN ids_sm_user_station_t ut ON
+						dev.station_code = ut.station_code AND ut.user_id = #{id}
+					</when>
+					<when test="userType == 'enterprise'">
+						INNER JOIN ids_station_info_t sit ON
+						dev.station_code = sit.station_code AND sit.enterprise_id =
+						#{enterpriseId}
+					</when>
+				</choose>
+				WHERE dev.is_logic_delete = 0 AND dev.dev_type_id NOT IN (2, 3, 4,
+				5, 13)
+			</when>
+			<otherwise>
+				WHERE dev.is_logic_delete = 0 AND dev.dev_type_id NOT IN
+				(2, 3, 4, 5, 13) AND dev.station_code = #{stationCode}
+			</otherwise>
+		</choose>
+		GROUP BY dev_type_id
+	</select>
+
+	<!-- 查询设备归一化配置的信号信息 -->
+	<resultMap
+		type="com.interest.ids.common.project.bean.device.DeviceSignalDataDto"
+		id="DeviceSignalDataMap">
+		<result column="column_name" property="columnName" />
+		<result column="display_name" property="displayName" />
+	</resultMap>
+	<select id="selectDevSignalConf" parameterType="java.lang.Long"
+		resultMap="DeviceSignalDataMap">
+		SELECT nm.column_name, nm.display_name
+		FROM ids_dev_info_t
+		dev
+		JOIN ids_normalized_info_t ni ON dev.signal_version =
+		ni.signal_version
+		JOIN ids_normalized_model_t nm ON
+		ni.normalized_signal_id = nm.id
+		WHERE dev.id = #{devId}
+	</select>
+
+	<!-- 查询设备组件信息 -->
+	<resultMap
+		type="com.interest.ids.common.project.bean.device.DevicePvModuleDto"
+		id="DevicePvModuleMap">
+		<result column="dev_id" property="devId" />
+		<result column="pv_code" property="pvCode" />
+		<result column="pv_capacity" property="pvCapacity" />
+		<result column="unit_num" property="unitNum" />
+		<result column="manufacturer" property="manufacturer" />
+		<result column="module_version" property="moduleVersion" />
+		<result column="module_type" property="moduleType" />
+	</resultMap>
+	<select id="selectDevicePvInfos" parameterType="long"
+		resultMap="DevicePvModuleMap">
+		SELECT
+		info.dev_id, ("pv" + info.pv_index) AS pv_code, info.fixed_power/1000 AS
+		pv_capacity,
+		info.modules_num_per_string AS unit_num,
+		module.manufacturer, module.module_version, module.module_type
+		FROM
+		ids_device_pv_module_t info
+		JOIN ids_pv_module_t module ON info.pv_model_id = module.id
+		WHERE
+		info.dev_id = #{devId}
+	</select>
+
+	<!-- 查询设备是否存在严重告警 -->
+	<select id="countCritAlarmsByDeviceIds" parameterType="list"
+		resultType="map">
+		select dev_id from (
+		select dev_id , count(*) as alarm_count
+		from ids_alarm_t
+		where level_id = 1 and status_id = 1
+		<if test="deviceIds != null and deviceIds.size > 0">
+			and dev_id in
+			<foreach collection="deviceIds" item="deviceId" open="("
+				separator="," close=")">
+				#{deviceId}
+			</foreach>
+		</if>
+		group by dev_id
+		) t where alarm_count > 0
+	</select>
+
+	<!-- 查询企业下所有未绑定集中式逆变器的汇率箱的id和name -->
+	<select id="getDCJSIdAndName" parameterType="java.lang.Long"
+		resultMap="condtionMap">
+		select
+		id, dev_alias
+		from
+		ids_dev_info_t
+		where
+		dev_type_id = 15
+		and id not in (
+		select dcjs_dev_id from ids_center_vert_detail_t
+		)
+		<if test="value != null and value != ''">
+			and enterprise_id = #{value}
+		</if>
+	</select>
+
+	<!-- 根据id查询支流汇率的详情信息 -->
+	<resultMap type="java.util.Map" id="dcjsMap">
+		<result column="vender_name" property="venderName" />
+		<result column="dev_type_id" property="devTypeId" />
+		<result column="dev_alias" property="devAlias" />
+		<result column="num" property="num" />
+		<result column="id" property="id" />
+		<result column="total_pv_cap" property="totalPvCap" />
+	</resultMap>
+	<select id="getDCJSDetail" parameterType="java.lang.String"
+		resultMap="dcjsMap">
+		select
+		single_version.vender_name,
+		dev.dev_type_id,
+		dev.dev_alias,
+		capacity.num,
+		dev.id,
+		IFNULL(capacity.pv1,0) + IFNULL(capacity.pv2,0) + IFNULL(capacity.pv3,0) +
+		IFNULL(capacity.pv4,0) + IFNULL(capacity.pv5,0) +
+		IFNULL(capacity.pv6,0) + IFNULL(capacity.pv7,0) +
+		IFNULL(capacity.pv8,0) + IFNULL(capacity.pv9, 0) +
+		IFNULL(capacity.pv10,0) + IFNULL(capacity.pv11,0) +
+		IFNULL(capacity.pv12,0) + IFNULL(capacity.pv13,0) +
+		IFNULL(capacity.pv14,0) + IFNULL(capacity.pv15,0)
+		+ IFNULL(capacity.pv16,0) + IFNULL(capacity.pv17,0) +
+		IFNULL(capacity.pv18,0) + IFNULL(capacity.pv19,0) +
+		IFNULL(capacity.pv20,0) as total_pv_cap
+		from
+		ids_dev_info_t dev left join ids_pv_capacity_t capacity on dev.id =
+		capacity.device_id
+		left join ids_signal_version_t single_version on dev.signal_version =
+		single_version.signal_version
+		where
+		dev.id in (${value})
+	</select>
+	<!-- 统计所有未被绑定的直流汇率箱 -->
+	<select id="selectAllDCJSCount"
+		parameterType="com.interest.ids.common.project.bean.device.DeviceInfoDto"
+		resultType="java.lang.Integer">
+		select count(dev.id) from ids_dev_info_t dev, ids_station_info_t
+		station
+		where dev.dev_type_id = 15 AND station.station_code =
+		dev.station_code
+		and dev.id not
+		in (
+		select dcjs_dev_id from
+		ids_center_vert_detail_t where center_vert_id <![CDATA[!=]]>
+		#{id}
+		)
+		<include refid="condtion"></include>
+		<if test="enterpriseId != null and enterpriseId != ''">
+			and enterprise_id = #{enterpriseId}
+		</if>
+	</select>
+
+	<!-- 根据条件查询未被绑定的直流汇率箱的详情 -->
+	<select id="selectDCJSByCondtion"
+		parameterType="com.interest.ids.common.project.bean.device.DeviceInfoDto"
+		resultMap="condtionMap">
+		<choose>
+			<when test="type_ == 'system'">
+				select dev.id id, station.station_name
+				station_name,station.station_code station_code,
+				dev.dev_alias dev_alias,dev.dev_type_id dev_type_id,
+				dev.signal_version signal_version,dev.sn_code sn_code,
+				dev.longitude longitude,dev.latitude latitude,dev.parent_id
+				from ids_dev_info_t
+				dev, ids_station_info_t station
+				where dev.station_code = station.station_code
+			</when>
+			<when test="type_ == 'enterprise'">
+				select
+				dev.id id,station.station_name station_name,station.station_code
+				station_code,
+				dev.dev_alias dev_alias,dev.dev_type_id dev_type_id,dev.signal_version
+				signal_version,
+				dev.sn_code sn_code,dev.longitude longitude,dev.latitude latitude,dev.parent_id
+				from ids_dev_info_t dev, ids_station_info_t station
+				where
+				dev.station_code = station.station_code and station.enterprise_id =
+				#{enterpriseId}
+			</when>
+			<otherwise>
+				select
+				dev.id id,station.station_name station_name,
+				station.station_code station_code,dev.dev_alias dev_alias,
+				dev.dev_type_id dev_type_id,dev.signal_version signal_version,
+				dev.sn_code sn_code,dev.longitude longitude,dev.latitude latitude,dev.parent_id
+				from ids_dev_info_t dev, ids_sm_user_station_t user_station,
+				ids_station_info_t station
+				where dev.station_code =
+				user_station.station_code
+				and station.station_code = user_station.station_code
+				and user_station.user_id = #{userId}
+			</otherwise>
+		</choose>
+		and dev.id not in (
+		select dcjs_dev_id from ids_center_vert_detail_t where center_vert_id <![CDATA[!=]]>
+		#{id}
+		)
+		<if test="areaCode != null and areaCode !=''">
+			and (station.area_code = #{areaCode} or station.area_code
+			like
+			concat(#{areaCode},'@','%%'))
+		</if>
+		<include refid="condtion"></include>
+		limit #{start},#{pageSize}
+	</select>
+
+	<!-- 插入集中式逆变器和直流汇率箱的绑定关系 -->
+	<insert id="insertCenterVerDetail" parameterType="java.util.Map">
+		insert into ids_center_vert_detail_t(center_vert_id,
+		dcjs_dev_id)values
+		<foreach collection="dcjsDevIds" item="dcjsDevId" open="("
+			separator="),(" close=")">
+			#{centerVertId},#{dcjsDevId}
+		</foreach>
+	</insert>
+
+	<!-- 删除集中式逆变器和直流汇率箱的绑定关系 -->
+	<delete id="deleteCenterVerDetailByCenterId" parameterType="long">
+		delete from ids_center_vert_detail_t where center_vert_id = #{id}
+	</delete>
+
+	<select id="selectDevWithChild" parameterType="long" resultMap="ChildDevMap">
+		SELECT dev_rel.dcjs_dev_id AS id, dev.dev_alias,
+		dev_ver.signal_version, dev_ver.vender_name,
+		pv.pv_num,
+		pv.installed_capacity
+		FROM ids_center_vert_detail_t dev_rel
+		INNER JOIN ids_dev_info_t dev ON dev.id = dev_rel.center_vert_id
+		LEFT JOIN
+		ids_signal_version_t dev_ver ON dev.signal_version =
+		dev_ver.signal_version
+		LEFT JOIN (
+		SELECT dev_id, SUM(fixed_power)/1000 AS installed_capacity, COUNT(1) AS
+		pv_num FROM ids_device_pv_module_t
+		GROUP BY dev_id
+		) pv ON pv.dev_id = dev_rel.dcjs_dev_id
+		WHERE dev.id =
+		#{devId} AND dev.is_logic_delete = 0
+	</select>
+
+	<!-- 根据集中是逆变器查询绑定的汇率箱的id -->
+	<select id="getDCJSByShip" parameterType="java.lang.Long"
+		resultType="java.lang.Long">
+		select dcjs_dev_id from ids_center_vert_detail_t where
+		center_vert_id = #{value}
+	</select>
+	<!-- 查询绑定的汇率箱的id和名字 -->
+	<select id="getBindedById" parameterType="java.lang.Long"
+		resultMap="condtionMap">
+		select
+		dev.id, dev.dev_alias
+		from
+		ids_dev_info_t dev,
+		ids_center_vert_detail_t center_vert
+		where
+		dev.id = center_vert.dcjs_dev_id
+		and center_vert.center_vert_id = #{value}
+	</select>
+
+	<!-- 统计当前添加的汇率箱是否已被其他设备绑定 -->
+	<select id="dCJSCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) from ids_center_vert_detail_t where
+		dcjs_dev_id in (${value})
+	</select>
+
+	<select id="queryDevIdsByMatrixId" parameterType="java.lang.Long"
+		resultType="java.lang.Integer">
+		select id from ids_dev_info_t
+		where matrix_id = #{matrixId}
+		and dev_type_id in
+		<foreach collection="devTypeIds" item="devTypeId" open="("
+			separator="," close=")">
+			#{devTypeId}
+		</foreach>
+	</select>
+	<select id="getDevIdsByVersionId" parameterType="java.util.List"
+		resultType="java.lang.Long">
+		select id from ids_dev_info_t where dev_type_id = 37
+		and signal_version in (
+		select signal_version from ids_signal_version_t where id in
+		<foreach collection="versionIdList" item="versionId" open="("
+			separator="," close=")">
+			#{versionId}
+		</foreach>
+		)
+
+	</select>
+	<select id="getTGJByVersionId" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		SELECT
+		dev.*
+		FROM
+		ids_dev_info_t dev,
+		ids_signal_version_t ver
+		WHERE
+		ver.id = #{value}
+		AND ver.dev_type_id in (13, 37)
+		AND ver.signal_version = dev.signal_version
+		AND dev.dev_type_id = ver.dev_type_id
+		AND dev.station_code = ver.station_code
+	</select>
+	<select id="selectUpgradeDevByCoudition" parameterType="map" resultMap="DevUpgradeMap">
+		SELECT
+		dev.id dev_id,
+		station.station_name station_name,
+		dev.dev_name dev_name,
+		dev.dev_type_id dev_type_id,
+		dev.upgrade_process upgrade_process,
+		version.signal_version signal_version
+		FROM
+		ids_dev_info_t dev,
+		ids_station_info_t station,
+		ids_signal_version_t version
+		WHERE
+		dev.station_code = station.station_code
+		AND dev.dev_type_id = version.dev_type_id
+		<if test="stationAlias != null and stationAlias != ''">
+			and station_name like '%${stationAlias}%'
+		</if>
+		<if test="devAlias != null and devAlias != ''">
+			and dev_name like '%${devAlias}%'
+		</if>
+		<if test="devType != null">
+			and dev.dev_type_id = ${devType}
+		</if>
+		<if test="devModel != null and devModel != ''">
+			and version.signal_version like '%${devModel}%'
+		</if>
+	</select>
+	<!-- 
+	<select id="getChildDevList" >
+	</select>
+	 -->
+</mapper>

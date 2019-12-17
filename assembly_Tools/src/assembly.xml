@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>release</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<dependencySets>
+		
+		<!-- devJAR包 -->
+		<dependencySet>
+        	<outputDirectory>software/ids/lib/dev-lib</outputDirectory>
+		    <includes>
+				<include>com.interest:ids-dev-starter</include>
+				<include>com.interest:ids-dev-alarm</include>
+				<include>com.interest:ids-dev-db</include>
+				<include>com.interest:ids-dev-network</include>
+				<include>com.interest:ids-dev-api</include>
+            </includes>
+        </dependencySet>
+		
+		<dependencySet>
+        	<outputDirectory>software/ids/lib/common-lib</outputDirectory>
+		    <includes>
+				<include>com.interest:apache-ftp-server</include>
+				<include>com.interest:ids-common-project</include>
+				<include>com.interest:ids-common-interface</include>
+				<include>com.interest:ids-redis-client</include>
+			</includes>
+        </dependencySet>
+		<dependencySet>
+        	<outputDirectory>software/ids/lib/biz-lib</outputDirectory>
+		    <includes>
+				<include>com.interest:ids-biz-authorize</include>
+				<include>com.interest:ids-biz-kpicalc</include>
+				<include>com.interest:ids-biz-web</include>
+				<include>com.interest:ids-biz-report</include>
+				<include>com.interest:ids-biz-data</include>
+            </includes>
+        </dependencySet>
+
+		 <dependencySet>
+        	<outputDirectory>software/ids/lib/third-lib</outputDirectory>
+			<excludes>	
+				<exclude>com.interest:ids-dev-starter</exclude>
+				<exclude>com.interest:ids-dev-alarm</exclude>
+				<exclude>com.interest:ids-dev-db</exclude>
+				<exclude>com.interest:ids-dev-network</exclude>
+				<exclude>com.interest:ids-dev-api</exclude>
+				<exclude>com.interest:apache-ftp-server</exclude>
+				<exclude>com.interest:ids-common-project</exclude>
+				<exclude>com.interest:ids-common-interface</exclude>
+				<exclude>com.interest:ids-redis-client</exclude>
+				<exclude>com.interest:ids-biz-authorize</exclude>
+				<exclude>com.interest:ids-biz-kpicalc</exclude>
+				<exclude>com.interest:ids-biz-web</exclude>
+				<exclude>com.interest:ids-biz-report</exclude>
+				<exclude>com.interest:ids-biz-data</exclude>
+			</excludes>
+		</dependencySet>
+    </dependencySets>	
+	<!--  =====================配置文件引用========================  -->					
+    <fileSets>
+	
+	    <!-- 三方软件 -->
+	    <fileSet>
+			<directory>../software</directory>
+			<outputDirectory>software/thirdpackage</outputDirectory>
+		</fileSet>
+		
+		<!-- shell -->
+		 <fileSet>
+			<directory>../tools/bin</directory>
+			<outputDirectory>software/bin</outputDirectory>
+		 </fileSet>
+		 
+		 <!-- 数据库脚本 -->
+		 <fileSet>
+			<directory>../tools/dbscript</directory>
+			<outputDirectory>software/thirdpackage/dbscript</outputDirectory>
+		 </fileSet>
+		 
+		 
+		<fileSet>
+			<directory>../ids-common-all/ids-redis-client/src/main/conf</directory>
+			<outputDirectory>software/ids/ids-conf/common-conf</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-common-all/ids-redis-client/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/common-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-common-all/ids-redis-client/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/common-conf/config</outputDirectory>
+		</fileSet>
+		
+		<fileSet>
+			<directory>../ids-common-all/apache-ftp-server/src/main/conf/ftp</directory>
+			<outputDirectory>software/ids/ids-conf/common-conf/ftp</outputDirectory>
+		</fileSet>
+		
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-starter/src/main/conf</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-starter/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-starter/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+    <fileSet>
+			<directory>../ids-dev-all/ids-gatekeeper-server/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-gatekeeper-server/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-alarm/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-alarm/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-network/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-network/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-alarm/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-alarm/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-db/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-db/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-api/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-api/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-dev-all/ids-dev-starter/src/main/resources/il8n</directory>
+			<outputDirectory>software/ids/ids-conf/dev-conf/il8n</outputDirectory>
+		</fileSet>
+		
+		<!--  biz -->
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-web/src/main/conf</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-web/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-web/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-web/src/main/resources/diagram</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/diagram</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-web/src/main/resources/word</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/word</outputDirectory>
+		</fileSet>
+		<!--auth-->
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-authorize/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-authorize/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/spring</outputDirectory>
+		</fileSet>
+		
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-kpicalc/src/main/conf/config</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/config</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-kpicalc/src/main/conf/spring</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/spring</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-authorize/src/main/resources/il8n</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/il8n</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../ids-biz-all/ids-biz-web/src/main/resources/il8n</directory>
+			<outputDirectory>software/ids/ids-conf/biz-conf/il8n</outputDirectory>
+		</fileSet>
+		
+	</fileSets>
+</assembly>	 

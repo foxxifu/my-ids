@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.intelligentclean.StationWeatherStatisticsMapper">
+
+	<resultMap id="StationWeatherStatisticsMap" type="com.interest.ids.common.project.bean.intelligentclean.StationWeatherStatisticsM">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+		<result column="year_time" jdbcType="VARCHAR" property="yearTime" />
+		<result column="month_time" jdbcType="VARCHAR" property="monthTime" />
+		<result column="heavy_rain_days" jdbcType="TINYINT" property="heavyRainDays" />
+		<result column="radiation_intensity" jdbcType="DECIMAL" property="radiationIntensity" />
+		<result column="middle_rain_days" jdbcType="TINYINT" property="middleRainDays" />
+	</resultMap>
+	
+	<select id="queryLastYearRadiation" parameterType="java.util.Map" resultMap="StationWeatherStatisticsMap">
+		SELECT 'thirtyDays' as time,a.radiation_intensity radiationIntensity,
+		a.middle_rain_days + a.heavy_tain_days as daysNoNeedClean 
+		FROM ids_station_weather_statistics_t a
+		WHERE a.station_code = #{stationCode} AND a.month_time = #{thirtyDays}
+		UNION
+		SELECT 'sixtyDays' as time,SUM(a.radiation_intensity) radiationIntensity,
+		SUM(a.middle_rain_days) + SUM(a.heavy_tain_days) as daysNoNeedClean 
+		FROM ids_station_weather_statistics_t a
+		WHERE a.station_code = #{stationCode} AND a.month_time in (#{thirtyDays},#{sixtyDays}) GROUP BY a.station_code
+	</select>	
+	
+	
+</mapper>

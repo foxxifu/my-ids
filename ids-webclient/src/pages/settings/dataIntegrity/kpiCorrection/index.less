@@ -1,0 +1,31 @@
+@import (once, reference) '~@/assets/css/lib';
+
+.el-container {
+  /deep/ .kpiCorrectionTable {
+    /deep/ .el-table__body tr:hover>td {
+      background-color: #e6f6fb;
+    }
+  }
+
+  /deep/ .addAndEditForm {
+    /deep/ .el-form-item {
+      margin-bottom: 0px;
+    }
+
+    /deep/ .el-table {
+      overflow: visible;
+      /deep/ .cell {
+        overflow: visible;
+      }
+      /deep/ .el-table__body-wrapper{
+        overflow: visible;
+      }
+    }
+
+    /deep/ .self-is-required:after {
+      content: '*';
+      color: #f56c6c;
+      margin-right: 4px;
+    }
+  }
+}

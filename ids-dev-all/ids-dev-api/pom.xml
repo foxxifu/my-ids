@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids-dev-all</artifactId>
+		<groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+	  
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-dev-api</artifactId>
+    <packaging>jar</packaging>
+    <name>ids-dev-api</name>
+	
+    <!--<modules>-->
+		<!--<module>ids-common-project</module>-->
+		
+		<!--<module>platform-install-all</module>
+		<module>platform-log-all</module>-->
+		<!--<module>platform-container-jetty</module>-->
+		
+    <!--</modules>-->
+
+	
+</project>
+

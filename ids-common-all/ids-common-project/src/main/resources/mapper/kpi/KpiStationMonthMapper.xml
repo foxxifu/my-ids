@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiStationMonthMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiStationMonthM">
+    <id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId" />
+    <result column="real_capacity" jdbcType="DECIMAL" property="realCapacity" />
+    <result column="radiation_intensity" jdbcType="DECIMAL" property="radiationIntensity" />
+    <result column="theory_power" jdbcType="DECIMAL" property="theoryPower" />
+    <result column="product_power" jdbcType="DECIMAL" property="productPower" />
+    <result column="ongrid_power" jdbcType="DECIMAL" property="ongridPower" />
+    <result column="buy_power" jdbcType="DECIMAL" property="buyPower" />
+    <result column="self_use_power" jdbcType="DECIMAL" property="selfUsePower" />
+    <result column="consume_power" jdbcType="DECIMAL" property="consumePower" />
+    <result column="limit_loss_power" jdbcType="DECIMAL" property="limitLossPower" />
+    <result column="trouble_loss_power" jdbcType="DECIMAL" property="troubleLossPower" />
+    <result column="performance_ratio" jdbcType="DECIMAL" property="performanceRatio" />
+    <result column="equivalent_hour" jdbcType="DECIMAL" property="equivalentHour" />
+    <result column="power_profit" jdbcType="DECIMAL" property="powerProfit" />
+    <result column="co2_reduction" jdbcType="DECIMAL" property="co2Reduction" />
+    <result column="coal_reduction" jdbcType="DECIMAL" property="coalReduction" />
+    <result column="tree_reduction" jdbcType="BIGINT" property="treeReduction" />
+    <result column="statistic_time" jdbcType="BIGINT" property="statisticTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    collect_time, station_code, enterprise_id, real_capacity, radiation_intensity, theory_power,
+    product_power, ongrid_power, buy_power, self_use_power, consume_power, limit_loss_power, trouble_loss_power,
+    performance_ratio, equivalent_hour, power_profit, co2_reduction, coal_reduction, tree_reduction, statistic_time
+  </sql>
+
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into ids_kpi_month_station_t(
+    <include refid="Base_Column_List"/>
+    ) values
+    <foreach collection="list" item="item" separator=",">
+      (
+      #{item.collectTime}, #{item.stationCode}, #{item.enterpriseId}, #{item.realCapacity},
+      #{item.radiationIntensity}, #{item.theoryPower}, #{item.productPower}, #{item.ongridPower},
+      #{item.buyPower}, #{item.selfUsePower}, #{item.consumePower}, #{item.limitLossPower},
+      #{item.troubleLossPower}, #{item.performanceRatio}, #{item.equivalentHour}, #{item.powerProfit},
+      #{item.co2Reduction}, #{item.coalReduction}, #{item.treeReduction}, #{item.statisticTime}
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="com.interest.ids.common.project.bean.kpi.KpiStationHourM" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_kpi_month_station_t
+    where collect_time = #{collectTime,jdbcType=BIGINT}
+      and station_code = #{stationCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectStationMonthKpi" parameterType="map" resultMap="BaseResultMap" statementType="STATEMENT">
+    select
+    <include refid="Base_Column_List" />
+    from ${tableName}
+    <where>
+      <choose>
+        <when test="startTime != null and endTime != null">
+          collect_time between ${startTime} and ${endTime}
+        </when>
+        <when test="startTime != null">
+          collect_time = ${startTime}
+        </when>
+      </choose>
+      <if test="stationCodes != null and stationCodes.size > 0">
+        and station_code in
+        <foreach collection="stationCodes" item="stationCode" open="(" separator="," close=")">
+          &apos;${stationCode}&apos;
+        </foreach>
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+    delete from ids_kpi_month_station_t
+    where collect_time in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.collectTime}
+    </foreach>
+    and station_code in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.stationCode}
+    </foreach>
+  </delete>
+</mapper>

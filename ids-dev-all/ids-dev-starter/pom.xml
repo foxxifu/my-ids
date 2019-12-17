@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids-dev-all</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-dev-starter</artifactId>
+    <packaging>jar</packaging>
+    <name>ids-dev-starter</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-dev-network</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.interest</groupId>
+            <artifactId>ids-redis-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-db</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-alarm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+				
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-gatekeeper-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+        <!-- 三方包依�? -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-staticdocs</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+    </dependencies>
+</project>
+

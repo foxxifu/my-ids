@@ -1,0 +1,220 @@
+@import (once) "../base";
+@import (once) "../bootstrap";
+
+/************************************ 登录页 start ************************************/
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: @linkColor;
+  opacity: 1;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: @linkColor;
+  opacity: 1;
+}
+
+input:-ms-input-placeholder {
+  color: @linkColor;
+  opacity: 1;
+}
+
+input::-webkit-input-placeholder {
+  color: @linkColor;
+  opacity: 1;
+}
+
+#loginPageDiv {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-width: 980px;
+  min-height: 655px;
+  background: url('/images/login/login_bg.jpg') no-repeat;
+  .background-size(100%, 100%);
+  color: #FFFFFF;
+  line-height: 30px;
+
+  .login-top {
+    height: 18%;
+    .switch-language {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+
+      select {
+        background-color: #C8CAC5;
+      }
+    }
+  }
+
+  .login-main {
+    margin: 0 auto;
+    width: 660px;
+
+    .logo {
+      text-align: center;
+      padding: 10px 0;
+      font-size: 32px;
+      color: #FFFFFF;
+      margin-bottom: -80px;
+    }
+
+    .login-form {
+      position: relative;
+      background: url(/images/login/login_form_bg.png) no-repeat;
+      padding: 160px 95px 0 97px;
+      background-size: 100% 100%;
+      //-webkit-box-reflect: below 3px -webkit-linear-gradient(transparent, transparent 85%, rgba(0, 0, 0, .1));
+
+      //&:before {
+      //  content: '';
+      //  position: absolute;
+      //  left: -10%;
+      //  bottom: -2px;
+      //  width: 120%;
+      //  height: 2px;
+      //  background: #000000;
+      //  z-index: 0;
+      //  .radial-gradient(top, #000000, transparent);
+      //  box-shadow: 0 -3px 30px 1px #000000;
+      //}
+
+      .login-inp {
+        padding: 10px;
+        width: 100%;
+        height: 60px;
+        line-height: 40px;
+        background-color: transparent;
+        color: #6ddffa;
+        border: 1px solid #6ddffa;
+        border-radius: 10px;
+
+        &.userName {
+          margin-top: 10px;
+        }
+
+        &.password {
+          margin-top: 25px;
+        }
+
+        label {
+          float: left;
+          width: 60px;
+          text-align: center;
+          color: #6ddffa;
+          height: 40px;
+          margin-left: -10px;
+          border-right: 1px solid #6ddffa;
+          background: url(/images/login/login_inp_icons.png) 0 0 no-repeat;
+
+          &.userIcon {
+            background-position: 8px 0;
+          }
+
+          &.pwdIcon {
+            background-position: 8px -85px;
+          }
+        }
+        input {
+          float: left;
+          width: 396px;
+          height: 40px;
+          font-size: 12pt;
+          color: @linkHoverColor;
+          background: transparent;
+          padding: 0 0 0 12px;
+          border: none;
+          border-radius: 0 8px 8px 0;
+        }
+      }
+
+      .reg-tip {
+        margin-left: 25px;
+        a {
+          color: #6ddffa;
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .login-event {
+        margin: 40px 0;
+        > label {
+          margin: 0 10px 0 0;
+          display: inline-block;
+          color: @linkColor;
+          cursor: pointer;
+
+          input[type="checkbox"] {
+            top: 3px;
+            &::before {
+              top: -1px;
+              width: 1em;
+              height: 1em;
+              text-indent: .1em;
+              border-color: @linkColor;
+            }
+          }
+        }
+      }
+
+      .login-buttons {
+        margin: 10px -90px -15px;
+
+        .login-btn {
+          display: block;
+          width: 100%;
+          height: 80px;
+          line-height: 80px;
+          font-size: 28px;
+          color: #073357;
+          #gradient > .vertical(@linkColor, @linkHoverColor, 0%, 80%);
+          text-align: center;
+          text-shadow: 1px 1px 2px #073357;
+          border: none;
+
+          &:active {
+            background: #6FD8E7;
+          }
+          &:hover {
+            background: #6FD8E7;
+          }
+        }
+      }
+    }
+    .login-form-bottom {
+      position: absolute;
+      bottom: -60px;
+      left: -65.5px;
+      width: 120%;
+      height: 63px;
+      //background: url(/images/login/login_form_bottom.png) center top no-repeat;
+      background: url(/images/login/login_bottom_bg.png) center top no-repeat;
+      z-index: 1;
+    }
+  }
+
+  .login-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    font-size: 14px;
+    line-height: 60px;
+    color: #FFFFFF;
+    text-align: center;
+    background: transparent;
+    border-top: 0 solid #014236;
+    a {
+      color: #FFFFFF;
+      &:hover {
+        color: #FEFEFE;
+      }
+    }
+  }
+}
+/************************************ 登录页 end ************************************/

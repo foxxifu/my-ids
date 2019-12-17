@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.analysis.AnalysisAlarmModelMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.analysis.AnalysisAlarmModel" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="alarm_id" property="alarmId" jdbcType="TINYINT" />
+    <result column="alarm_name" property="alarmName" jdbcType="VARCHAR" />
+    <result column="repair_suggestion" property="repairSuggestion" jdbcType="VARCHAR" />
+    <result column="severity_id" property="severityId" jdbcType="TINYINT" />
+  </resultMap>
+</mapper>

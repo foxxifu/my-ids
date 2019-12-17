@@ -1,0 +1,162 @@
+<div id="exhibition_station_infoWin" class="ids-module">
+    <section id="title">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 id="station_name">某某电站名称</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content">
+        <div class="container-fluid">
+            <div class="row no-gutter-both" style="width: 800px;height: 504px;">
+                <div class="col-xs-8">
+                    <div class="info-picture">
+                        <img id="station_pic" class="solid-imac animated fadeInUp" style="width:100%; height:100%"
+                             src="/images/main/exhibition/infoWin/img_loading.gif" alt="电站图片加载中…">
+                    </div>
+                    <div class="info-weather-msg">
+                        <div class="info-weather-msg-tit"></div>
+                        <div id="info_dz_weather" class="info-weather-msg-con">
+                            <div class="weather-top"></div>
+                            <div class="weather-main">
+                                <div class="weather-left">
+                                    <div class="wl-img" align="center">
+                                        <img alt src="/images/weather/weather180/99.png"/>
+                                    </div>
+                                    <div class="wl-temperature"></div>
+                                    <div class="wm-msg"></div>
+                                    <div class="wm-msg"></div>
+                                </div>
+                                <div class="weather-right">
+                                    <div class="weather-right-day">
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wr-img">
+                                            <img alt src="/images/weather/weather60/99.png"/>
+                                        </div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                    </div>
+                                    <div class="weather-right-day">
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wr-img">
+                                            <img alt src="/images/weather/weather60/99.png"/>
+                                        </div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                    </div>
+                                    <div class="weather-right-day">
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wr-img">
+                                            <img alt src="/images/weather/weather60/99.png"/>
+                                        </div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                    </div>
+                                    <div class="weather-right-day">
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wr-img">
+                                            <img alt src="/images/weather/weather60/99.png"/>
+                                        </div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                        <div class="wm-msg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="height:100%">
+                    <div class="info-station-msg">
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-4">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.stationAddress</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <label id="station_address" style="overflow: hidden"></label>
+                            </div>
+                        </div>
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-4">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.lonlat</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <label id="station_lonlat"></label>
+                            </div>
+                        </div>
+                        <div class="row row no-gutter-both">
+                            <div class="col-xs-4">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.installedCapacity</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <label id="station_capacity"></label>
+                            </div>
+                        </div>
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-4">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.gridTime</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <label id="station_devoteDate"></label>
+                            </div>
+                        </div>
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-4">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.runDays</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <label id="station_runningDays"></label>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutter-both v-spacer-10">
+                            <div class="col-xs-12">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.powerProduct</label>
+                            </div>
+                        </div>
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-12">
+                                <label class="i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.currentDay</label>:&nbsp;<label
+                                        class="bold" id="station_gridPowerDay"></label> <label></label>
+                            </div>
+                        </div>
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-12">
+                                <label class="i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.currentMonth</label>:&nbsp;<label
+                                        class="bold" id="station_gridPowerMonth"></label> <label></label>
+                            </div>
+                        </div>
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-12">
+                                <label class="i18n"
+                                            style="display: none">Msg.modules.exhibition.map.stationInfoWin.currentYear</label>:&nbsp;<label
+                                        class="bold" id="station_gridPowerYear"></label> <label></label>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutter-both v-spacer-10">
+                            <div class="col-xs-12">
+                                <label class="bold i18n" style="display: none">Msg.modules.exhibition.map.stationInfoWin.stationIntroduce</label>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutter-both">
+                            <div class="col-xs-12">
+                                <div id="station_briefing"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.EnterpriseInfoMapper">
+    <resultMap id="BaseResultMap"
+        type="com.interest.ids.common.project.bean.sm.EnterpriseInfo">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="contact_people" jdbcType="VARCHAR"
+            property="contactPeople" />
+        <result column="contact_phone" jdbcType="VARCHAR"
+            property="contactPhone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="device_limit" jdbcType="INTEGER"
+            property="deviceLimit" />
+        <result column="user_limit" jdbcType="INTEGER" property="userLimit" />
+        <result column="create_user_id" jdbcType="BIGINT"
+            property="createUserId" />
+        <result column="create_date" jdbcType="TIMESTAMP"
+            property="createDate" />
+        <result column="modify_user_id" jdbcType="BIGINT"
+            property="modifyUserId" />
+        <result column="modify_date" jdbcType="TIMESTAMP"
+            property="modifyDate" />
+        <result column="longitude"  property="longitude" />
+        <result column="latitude"  property="latitude" />
+        <result column="radius"  property="radius" />
+        <result column="logo"  property="logo" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, description, parent_id, avatar_path, address, contact_people,
+        contact_phone,
+        email, device_limit, user_limit, create_user_id, create_date,
+        modify_user_id, modify_date,longitude,latitude,radius,logo
+    </sql>
+    
+    <sql id="condition">
+        <if test="enterprise.name != null and enterprise.name != ''">
+                and name like '%${enterprise.name}%'
+            </if>
+            <if test="enterprise.description != null and enterprise.description != '' ">
+                and description like '%${enterprise.description}%'
+            </if>
+            <if test="enterprise.parentId != null">
+                and parent_id = #{enterprise.parentId,jdbcType=BIGINT}
+            </if>
+            <if test="enterprise.avatarPath != null and enterprise.avatarPath != '' ">
+                and avatar_path = #{enterprise.avatarPath,jdbcType=VARCHAR}
+            </if>
+            <if test="enterprise.address != null and enterprise.address != '' ">
+                and address like '%${enterprise.address}%'
+            </if>
+            <if test="enterprise.contactPeople != null and enterprise.contactPeople != '' ">
+                and contact_people like '%${enterprise.contactPeople}%'
+            </if>
+            <if test="enterprise.contactPhone != null and enterprise.contactPhone != '' ">
+                and contact_phone like '%${enterprise.contactPhone}%'
+            </if>
+            <if test="enterprise.email != null and enterprise.email != '' ">
+                and email like '%${enterprise.email}%'
+            </if>
+            <if test="enterprise.deviceLimit != null">
+                and device_limit = #{enterprise.deviceLimit,jdbcType=INTEGER}
+            </if>
+            <if test="enterprise.userLimit != null">
+                and user_limit = #{enterprise.userLimit,jdbcType=INTEGER}
+            </if>
+            <if test="enterprise.createUserId != null">
+                and create_user_id = #{enterprise.createUserId,jdbcType=BIGINT}
+            </if>
+            <if test="enterprise.createDate != null">
+                and create_date = #{enterprise.createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="enterprise.modifyUserId != null">
+                and modify_user_id = #{enterprise.modifyUserId,jdbcType=BIGINT}
+            </if>
+            <if test="enterprise.modifyDate != null">
+                and modify_date = #{enterprise.modifyDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="type_ != 'system'">
+            	and id = (select enterprise_id from ids_sm_user_info_t where id = #{userId})
+            </if>
+    </sql>
+
+    <!-- 添加企业 -->
+    <insert id="insertEnterpriseM" useGeneratedKeys="true" keyProperty="id" parameterType="com.interest.ids.common.project.bean.sm.EnterpriseInfo">
+        insert into ids_sm_enterprise_info_t (name,description, parent_id, avatar_path,
+        address, contact_people, contact_phone,
+        email, device_limit, user_limit, create_user_id, create_date,
+        modify_user_id, modify_date,longitude,latitude,radius, logo)
+        values(#{name},#{description},
+        #{parentId},#{avatarPath},#{address},
+        #{contactPeople},#{contactPhone},
+        #{email},#{deviceLimit},#{userLimit},
+        #{createUserId},#{createDate},
+        #{modifyUserId},#{modifyDate},
+        #{longitude},#{latitude},#{radius},#{logo}
+        )
+    </insert>
+
+    <!-- 修改企业 -->
+    <update id="updateEnterpriseM"
+        parameterType="com.interest.ids.common.project.bean.sm.EnterpriseInfo">
+        update ids_sm_enterprise_info_t
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="avatarPath != null">
+                avatar_path = #{avatarPath,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPeople != null">
+                contact_people = #{contactPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceLimit != null">
+                device_limit = #{deviceLimit,jdbcType=INTEGER},
+            </if>
+            <if test="userLimit != null">
+                user_limit = #{userLimit,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude},
+            </if>
+            <if test="radius != null">
+                radius = #{radius},
+            </if>
+            <if test="logo != null">
+                `logo` = #{logo}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteEnterpriseMById" parameterType="java.lang.Long">
+        delete from ids_sm_enterprise_info_t where id = #{value}
+    </delete>
+
+    <!-- 根据ids删除 -->
+    <delete id="deleteEnterpriseMByIds" parameterType="java.lang.Long">
+        delete from ids_sm_enterprise_info_t where id in
+        <foreach collection="array" open="(" separator=","
+            close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据id查询 -->
+    <select id="selectEnterpriseMById" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_enterprise_info_t
+        where id = #{value}
+    </select>
+
+    <!-- 根据条件查询 -->
+    <select id="selectEnterpriseMByCondition"
+        parameterType="com.interest.ids.common.project.bean.sm.QueryEnterprise"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_enterprise_info_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+        order by create_date desc
+        limit #{page.start},#{page.pageSize}
+    </select>
+
+    <!-- 查询数据总条数 -->
+    <select id="selectAllCount" parameterType="com.interest.ids.common.project.bean.sm.QueryEnterprise" resultType="java.lang.Integer">
+        select count(*) from ids_sm_enterprise_info_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="selectEnterpriseMByPage" parameterType="com.interest.ids.common.project.bean.sm.Page"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_enterprise_info_t limit #{start},#{pageSize}
+    </select>
+
+    <!-- 根据stationCode查询企业信息 -->
+    <select id="selectEnterpriseMByStationCode" parameterType="java.lang.String"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_enterprise_info_t where id = (select enterprise_id from
+        ids_station_info_t where station_code = #{value})
+    </select>
+    <!-- 根据用户id查询企业 -->
+    <select id="selectEnterpriseMByUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+    <choose>
+    	<when test="type_ == 'system'">
+    		select enter.id id,enter.name name, enter.address address from ids_sm_enterprise_info_t enter
+    	</when>
+    	<otherwise>
+    		select enter.id id,enter.name name,enter.address address from ids_sm_enterprise_info_t enter,ids_sm_user_info_t user
+	        where (enter.id = user.enterprise_id and user.id = #{userId})
+    	</otherwise>
+    </choose>
+    </select>
+    
+    <!-- 根据用户id查询企业 -->
+    <select id="selectEnterpriseMByDomainId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT * FROM ids_sm_enterprise_info_t enter,ids_sm_domain_info_t domain
+		WHERE enter.id = domain.enterprise_id AND domain.id = #{value} 
+    </select>
+    <!-- 根据企业id查询区域的名称 -->
+    <select id="selectDomainNameByEnterId" parameterType="java.lang.Long" resultType="java.lang.String">
+    	select 
+    		name 
+    	from 
+    		ids_sm_domain_info_t
+    	where 
+    		enterprise_id = #{value}
+    </select>
+    <!-- /**查询企业绑定的用户*/ -->
+    <select id="selectUserNameByEnterId" parameterType="java.lang.Long" resultType="java.lang.String">
+    	select 
+    		login_name
+    	from 
+    		ids_sm_user_info_t
+    	where 
+    		enterprise_id = #{value}
+    		and status = 0
+    </select>
+    <!-- /**查询企业下绑定的电站*/ -->
+    <select id="selectStationNameByEnterId" parameterType="java.lang.Long" resultType="java.lang.String">
+    	select
+    		station_name
+    	from
+    		ids_station_info_t
+    	where 
+    		enterprise_id = #{value}
+    		and is_delete = 0
+    </select>
+    <!-- /**删除企业下面的所有的绝色*/ -->
+    <delete id="deleteRole" parameterType="java.lang.Long">
+    	delete from ids_sm_role_info_t where enterprise_id = #{value}
+    </delete>
+    
+    <select id="selectEnterpriseByIds" resultMap="BaseResultMap">
+    	select * from ids_sm_enterprise_info_t
+    	<where>
+    		<if test="enterpriseIds != null and enterpriseIds.size > 0">
+    			id in 
+	    		<foreach collection="enterpriseIds" item="id" open="(" separator="," close=")">
+	    			#{id}
+	    		</foreach>
+    		</if>
+    	</where>
+    </select>
+    <!-- 查询当前用户所在的企业的LOGO -->
+    <select id="getLoginUserLogo" parameterType="java.lang.Long" resultType="java.lang.String">
+    	select logo from ids_sm_enterprise_info_t WHERE id = (SELECT enterprise_id FROM ids_sm_user_info_t WHERE id = #{value})
+    </select>
+</mapper> 

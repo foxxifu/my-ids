@@ -1,0 +1,26 @@
+.SelectToolbar {
+	padding-bottom: 13px;
+}
+
+.leftFrame {
+	height:400px;
+	width: 25%;
+	border: 1px solid #AAFFD5;
+	position: relative;
+	float: left;
+}
+
+.rightFrame {
+	width: 74%;
+	position: relative;
+	float: right;
+}
+.sp {
+	
+	padding-left:5%;
+}
+.flow {
+	overflow: auto;
+}
+
+      

@@ -1,0 +1,27 @@
+export default {
+  batchCon: {
+    batchSelectCon: '集中式逆变器详情配置 - 批量选择汇流箱',
+    devName: '设备名称',
+    numSN: 'SN号',
+    devType: '设备类型',
+    conBox: '直流汇流箱',
+    devVersion: '设备版本',
+    devSN: '设备SN',
+    allSelect: '全选',
+    add: '添加',
+    selectEqc: '已选设备:',
+    allDel: '移除全部',
+    dragToMove: '拖动可以移动排列顺序',
+    remove: '移除',
+    sureChoose: '确定选择',
+    noDevMove: '无设备可以移除的',
+    sureMoveChooseDev: '确认移除所有选中的设备？',
+    tip: '提示',
+    cancelMove: '已取消移除',
+    addDev: '设备已添加',
+    noDev: '无任何的设备信息',
+    noNeedAdd: '当前页的所有设备已添加，无需再添加',
+    noChooseDev: '未选择任何的设备信息',
+    sureChooseNum: '确认使用选择的数据？选择后之前的选择将被替换',
+  }
+}

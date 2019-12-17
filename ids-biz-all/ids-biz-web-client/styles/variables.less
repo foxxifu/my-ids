@@ -1,0 +1,28 @@
+/* ==========================================================================
+   Variables#ffc240
+   ========================================================================== */
+@mainBackground: #011428;
+
+@mainColor: #98E4FE;
+
+//@baseFontFamily: Tahoma, Arial, 'Microsoft YaHei', '宋体', sans-serif;
+@baseFontFamily: Microsoft Yahei, Tahoma, Arial, Helvetica, "宋体";
+@baseFontSize: 14px;
+
+@linkColor: #2E99B3;
+@linkHoverColor: #6DDFFA;
+
+@modal-background: rgba(0, 65, 110, 0.97);
+@modal-header-background: #00406A;
+
+/******************************** hack ************************************/
+@hack-v-ie: ~"\9"; // IE系列 值后缀
+@hack-v-ie8-10: ~"\0"; // IE8-10, Opera 值后缀
+@hack-p-ie8-9: ~"/*\**/"; // IE8-9 属性后缀
+// Firefox 支持
+.mozDocument(@selector, @property, @value) {
+  @-moz-document url-prefix(){ @selector{@property:@value;}}
+}
+
+@tooltip-color: #FFFFFF;
+@tooltip-bg: #FF0000;

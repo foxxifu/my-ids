@@ -1,0 +1,30 @@
+
+export default {
+  licMan: {
+    stationName: '电站名称',
+    startTime: '开始时间',
+    endTime: '结束时间',
+    devName: '设备名',
+    operation: '操作',
+    detail: '详情',
+    timeDuration: '时间范围',
+    submit_sucess: '提交成功',
+    submit_fail: '提交失败',
+    confirm_delte: '确认删除？',
+    delete_success: '删除成功',
+    delete_fail: '删除失败',
+    modify_success: '更新成功',
+    modify_fail: '更新失败',
+    choose_file: '选择文件',
+    import_success: '导入成功',
+    import_fail: '导入失败',
+    impTime: '导入时间',
+    impUser: '导入用户',
+    accCap: '可接入容量(kW)',
+    acceCap: '已接入容量(kW)',
+    accInv: '可接入逆变器数(台)',
+    invCom: '已接入逆变器数(台)',
+    kpiVal: 'kpi值',
+    kpiName: 'kpi名称',
+  }
+}

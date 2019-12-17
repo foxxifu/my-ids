@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>ids</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+      
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ids-common-all</artifactId>
+    <packaging>pom</packaging>
+    
+    <modules>
+        <module>ids-common-project</module>
+        <module>ids-common-interface</module>
+        <module>ids-redis-client</module>
+    </modules>
+
+    
+</project>
+

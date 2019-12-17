@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.interest.ids.commoninterface.dao.largescreen.LargeScreenDao4StationMapper">
+	
+	<!-- 查询电站的当日日负荷曲线 -->
+	<select id="getActivePower" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT realtimeT.collect_time collectTime,realtimeT.active_Power activePower
+		FROM ids_station_realtime_data_t realtimeT,ids_station_info_t station
+		where realtimeT.station_code = station.station_code 
+    	and realtimeT.collect_time BETWEEN #{startDate} and #{endDate}
+		and station.station_code = #{stationCode}
+		UNION 
+		SELECT realtimeH.collect_time collectTime,realtimeH.active_Power activePower
+		FROM ids_station_realtime_data_h realtimeH,ids_station_info_t station
+		where realtimeH.station_code = station.station_code 
+		and station.station_code = #{stationCode}
+    	and realtimeH.collect_time BETWEEN #{startDate} and #{endDate}
+	</select>
+
+	<!-- 查询电站的当前负荷 -->
+	<select id="getCurrentActivePower" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT realtime.active_power AS currentPower
+		FROM ids_station_realtime_data_t realtime,ids_station_info_t station
+		WHERE station.station_code = #{stationCode} and realtime.station_code = station.station_code
+	</select>
+
+
+	<!-- 查询电站的日发电量和收益 -->
+	<select id="getPowerTrends" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT stationDay.collect_time collectTime,stationDay.product_power productPower,
+		stationDay.power_profit powerProfit
+		FROM ids_kpi_day_station_t stationDay,ids_station_info_t station
+		WHERE station.station_code = stationDay.station_code 
+		and station.station_code = #{stationCode}
+		and stationDay.collect_time BETWEEN #{firstDayOfMonth} and #{lastDayOfMonth}
+		GROUP BY stationDay.collect_time
+	</select>
+
+	<!-- 根据用户id查询用户所在企业的设备数量 -->
+	<select id="getCurrentDayCap" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT realtime.day_cap dayCapacity,realtime.day_income dayIncome
+		FROM ids_station_realtime_data_t realtime,ids_station_info_t station
+		WHERE realtime.station_code = station.station_code 
+		and station.station_code = #{stationCode}
+		AND realtime.collect_time > #{currentDay}
+	</select>
+
+
+	<!-- 查询电站的累计发电量 -->
+	<select id="getCommonData" parameterType="java.util.Map" resultType="java.util.Map">
+		select realtime.product_power totalCapacity,station.installed_capacity capacity,
+		taskinfo.allTaskCount,taskinfo.notFinishTaskCount
+		from ids_station_realtime_data_t realtime,ids_station_info_t station LEFT JOIN 
+		(SELECT alltask.station_code,alltask.allTaskCount,notfinishtask.notFinishTaskCount FROM 
+		(SELECT station_code,COUNT(1) allTaskCount 
+		FROM ids_workflow_defect_t GROUP BY station_code) alltask
+		LEFT JOIN
+		(SELECT station_code,COUNT(1) notFinishTaskCount 
+		FROM ids_workflow_defect_t WHERE proc_state <![CDATA[ <> ]]> 3 GROUP BY station_code) notfinishtask
+		ON alltask.station_code = notfinishtask.station_code) taskinfo 
+		ON taskinfo.station_code = station.station_code
+		where realtime.station_code = station.station_code 
+		and station.station_code = #{stationCode}
+	</select>
+	
+
+	<!-- 查询电站所在区域统计 -->
+	<select id="getListStationInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select result.stationLevel,count(1) stationCount from
+		(SELECT CASE WHEN
+		<![CDATA[station.installed_capacity > 0 ]]> <![CDATA[AND station.installed_capacity <= 10 THEN]]> 's0to10'
+		WHEN <![CDATA[station.installed_capacity > 10 ]]> <![CDATA[AND station.installed_capacity <= 100 THEN]]> 's10to100'
+		WHEN <![CDATA[station.installed_capacity > 100 ]]> <![CDATA[AND station.installed_capacity <= 500 THEN]]> 's100to500'
+		ELSE 's500up' END as stationLevel
+		FROM ids_station_info_t station,ids_sm_domain_info_t domain,ids_station_info_t stationquery
+		WHERE stationquery.domain_id = domain.id and station.domain_id = domain.id
+		AND station.is_delete = '0' and stationquery.station_code = #{stationCode}
+		) result 
+		GROUP BY result.stationLevel
+	</select>
+
+	<!-- 查询电站的当年社会贡献 -->
+	<select id="getYearSocialContribution" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT SUM(yearS.product_power/1000)*0.997 carbonEmissions,
+		SUM(yearS.product_power/1000)*0.4 savedCoal,
+		SUM(yearS.product_power)/18.3 deforestation
+		FROM ids_kpi_year_station_t yearS,ids_station_info_t station
+		WHERE yearS.station_code = station.station_code and station.station_code = #{stationCode}
+		and yearS.collect_time = #{year}
+	</select>
+
+
+	<!-- 查询电站的累计社会贡献 -->
+	<select id="getTotalSocialContribution" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		SUM(realtime.product_power/1000)*0.997 carbonEmissions,
+		SUM(realtime.product_power/1000)*0.4 savedCoal,
+		SUM(realtime.product_power)/18.3 deforestation
+		FROM ids_station_realtime_data_t realtime,ids_station_info_t station
+		WHERE realtime.station_code = station.station_code and station.station_code = #{stationCode}
+	</select>
+	
+	<!-- 根据电站的设备数量 -->
+	<select id="getDeviceCount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT dev.dev_type_id devTypeId,count(1) devTypeCount
+		FROM ids_dev_info_t dev,ids_station_info_t station
+		WHERE dev.station_code = station.station_code and station.station_code = #{stationCode}
+		AND dev.is_logic_delete = '0' AND dev.dev_type_id IN (1, 14, 15)
+		GROUP BY dev.dev_type_id
+		UNION ALL
+		SELECT 'pv' AS devTypeId,SUM(module.modules_num_per_string) devTypeCount
+		FROM ids_device_pv_module_t module,ids_dev_info_t dev,ids_station_info_t station
+		WHERE dev.station_code = station.station_code and station.station_code = #{stationCode}
+		AND module.dev_id = dev.id AND dev.is_logic_delete = '0' AND dev.dev_type_id IN (1, 14, 15)
+	</select>
+	
+	<!-- 查询当前系统的安全运行天数 -->
+	<select id="getSafeRunDays" parameterType="java.util.Map" resultType="java.lang.String">
+		select MAX(stationparam.param_value) safeRunDays from ids_sm_station_param_t stationparam
+		WHERE stationparam.station_code = #{stationCode}
+		and stationparam.param_key = 'SAFEOPRDATE'
+	</select>
+	
+	<select id="getPowerGeneration" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT SUM(realtime.active_power) activePower,SUM(realtime.day_cap) dayCap,SUM(realtime.day_income) dayIncome,
+		SUM(stationyear.ongrid_power) ongridPower,SUM(realtime.product_power) totalPower,SUM(realtime.total_income) totalIncome,
+		SUM(station.installed_capacity) capacity
+		FROM ids_station_info_t station
+		LEFT JOIN ids_station_realtime_data_t realtime ON station.station_code = realtime.station_code 
+		AND realtime.collect_time > #{today}
+		LEFT JOIN ids_kpi_year_station_t stationyear ON station.station_code = stationyear.station_code 
+		AND stationyear.collect_time = #{year}
+		WHERE station.station_code = #{stationCode}
+	</select>
+	
+	<select id="getTaskStatistics" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT defectcount.defectStat,COUNT(0) AS defectCount 
+		FROM (SELECT CASE WHEN defect.proc_state = 0 THEN 'todo'
+		WHEN defect.proc_state = 1 THEN 'doing'
+		ELSE 'done' END AS defectStat FROM ids_workflow_defect_t defect
+		WHERE defect.station_code = #{stationCode}) defectcount GROUP BY defectcount.defectStat
+	</select>
+
+</mapper>

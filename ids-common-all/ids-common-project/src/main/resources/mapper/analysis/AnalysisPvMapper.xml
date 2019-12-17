@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.analysis.AnalysisPvMapper" >
+
+   <resultMap id="InverterKpiDayMap" type="com.interest.ids.common.project.bean.kpi.KpiInverterDayM">
+    <result column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="dev_name" jdbcType="VARCHAR" property="devName" />
+    <result column="inverter_type" jdbcType="TINYINT" property="inverterType" />
+    <result column="real_capacity" jdbcType="DECIMAL" property="realCapacity" />
+    <result column="product_power" jdbcType="DECIMAL" property="productPower" />
+   </resultMap>
+   
+   <resultMap id="AnalyPvMap" type="com.interest.ids.common.project.bean.analysis.AnalysisPvM">
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="dev_id" jdbcType="BIGINT" property="devId" />
+    <result column="dev_alias" jdbcType="VARCHAR" property="devAlias" />
+    <result column="matrix_id" jdbcType="BIGINT" property="matrixId" />
+    <result column="matrix_name" jdbcType="VARCHAR" property="matrixName" />
+    <result column="pv_code" jdbcType="INTEGER" property="pvCode" />
+    <result column="analysis_time" jdbcType="BIGINT" property="analysisTime" />
+    <result column="analysis_state" jdbcType="TINYINT" property="analysisState" />
+    <result column="pv_capacity" jdbcType="DECIMAL" property="pvCapacity" />
+    <result column="lost_power" jdbcType="DECIMAL" property="lostPower" />
+    <result column="last_start_time" jdbcType="BIGINT" property="lastStartTime" />
+    <result column="last_end_time" jdbcType="BIGINT" property="lastEndTime" />
+   </resultMap>
+   
+   <resultMap id="AnalyPvMonthMap" type="com.interest.ids.common.project.bean.analysis.AnalysisPvMonthM">
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="dev_id" jdbcType="BIGINT" property="devId" />
+    <result column="dev_alias" jdbcType="VARCHAR" property="devAlias" />
+    <result column="matrix_id" jdbcType="BIGINT" property="matrixId" />
+    <result column="matrix_name" jdbcType="VARCHAR" property="matrixName" />
+    <result column="pv_code" jdbcType="INTEGER" property="pvCode" />
+    <result column="analysis_time" jdbcType="BIGINT" property="analysisTime" />
+    <result column="pv_capacity" jdbcType="DECIMAL" property="pvCapacity" />
+    <result column="trouble_last_time" jdbcType="INTEGER" property="troubleLastTime" />
+    <result column="trouble_lost_power" jdbcType="DECIMAL" property="troubleLostPower" />
+    <result column="ineff_last_time" jdbcType="INTEGER" property="ineffLastTime" />
+    <result column="ineff_lost_power" jdbcType="DECIMAL" property="ineffLostPower" />
+    <result column="hid_last_time" jdbcType="INTEGER" property="hidLastTime" />
+    <result column="hid_lost_power" jdbcType="DECIMAL" property="hidLostPower" />	
+   </resultMap>
+   
+   <resultMap id="AnalyMatrixDayMap" type="com.interest.ids.common.project.bean.analysis.AnalysisMatrixDayM">
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="matrix_id" jdbcType="BIGINT" property="matrixId" />
+    <result column="matrix_name" jdbcType="VARCHAR" property="matrixName" />
+    <result column="installed_capacity" jdbcType="DECIMAL" property="installedCapacity" />
+    <result column="analysis_time" jdbcType="BIGINT" property="analysisTime" />
+    <result column="pv_num" jdbcType="INTEGER" property="pvNum"/>
+    <result column="product_power" jdbcType="DECIMAL" property="productPower"/>
+    <result column="trouble_pv_num" jdbcType="INTEGER" property="troublePvNum" />
+    <result column="trouble_lost_power" jdbcType="DECIMAL" property="troubleLostPower" />
+    <result column="ineff_pv_num" jdbcType="INTEGER" property="ineffPvNum" />
+    <result column="ineff_lost_power" jdbcType="DECIMAL" property="ineffLostPower" />
+    <result column="hid_pv_num" jdbcType="INTEGER" property="hidPvNum" />
+    <result column="hid_lost_power" jdbcType="DECIMAL" property="hidLostPower" />
+   </resultMap>
+
+   <resultMap id="AnalyMatrixMonthMap" type="com.interest.ids.common.project.bean.analysis.AnalysisMatrixMonthM">
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="matrix_id" jdbcType="BIGINT" property="matrixId" />
+    <result column="matrix_name" jdbcType="VARCHAR" property="matrixName" />
+    <result column="installed_capacity" jdbcType="DECIMAL" property="installedCapacity" />
+    <result column="analysis_time" jdbcType="BIGINT" property="analysisTime" />
+    <result column="pv_num" jdbcType="INTEGER" property="pvNum"/>
+    <result column="product_power" jdbcType="DECIMAL" property="productPower"/>
+    <result column="trouble_pv_num" jdbcType="INTEGER" property="troublePvNum" />
+    <result column="trouble_lost_power" jdbcType="DECIMAL" property="troubleLostPower" />
+    <result column="ineff_pv_num" jdbcType="INTEGER" property="ineffPvNum" />
+    <result column="ineff_lost_power" jdbcType="DECIMAL" property="ineffLostPower" />
+    <result column="hid_pv_num" jdbcType="INTEGER" property="hidPvNum" />
+    <result column="hid_lost_power" jdbcType="DECIMAL" property="hidLostPower" />
+   </resultMap>
+   
+   <resultMap id="AnalyMatrixYearMap" type="com.interest.ids.common.project.bean.analysis.AnalysisMatrixYearM">
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="matrix_id" jdbcType="BIGINT" property="matrixId" />
+    <result column="matrix_name" jdbcType="VARCHAR" property="matrixName" />
+    <result column="installed_capacity" jdbcType="DECIMAL" property="installedCapacity" />
+    <result column="analysis_time" jdbcType="BIGINT" property="analysisTime" />
+    <result column="pv_num" jdbcType="INTEGER" property="pvNum"/>
+    <result column="product_power" jdbcType="DECIMAL" property="productPower"/>
+    <result column="trouble_pv_num" jdbcType="INTEGER" property="troublePvNum" />
+    <result column="trouble_lost_power" jdbcType="DECIMAL" property="troubleLostPower" />
+    <result column="ineff_pv_num" jdbcType="INTEGER" property="ineffPvNum" />
+    <result column="ineff_lost_power" jdbcType="DECIMAL" property="ineffLostPower" />
+    <result column="hid_pv_num" jdbcType="INTEGER" property="hidPvNum" />
+    <result column="hid_lost_power" jdbcType="DECIMAL" property="hidLostPower" />
+   </resultMap>
+   
+   <!-- 查询大机关联直流汇流箱 -->
+   <select id="selectConcInvWithDcjs" resultType="java.util.Map" parameterType="list">
+   	select center_vert_id, dcjs_dev_id
+   	from ids_center_vert_detail_t
+   	<where>
+   		<if test="list != null and list.size > 0">
+   			center_vert_id in
+   			<foreach collection="list" item="concInvId" open="(" separator="," close=")">
+   				#{concInvId}
+   			</foreach>
+   		</if>
+   	</where>
+   </select>
+   
+   <!-- 查询基准逆变器最近一刻发电量 -->
+   <select id="selectCurrentBaseInvDayCap" resultMap="InverterKpiDayMap" statementType="STATEMENT">
+   		SELECT
+   			t1.station_code, 
+   			t1.dev_id as device_id,
+			t1.day_capacity as product_power
+		FROM
+			<choose>
+				<when test="onlineType == 2">
+					ids_inverter_string_data_t t1
+				</when>
+				<otherwise>
+					ids_inverter_conc_data_t t1
+				</otherwise>
+			</choose>
+		INNER JOIN (
+			SELECT
+				device_id,
+				max(equivalent_hour) AS equivalent_hour
+			FROM
+				ids_kpi_day_inverter_t
+			WHERE
+				station_code = &apos;${stationCode}&apos; 
+				AND collect_time &gt;= UNIX_TIMESTAMP() * 1000 - 7 * 24 * 3600 * 1000
+			GROUP BY
+				device_id
+			ORDER BY
+				equivalent_hour DESC
+			LIMIT 1
+		) t2 ON t1.dev_id = t2.device_id
+		ORDER BY
+			t1.collect_time DESC
+		LIMIT 1
+   </select>
+   
+   <select id="selectBechmarkInvCurrentDayCap" resultMap="InverterKpiDayMap" statementType="STATEMENT">
+   		SELECT
+   			t1.station_code, 
+   			t1.dev_id as device_id,
+			t1.day_capacity as product_power
+		FROM
+			<choose>
+				<when test="devTypeId == 1">
+					ids_inverter_string_data_t t1
+				</when>
+				<otherwise >
+					ids_inverter_conc_data_t t1
+				</otherwise>
+			</choose>
+		WHERE t1.dev_id = ${devId}
+   </select>
+   
+   <select id="selectPvAnalyM" parameterType="list" resultMap="AnalyPvMap">
+   		SELECT * FROM ids_analysis_pv_day_t
+   		<where>
+   			<if test="list != null and list.size > 0">
+   				dev_id in 
+   				<foreach collection="list" item="item" open="(" separator="," close=")">
+   					#{item.devId}
+   				</foreach>
+   				and pv_code in 
+   				<foreach collection="list" item="item" open="(" separator="," close=")">
+   					#{item.pvCode}
+   				</foreach>
+   				and analysis_time in 
+   				<foreach collection="list" item="item" open="(" separator="," close=")">
+   					#{item.analysisTime}
+   				</foreach>
+   				and analysis_state in
+   				<foreach collection="list" item="item" open="(" separator="," close=")">
+   					#{item.analysisState}
+   				</foreach>
+   			</if>
+   		</where>
+   </select>
+   
+   <select id="selectDevLocationInfo" parameterType="list" resultMap="AnalyPvMap">
+	   	SELECT
+			dev.id AS dev_id,
+			dev.dev_alias,
+			arr.id AS matrix_id,
+			arr.subarray_name AS matrix_name,
+			pv.fixed_power AS pv_capacity
+		FROM ids_dev_info_t dev
+		JOIN ids_subarray_info_t arr ON dev.matrix_id = arr.id
+		JOIN ids_device_pv_module_t pv ON dev.id = pv.dev_id
+		<where>
+			<if test="list != null and list.size > 0">
+				dev.id IN
+				<foreach collection="list" item="item" open="(" separator="," close=")">
+					#{item.devId}
+				</foreach>
+				AND pv.pv_index IN
+				<foreach collection="list" item="item" open="(" separator="," close=")">
+					#{item.pvCode}
+				</foreach>
+			</if>
+		</where>
+   </select>
+   
+   <insert id="savePvAnalyM" parameterType="list">
+   		insert into ids_analysis_pv_day_t values
+   		<foreach collection="list" item="item" separator=",">
+   			( 
+   				#{item.stationCode},#{item.devId},#{item.pvCode},#{item.analysisTime},#{item.devAlias},
+   				#{item.pvCapacity},#{item.matrixId},#{item.matrixName},#{item.analysisState},#{item.lostPower},
+   				#{item.lastStartTime},#{item.lastEndTime}
+	   		)
+   		</foreach>
+   </insert>
+    
+    <!-- 批量更新 -->
+   <!-- <update id="updatePvAnalyM" parameterType="list">
+   		<foreach collection="list" item="item" separator=";">
+   			update ids_analysis_pv_day_t set 
+   				lost_power = #{item.lostPower}
+   			where 
+   				station_code = #{item.stationCode} and
+   				dev_id = #{item.devId} and
+   				pv_code = #{item.pvCode} and
+   				analysis_time = #{item.analysisTime}
+   		</foreach>
+   </update> -->
+   
+   <update id="updatePvAnalyM" parameterType="com.interest.ids.common.project.bean.analysis.AnalysisPvM">
+   		update ids_analysis_pv_day_t set 
+			lost_power = #{lostPower}
+			<if test="lastEndTime != null">
+				,last_end_time = #{lastEndTime}
+			</if>
+		where 
+			station_code = #{stationCode} and
+			dev_id = #{devId} and
+			pv_code = #{pvCode} and
+			analysis_time = #{analysisTime}
+   </update>
+   
+   <!-- 查询组串诊断组串日数据  -->
+   <select id="selectPvAnalysisDay" resultMap="AnalyPvMap">
+		select * from ids_analysis_pv_day_t
+		where station_code = #{stationCode} and
+			analysis_time between #{startTime} and #{endTime}
+   </select>
+   
+   <!-- 获取电站某月的组串诊断数据 -->
+   <select id="selectPvAnalysisMonth" resultMap="AnalyPvMonthMap">
+   		select * from ids_analysis_pv_month_t
+   		where station_code = #{stationCode} and
+   			analysis_time = #{analysisTime}
+   </select>
+   
+   <!-- 新增组串诊断月数据 -->
+   <insert id="insertAnalysisPvMonthM" parameterType="list">
+   		insert into ids_analysis_pv_month_t values
+   			<foreach collection="list" item="item" separator=",">
+   				(
+   					#{item.stationCode}, #{item.devId}, #{item.pvCode}, #{item.analysisTime}, #{item.devAlias}, 
+   					#{item.pvCapacity}, #{item.matrixId}, #{item.matrixName}, #{item.troubleLastTime}, 
+   					#{item.troubleLostPower}, #{item.ineffLastTime},#{item.ineffLostPower}, #{item.hidLastTime}, #{item.hidLostPower}
+   				)
+   			</foreach>
+   </insert>
+   
+   <!-- 更新组串诊断月数据 -->
+   <!-- <update id="upateAnalysisPvMonthM" parameterType="list">
+   		<foreach collection="list" item="item" separator=";">
+   			update ids_analysis_pv_month_t 
+   				set trouble_last_time = #{item.troubleLastTime},
+   					trouble_lost_power = #{item.troubleLostPower},
+   					ineff_last_time = #{item.ineffLastTime},
+   					ineff_lost_power = #{item.ineffLostPower},
+   					hid_last_time = #{item.hidLastTime},
+   					hid_lost_power = #{item.hidLostPower}
+   				where station_code = #{item.stationCode} and
+   					dev_id = #{item.devId} and
+   					pv_code = #{item.pvCode} and
+   					analysis_time = #{item.analysisTime}
+   		</foreach>
+   </update> -->
+   <update id="upateAnalysisPvMonthM" parameterType="com.interest.ids.common.project.bean.analysis.AnalysisPvMonthM">
+   		update ids_analysis_pv_month_t 
+			set trouble_last_time = #{troubleLastTime},
+				trouble_lost_power = #{troubleLostPower},
+				ineff_last_time = #{ineffLastTime},
+				ineff_lost_power = #{ineffLostPower},
+				hid_last_time = #{hidLastTime},
+				hid_lost_power = #{hidLostPower}
+			where station_code = #{stationCode} and
+				dev_id = #{devId} and
+				pv_code = #{pvCode} and
+				analysis_time = #{analysisTime}
+   </update>
+   
+   <!--  获取组串诊断子阵级日数据 -->
+   <select id="selectAnalysisMatrixDay" resultMap="AnalyMatrixDayMap">
+   		select * from ids_analysis_matrix_day_t
+   		where station_code = #{stationCode} and
+   			analysis_time = #{analysisTime}
+   </select>
+   
+   <!-- 新增组串诊断子阵日统计数据 -->
+   <insert id="insertAnalysisMatrixDay" parameterType="list">
+   		insert into ids_analysis_matrix_day_t values 
+   			<foreach collection="list" item="item" separator=",">
+   				(
+   					#{item.stationCode}, #{item.matrixId}, #{item.analysisTime}, #{item.matrixName}, 
+   					#{item.installedCapacity}, #{item.pvNum}, #{item.productPower}, #{item.troublePvNum}, 
+   					#{item.troubleLostPower}, #{item.ineffPvNum},#{item.ineffLostPower}, #{item.hidPvNum}, #{item.hidLostPower}
+   				)
+   			</foreach>
+   </insert>
+   
+   <!-- 更新组串诊断子阵日统计数据 -->
+   <!-- <update id="updateAnalysisMatrixDay" parameterType="list">
+   		<foreach collection="list" item="item" separator=";">
+   			update ids_analysis_matrix_day_t
+   			set product_power = #{item.productPower},
+   				trouble_pv_num = #{item.troublePvNum},
+   				trouble_lost_power = #{item.troubleLostPower},
+   				ineff_pv_num = #{item.ineffPvNum},
+   				ineff_lost_power = #{item.ineffLostPower},
+   				hid_pv_num = #{item.hidPvNum},
+   				hid_lost_power = #{item.hidLostPower}
+   			where station_code = #{item.station_code} and
+   				matrix_id = #{item.matrixId}
+   				analysis_time = #{item.analysisTime}
+   		</foreach>
+   </update> -->
+   <update id="updateAnalysisMatrixDay" parameterType="com.interest.ids.common.project.bean.analysis.AnalysisMatrixDayM">
+   		update ids_analysis_matrix_day_t
+   			set product_power = #{productPower},
+   				trouble_pv_num = #{troublePvNum},
+   				trouble_lost_power = #{troubleLostPower},
+   				ineff_pv_num = #{ineffPvNum},
+   				ineff_lost_power = #{ineffLostPower},
+   				hid_pv_num = #{hidPvNum},
+   				hid_lost_power = #{hidLostPower}
+   			where station_code = #{stationCode} and
+   				matrix_id = #{matrixId} and
+   				analysis_time = #{analysisTime}
+   </update>
+   
+   <!--  获取组串诊断子阵级月数据 -->
+   <select id="selectAnalysisMatrixMonth" resultMap="AnalyMatrixMonthMap">
+   		select * from ids_analysis_matrix_month_t
+   		where station_code = #{stationCode} and
+   			analysis_time = #{analysisTime}
+   </select>
+   
+   <!-- 新增组串诊断子阵月统计数据 -->
+   <insert id="insertAnalysisMatrixMonth" parameterType="list">
+   		insert into ids_analysis_matrix_month_t values 
+   			<foreach collection="list" item="item" separator=",">
+   				(
+   					#{item.stationCode}, #{item.matrixId}, #{item.analysisTime}, #{item.matrixName}, 
+   					#{item.installedCapacity}, #{item.pvNum}, #{item.productPower}, #{item.troublePvNum}, 
+   					#{item.troubleLostPower}, #{item.ineffPvNum},#{item.ineffLostPower}, #{item.hidPvNum}, #{item.hidLostPower}
+   				)
+   			</foreach>
+   </insert>
+   
+   <!-- 更新组串诊断子阵月统计数据 -->
+   <!-- <update id="updateAnalysisMatrixMonth" parameterType="list">
+   		<foreach collection="list" item="item" separator=";">
+   			update ids_analysis_matrix_month_t
+   			set product_power = #{item.productPower},
+   				trouble_pv_num = #{item.troublePvNum},
+   				trouble_lost_power = #{item.troubleLostPower},
+   				ineff_pv_num = #{item.ineffPvNum},
+   				ineff_lost_power = #{item.ineffLostPower},
+   				hid_pv_num = #{item.hidPvNum},
+   				hid_lost_power = #{item.hidLostPower}
+   			where station_code = #{item.station_code} and
+   				matrix_id = #{item.matrixId}
+   				analysis_time = #{item.analysisTime}
+   		</foreach>
+   </update> -->
+   <update id="updateAnalysisMatrixMonth" parameterType="com.interest.ids.common.project.bean.analysis.AnalysisMatrixMonthM">
+   		update ids_analysis_matrix_month_t
+   			set product_power = #{productPower},
+   				trouble_pv_num = #{troublePvNum},
+   				trouble_lost_power = #{troubleLostPower},
+   				ineff_pv_num = #{ineffPvNum},
+   				ineff_lost_power = #{ineffLostPower},
+   				hid_pv_num = #{hidPvNum},
+   				hid_lost_power = #{hidLostPower},
+   				installed_capacity = #{installedCapacity}
+   			where station_code = #{stationCode} and
+   				matrix_id = #{matrixId} and
+   				analysis_time = #{analysisTime}
+   </update>
+   
+   <!--  获取组串诊断子阵级年数据 -->
+   <select id="selectAnalysisMatrixYear" resultMap="AnalyMatrixYearMap">
+   		select * from ids_analysis_matrix_year_t
+   		where station_code = #{stationCode} and
+   			analysis_time = #{analysisTime}
+   </select>
+   
+   <!-- 新增组串诊断子阵日统计数据 -->
+   <insert id="insertAnalysisMatrixYear" parameterType="list">
+   		insert into ids_analysis_matrix_year_t values 
+   			<foreach collection="list" item="item" separator=",">
+   				(
+   					#{item.stationCode}, #{item.matrixId}, #{item.analysisTime}, #{item.matrixName}, 
+   					#{item.installedCapacity}, #{item.pvNum}, #{item.productPower}, #{item.troublePvNum}, 
+   					#{item.troubleLostPower}, #{item.ineffPvNum},#{item.ineffLostPower}, #{item.hidPvNum}, #{item.hidLostPower}
+   				)
+   			</foreach>
+   </insert>
+   
+   <!-- 更新组串诊断子阵日统计数据 -->
+   <!-- <update id="updateAnalysisMatrixYear" parameterType="list">
+   		<foreach collection="list" item="item" separator=";">
+   			update ids_analysis_matrix_year_t
+   			set product_power = #{item.productPower},
+   				trouble_pv_num = #{item.troublePvNum},
+   				trouble_lost_power = #{item.troubleLostPower},
+   				ineff_pv_num = #{item.ineffPvNum},
+   				ineff_lost_power = #{item.ineffLostPower},
+   				hid_pv_num = #{item.hidPvNum},
+   				hid_lost_power = #{item.hidLostPower}
+   			where station_code = #{item.stationCode} and
+   				matrix_id = #{item.matrixId}
+   				analysis_time = #{item.analysisTime}
+   		</foreach>
+   </update> -->
+   <update id="updateAnalysisMatrixYear" parameterType="com.interest.ids.common.project.bean.analysis.AnalysisMatrixYearM">
+   		update ids_analysis_matrix_year_t
+   			set product_power = #{productPower},
+   				trouble_pv_num = #{troublePvNum},
+   				trouble_lost_power = #{troubleLostPower},
+   				ineff_pv_num = #{ineffPvNum},
+   				ineff_lost_power = #{ineffLostPower},
+   				hid_pv_num = #{hidPvNum},
+   				hid_lost_power = #{hidLostPower},
+   				installed_capacity = #{installedCapacity}
+   			where station_code = #{stationCode} and
+   				matrix_id = #{matrixId} and
+   				analysis_time = #{analysisTime}
+   </update>
+   
+   <select id="getMatrixDayProductPower" resultType="double">
+	   	SELECT
+			SUM(product_power) AS product_power
+		FROM
+			ids_kpi_day_inverter_t
+		WHERE
+			collect_time = #{collectTime} AND
+			device_id IN 
+				<foreach collection="devIds" item="devId" open="(" separator="," close=")">
+					#{devId}
+				</foreach>
+   </select>
+   <!-- 查询当前电站下所有子阵的损失电量数据 -->
+   <select id="getPvAnalysisOfGroupByMatrix" resultType="com.interest.ids.common.project.dto.AnalysisDayGroupDto">
+   	SELECT
+		matrix_id matrixId, dev_id devId, analysis_state analysisState, MAX(matrix_name) matrixName, SUM(lost_power) lostPower, 
+	  GROUP_CONCAT(distinct pv_code SEPARATOR ',') pvs
+	FROM
+		ids_analysis_pv_day_t
+	WHERE
+		station_code = #{stationCode}
+	AND analysis_time BETWEEN #{beginDate} AND #{endDate}
+	GROUP BY matrix_id, dev_id, analysis_state
+   </select>
+</mapper>

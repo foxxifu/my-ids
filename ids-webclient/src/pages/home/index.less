@@ -1,0 +1,237 @@
+@import (once) '~@/assets/css/variables';
+
+.home {
+  padding: 0 15px;
+  height: 100%;
+  .show-text-style {
+    color: @lightblue;
+    font-size: 24px;
+    &.blackColor {
+      color: @black;
+    }
+  }
+  .show-title-style {
+    font-size: 16px;
+    color: @text-regular;
+  }
+  .unitStyle {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: @mainColor
+  }
+  .yearPowerChart {
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -173px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 50%;
+      left: 25%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -280px 41px;
+    }
+  }
+  .yearIncomeChart {
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -173px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 50%;
+      left: 25%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -118px 49px;
+    }
+  }
+  .dayIncomeChart {
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -16px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 54%;
+      left: 23%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -9px 36px;
+    }
+  }
+  .dayPowerChart, .totalPowerChart {
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -16px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 50%;
+      left: 25%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -206px 24px;
+    }
+  }
+  .content-body {
+    margin-top: 28px;
+    height: ~'calc(100% - 220px)';
+    min-height: 480px;
+
+    .box-card {
+      float: left;
+      width: (100% - 2 * 2%) / 3;
+      min-width: 250px;
+      height: 100%;
+      margin-right: 2%;
+      background: transparent;
+      border: 0 solid #e6f6fb;
+      border-radius: 4px;
+
+      /deep/ .el-card__header {
+        height: 34px;
+        line-height: 25px;
+        padding: 0 20px;
+        font-size: 18px;
+        background: url('~/assets/images/home/line1.png') 0 bottom no-repeat;
+        border: none;
+      }
+      /deep/ .el-card__body {
+        height: 27vh;
+        padding: 0;
+      }
+    }
+
+    .content-row-first,
+    .content-row-secend {
+      height: 50%;
+      .box-card:last-child {
+        margin-right: 0;
+      }
+      .content-chart {
+        position: relative;
+        height: 100%;
+        .stationOrder {
+          & > i {
+            background: url('~/assets/images/home/home_bg.png') no-repeat -379px -38px;
+            display: block;
+            float: left;
+            width: 24px;
+            line-height: 24px;
+            height: 24px;
+            &.des {
+              transform: rotate(180deg);
+              -ms-transform: rotate(180deg); /* IE 9 */
+              -webkit-transform: rotate(180deg); /* Safari and Chrome */
+            }
+          }
+          & > span {
+            display: block;
+            float: left;
+            line-height: 24px;
+            padding-left: 6px;
+          }
+          position: absolute;
+          right: 2%;
+          top: 9px;
+          cursor: pointer;
+          z-index: 1;
+        }
+
+        .el-tabs--top {
+          /deep/ .el-tabs__header {
+            padding: 0;
+            position: relative;
+            margin: 0 0 5px;
+          }
+          /deep/ .el-tabs__content {
+            height: 100%;
+            & > div {
+              height: ~'calc(100% - 38px)';
+              & > div {
+                height: 100%;
+                overflow-y: auto;
+              }
+            }
+          }
+        }
+
+        i.my-dev-dis {
+          display: block;
+          width: 46px;
+          height: 39px;
+          margin: 0 auto;
+          background: url('~/assets/images/home/home_bg.png') no-repeat;
+          &.zj {
+            background-position: -324px -260px;
+          }
+          &.nbq {
+            background-position: -132px -260px;
+          }
+          &.jzsnbq {
+            background-position: -229px -260px;
+          }
+          &.zlhlx {
+            background-position: -26px -260px;
+          }
+        }
+        // 贡献
+        i.my-contribution {
+          background: url('~/assets/images/home/home_bg.png') no-repeat;
+          height: 70px;
+          width: 85px;
+          min-width: 66px;
+          display: block;
+          margin: 0 auto;
+          &.coal {
+            background-position: -121px -129px;
+          }
+          &.co2 {
+            background-position: -10px -129px;
+          }
+          &.tree-planting {
+            background-position: -220px -129px;
+          }
+        }
+      }
+    }
+  }
+  // home 页面的tab标签的样式修改 开始 ========》
+  /deep/ .el-tabs__nav {
+    margin-left: 20px;
+    padding-right: 40px;
+  }
+  /deep/ .content-row-secend {
+    margin-top: 10px;
+  }
+  /deep/ .el-tabs__item {
+    width: 36%;
+    min-width: 100px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(51, 51, 51, .5);
+    &.is-active {
+      color: #333;
+      font-weight: bold;
+    }
+  }
+  /deep/ .el-tabs__active-bar {
+    min-width: 100px;
+    border-radius: 3px;
+    height: 5px;
+    background-color: #09A8D9;
+  }
+  // home 页面的tab标签的样式修改 结束 《========
+}

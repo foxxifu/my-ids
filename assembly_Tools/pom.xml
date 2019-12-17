@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+    <parent>
+        <artifactId>ids</artifactId>
+        <groupId>com.interest</groupId>
+        <version>IDS_V2_0_20190830_1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>assembly</artifactId>
+    <packaging>pom</packaging>
+    <name>third jar Assembly</name>
+	
+	<properties>
+        <project.version>IDS_V2_0_20190830_1</project.version>
+    </properties>
+	
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptor>src/assembly.xml</descriptor>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        	<plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId> 
+                <version>1.1</version> 
+                <!--<executions>
+                    <execution>
+                        <id>movedir</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <ant target="movedir" antfile="src/build.xml">
+                                <property name="assembly.dir" value="${project.build.directory}\\assembly-${project.version}.dir\\assembly-${project.version}" />
+                                </ant>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                          <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>-->
+                <dependencies>
+                    <!--<dependency>
+                        <groupId>omc-private</groupId>
+                        <artifactId>onekey</artifactId>
+                        <version>1.0.0</version>
+                    </dependency>-->
+                    <dependency>
+                        <groupId>commons-io</groupId> 
+                        <artifactId>commons-io</artifactId> 
+                        <version>1.3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant</groupId> 
+                        <artifactId>ant</artifactId> 
+                        <version>1.6.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>	
+        </plugins>
+    </build>
+    <dependencies>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-biz-web</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-biz-report</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-biz-kpicalc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-biz-authorize</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-common-project</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-common-interface</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-redis-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-network</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-db</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-alarm</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-dev-starter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+    
+    <dependency>
+			<groupId>com.interest</groupId>
+			<artifactId>ids-gatekeeper-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+    </dependencies>
+</project>

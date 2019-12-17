@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.SystemParamMapper">
+	<resultMap type="com.interest.ids.common.project.bean.sm.SystemParam" id="resultMap">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="description" property="description"/>
+		<result column="file_id" property="fileId"/>
+		<result column="system_name" property="systemName"/>
+	</resultMap>
+
+	<!-- 插入系统参数配置 -->
+    <insert id="saveParam" parameterType="com.interest.ids.common.project.bean.sm.SystemParam">
+    	insert into ids_system_param(description,file_id,system_name) values(#{description},#{fileId},#{systemName})
+    </insert>
+    
+    <!-- 更新系统参数配置 -->
+    <update id="updateParam" parameterType="com.interest.ids.common.project.bean.sm.SystemParam">
+    	update ids_system_param set description = #{description},file_id=#{fileId},system_name = #{systemName} where id = #{id}
+    </update>
+    
+    <!-- 获取系统参数配置 -->
+    <select id="getSystemParam" resultMap="resultMap">
+    	select id,description,file_id,system_name from ids_system_param where id = 1
+    </select>
+</mapper>

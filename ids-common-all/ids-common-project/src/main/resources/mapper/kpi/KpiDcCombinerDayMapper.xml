@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiDcCombinerDayMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiDcCombinerDayM">
+    <id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <id column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="dev_name" jdbcType="VARCHAR" property="devName" />
+    <result column="discrete_rate" jdbcType="DECIMAL" property="discreteRate" />
+    <result column="equivalent_hour" jdbcType="DECIMAL" property="equivalentHour" />
+    <result column="pv1_avg_i" jdbcType="DECIMAL" property="pv1AvgI" />
+    <result column="pv2_avg_i" jdbcType="DECIMAL" property="pv2AvgI" />
+    <result column="pv3_avg_i" jdbcType="DECIMAL" property="pv3AvgI" />
+    <result column="pv4_avg_i" jdbcType="DECIMAL" property="pv4AvgI" />
+    <result column="pv5_avg_i" jdbcType="DECIMAL" property="pv5AvgI" />
+    <result column="pv6_avg_i" jdbcType="DECIMAL" property="pv6AvgI" />
+    <result column="pv7_avg_i" jdbcType="DECIMAL" property="pv7AvgI" />
+    <result column="pv8_avg_i" jdbcType="DECIMAL" property="pv8AvgI" />
+    <result column="pv9_avg_i" jdbcType="DECIMAL" property="pv9AvgI" />
+    <result column="pv10_avg_i" jdbcType="DECIMAL" property="pv10AvgI" />
+    <result column="pv11_avg_i" jdbcType="DECIMAL" property="pv11AvgI" />
+    <result column="pv12_avg_i" jdbcType="DECIMAL" property="pv12AvgI" />
+    <result column="pv13_avg_i" jdbcType="DECIMAL" property="pv13AvgI" />
+    <result column="pv14_avg_i" jdbcType="DECIMAL" property="pv14AvgI" />
+    <result column="pv15_avg_i" jdbcType="DECIMAL" property="pv15AvgI" />
+    <result column="pv16_avg_i" jdbcType="DECIMAL" property="pv16AvgI" />
+    <result column="pv17_avg_i" jdbcType="DECIMAL" property="pv17AvgI" />
+    <result column="pv18_avg_i" jdbcType="DECIMAL" property="pv18AvgI" />
+    <result column="pv19_avg_i" jdbcType="DECIMAL" property="pv19AvgI" />
+    <result column="pv20_avg_i" jdbcType="DECIMAL" property="pv20AvgI" />
+    <result column="avg_u" jdbcType="DECIMAL" property="avgU" />
+    <result column="statistics_time" jdbcType="BIGINT" property="statisticsTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    collect_time, station_code, device_id, dev_name, discrete_rate, equivalent_hour,
+    pv1_avg_i, pv2_avg_i, pv3_avg_i, pv4_avg_i, pv5_avg_i, pv6_avg_i, pv7_avg_i, pv8_avg_i,
+    pv9_avg_i, pv10_avg_i, pv11_avg_i, pv12_avg_i, pv13_avg_i, pv14_avg_i, pv15_avg_i,
+    pv16_avg_i, pv17_avg_i, pv18_avg_i, pv19_avg_i, pv20_avg_i, avg_u, statistics_time
+  </sql>
+  
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into ids_kpi_day_combinerdc_t (
+    <include refid="Base_Column_List"/>
+    ) values
+      <foreach collection="list" item="item" separator=",">
+        (
+          #{item.collectTime},#{item.stationCode},#{item.deviceId},#{item.devName},
+          #{item.discreteRate},#{item.equivalentHour},
+          #{item.pv1AvgI},#{item.pv2AvgI},#{item.pv3AvgI},#{item.pv4AvgI},#{item.pv5AvgI},#{item.pv6AvgI},
+          #{item.pv7AvgI},#{item.pv8AvgI},#{item.pv9AvgI},#{item.pv10AvgI},#{item.pv11AvgI},#{item.pv12AvgI},
+          #{item.pv13AvgI},#{item.pv14AvgI},#{item.pv15AvgI},#{item.pv16AvgI},#{item.pv17AvgI},#{item.pv18AvgI},
+          #{item.pv19AvgI},#{item.pv20AvgI},#{item.avgU},#{item.statisticsTime}
+        )
+      </foreach>
+  </insert>
+  
+  <select id="selectByPrimaryKey" parameterType="com.interest.ids.common.project.bean.KpiBaseModel"
+          resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_kpi_day_combinerdc_t
+    where collect_time = #{collectTime,jdbcType=BIGINT}
+      and station_code = #{stationCode,jdbcType=VARCHAR}
+      and device_id = #{deviceId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+    delete from ids_kpi_day_combinerdc_t
+    where collect_time in
+      <foreach collection="list" item="item" open="(" separator="," close=")">
+        #{item.collectTime}
+      </foreach>
+      and station_code in
+      <foreach collection="list" item="item" open="(" separator="," close=")">
+        #{item.stationCode}
+      </foreach>
+      and device_id in
+      <foreach collection="list" item="item" open="(" separator="," close=")">
+        #{item.deviceId}
+      </foreach>
+  </delete>
+  
+  <!-- 查询电站下的汇流箱的天kpi数据 -->
+  <select id="getKpiDcCombinerDayByStationCode" resultMap="BaseResultMap">
+  	select 
+  		dev_name,avg_u,statistics_time
+  	from 
+  		ids_kpi_day_combinerdc_t 
+  	where 
+  		station_code = #{stationCode}
+  		and statistics_time between #{startTime} and #{endTime}
+  </select>
+  
+  <!--  -->
+  <select id="getTopKpiDcCombinerDayByStationCode" resultMap="BaseResultMap">
+  	select 
+  		dev_name,avg(avg_u) avg_u
+  	from 
+  		ids_kpi_day_combinerdc_t 
+  	where 
+  		station_code = #{stationCode}
+  		and statistics_time between #{startTime} and #{endTime}
+  	group by dev_name
+  	order by avg_u asc
+  	limit 0,10
+  </select>
+</mapper>

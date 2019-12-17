@@ -1,0 +1,81 @@
+.GridTableDiv {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    cursor: default;
+}
+
+.GridTableDiv table {
+    table-layout: auto;
+}
+
+.GridTableTitleDiv tr {
+    background-color: rgba(1, 120, 8, 0);
+}
+
+.GridTableTitleDiv tr td {
+    color: #fff;
+}
+
+.GridTableTitleDiv.SingleTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px auto;
+}
+
+.GridTableHeaderDiv {
+    word-break: break-word;
+    border: 1px solid  #98FECC;
+    border-width: 1px 1px 0px 1px;
+    background-color: transparent;
+}
+
+.GridTableHeaderDiv .GridTableHeader {
+    width: 100%;
+    background-color: transparent;
+}
+
+.GridTableHeaderDiv .GridTableHeader .GridTableHeaderTH {
+	color:#343434;
+    background-color: #CBF4E4;
+}
+
+.GridTableHeaderDiv .GridTableHeader .GridTableHeaderTH th {
+    padding: 10px 0;
+    border-color: transparent;
+    border-right: 1px solid #98FECC;
+    border-bottom: 1px solid #98FECC;
+    box-sizing: border-box;
+}
+
+.GridTableBodyDiv {
+    /* border: 1px solid #045C14;
+    border-color: transparent transparent #045C14 transparent; */
+}
+
+.GridTableBodyDiv .GridTableBody {
+    color: #585858;
+    background-color: rgba(2, 47, 28, 0);
+}
+
+.GridTableBodyDiv .GridTableBody td {
+    border-right: 1px solid #98FECC;
+    border-bottom: 1px solid #98FECC;
+    box-sizing: border-box;
+}
+
+.GridTableBodyDiv .GridTableBody td:last-child {
+     border-right: none;
+}
+
+.GridTableBodyDiv .GridTableBody .DoubleBodyLine {
+    background-color: #E5F8F2;
+}
+
+.GridTableBodyDiv .GridTableBody .SingleBodyLine {
+    background-color: rgba(2, 47, 28, 0);
+}
+
+.GridTableBodyDiv .GridTableBody .SelectedBodyLine {
+    background-color: rgba(97, 104, 101, 0.11);
+}

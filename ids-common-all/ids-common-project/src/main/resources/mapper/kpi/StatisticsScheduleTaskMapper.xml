@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.StatisticsScheduleTaskMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.StatisticsScheduleTaskM">
+    <result column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <result column="busi_type" jdbcType="VARCHAR" property="busiType" />
+    <result column="stat_date" jdbcType="BIGINT" property="statDate" />
+    <result column="stat_type" jdbcType="TINYINT" property="statType" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="deal_state" jdbcType="TINYINT" property="dealState" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    station_code,busi_type,stat_date,stat_type,create_time,deal_state
+  </sql>
+
+  <select id="listTodoSchedulers" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_statistics_schedule_task_t
+    where stat_date = #{statTime}
+      and stat_type = #{statType}
+      and deal_state = 0 or deal_state is null
+      and station_code in
+          <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+              #{stationCode}
+          </foreach>
+  </select>
+  
+  <select id="listTodoSchedulersInDuration" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_statistics_schedule_task_t
+    where stat_date between #{statStartTime} and #{statEndTime}
+      and stat_type = #{statType}
+      and deal_state = 0 or deal_state is null
+      and station_code in
+          <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+              #{stationCode}
+          </foreach>
+  </select>
+  
+  <select id="listToDoErrorSchedulers" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_statistics_schedule_task_t
+    where stat_date between #{statStartTime} and #{statEndTime}
+      and stat_type = #{statType}
+      and deal_state in (0,-1)
+      and station_code in
+          <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+              #{stationCode}
+          </foreach>
+  </select>
+  
+  <select id="listErrorSchedulersInDuration" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_statistics_schedule_task_t
+    where stat_date between #{statStartTime} and #{statEndTime}
+      and stat_type = #{statType}
+      and deal_state = -1
+      and station_code in
+          <foreach collection="stationCodes" item="stationCode" index="index" open="(" separator="," close=")">
+              #{stationCode}
+          </foreach>
+  </select>
+  
+  <!-- 更新任务状态 -->
+  <update id="updateSchedulerStatus">
+  	update ids_statistics_schedule_task_t set deal_state = #{status}
+  	where station_code in
+  		<foreach collection="schedulers" item="item" open="(" separator="," close=")">
+  			#{item.stationCode}
+  		</foreach>
+  		and busi_type in
+  		<foreach collection="schedulers" item="item" open="(" separator="," close=")">
+  			#{item.busiType}
+  		</foreach>
+  		and stat_date in
+  		<foreach collection="schedulers" item="item" open="(" separator="," close=")">
+  			#{item.statDate}
+  		</foreach>
+  		and stat_type in 
+  		<foreach collection="schedulers" item="item" open="(" separator="," close=")">
+  			#{item.statType}
+  		</foreach>
+  </update>
+  
+  <delete id="deleteSchedulers" parameterType="list">
+  	delete from ids_statistics_schedule_task_t 
+  	where station_code in
+  		<foreach collection="list" item="item" open="(" separator="," close=")">
+  			#{item.stationCode}
+  		</foreach>
+  		and busi_type in
+  		<foreach collection="list" item="item" open="(" separator="," close=")">
+  			#{item.busiType}
+  		</foreach>
+  		and stat_date in
+  		<foreach collection="list" item="item" open="(" separator="," close=")">
+  			#{item.statDate}
+  		</foreach>
+  		and stat_type in 
+  		<foreach collection="list" item="item" open="(" separator="," close=")">
+  			#{item.statType}
+  		</foreach>
+  </delete>
+</mapper>

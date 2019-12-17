@@ -1,0 +1,762 @@
+@import (once, reference) '~@/assets/css/lib';
+
+#exhibition {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  background: #141414 url(~/assets/images/exhibition/bg.jpg) 0 0 no-repeat;
+  overflow: hidden;
+
+  .box-card {
+    width: 100%;
+    min-height: 200px;
+    padding: 6px;
+    margin: 10px 0;
+    background: none;
+    border: none;
+
+    .box-header {
+      position: relative;
+      background: url(~/assets/images/exhibition/box_title_bg.png) 0 100% no-repeat;
+      min-width: 200px;
+      height: 50px;
+      margin: 0;
+      padding: 0;
+      line-height: 45px;
+      color: #0a9ffe;
+      h1 {
+        font-size: 17px;
+        font-weight: 500;
+        text-indent: 2.4em;
+        .txt-ellipsis;
+      }
+      .more {
+        position: absolute;
+        right: 15px;
+        top: 0;
+        color: #ccd7e4;
+        display: inline-block;
+
+        .val {
+          font-size: 20px;
+          color: #0a9ffe;
+        }
+      }
+    }
+
+    .box-content {
+      position: relative;
+      width: 100%;
+      height: ~'calc(100% - 80px)';
+      color: #f7f7f7;
+      overflow: hidden;
+
+      .charts-box {
+        height: 100%;
+      }
+    }
+  }
+
+  .center-shadow {
+    &.active {
+      background: center no-repeat;
+    }
+  }
+
+  .top {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    color: #f7f7f7;
+    display: flex;
+    z-index: 3;
+
+    &.center-shadow {
+      &.active {
+        background-image: url("~/assets/images/exhibition/top_bg.png");
+      }
+    }
+
+    .top-left {
+      position: relative;
+      height: 66px;
+      line-height: 45px;
+      padding: 15px 24px;
+      vertical-align: top;
+      flex: 0 0 600px;
+      display: inline-block;
+
+      span {
+        font-size: 18pt;
+        line-height: 50px;
+        vertical-align: top;
+        display: inline-block;
+
+        &.unit {
+          font-size: 13pt;
+        }
+      }
+      .total-power-value {
+        color: #39BE71;
+        font-size: 30pt;
+        margin: 2px 8px;
+        padding-right: 2px;
+        border-radius: 2px;
+        display: inline-block;
+        overflow: hidden;
+      }
+    }
+    .top-center {
+      position: relative;
+      width: 720px;
+      color: #ffffff;
+      text-align: center;
+      vertical-align: middle;
+      flex: 1;
+      display: inline-block;
+
+      h1 {
+        height: 66px;
+        line-height: 77px;
+        // font-size: 28pt;
+        font-size: 30px;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+
+        //&::after {
+        //  // content: url("~/assets/images/login/login_title_top.png");
+        //  // position: absolute;
+        //  // top: -27px;
+        //  // left: 294px;
+        //  // width: 40px;
+        //  // height: 38px;
+        //  content: url("~/assets/images/logo.png");
+        //  position: absolute;
+        //  top: 8px;
+        //  left: 83px;
+        //  width: 40px;
+        //  height: 38px;
+        //}
+
+        img.logoImg {
+          max-width: 100px;
+          max-height: 50px;
+          position: relative;
+          top: 6px;
+          //margin: 0 5px;
+        }
+      }
+    }
+    .top-right {
+      position: relative;
+      height: 66px;
+      line-height: 45px;
+      padding: 15px 24px;
+      vertical-align: top;
+      flex: 0 0 600px;
+      display: inline-block;
+
+      span {
+        font-size: 18pt;
+        line-height: 50px;
+        vertical-align: top;
+        display: inline-block;
+        &.unit {
+          font-size: 13pt;
+        }
+      }
+      .safe-running-days-value {
+        color: #39BE71;
+        font-size: 30pt;
+        margin: 2px 8px;
+        padding-right: 2px;
+        border-radius: 2px;
+        display: inline-block;
+        overflow: hidden;
+      }
+
+      .top-current-time {
+        position: absolute;
+        top: 20px;
+        right: 32px;
+        color: #b1ffff;
+        font-size: 20pt;
+        display: inline-block;
+
+        &::before {
+          position: absolute;
+          left: -20px;
+          content: '';
+          width: 20px;
+          height: 20px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .left {
+    float: left;
+    position: absolute;
+    top: 77px;
+    left: 0;
+    padding-left: 12px;
+    width: 464px;
+    height: calc(100% - 125px);
+    z-index: 2;
+
+    .box-card:nth-child(1) {
+      height: 266px;
+      &.center-shadow {
+        &.active {
+          background-image: url("~/assets/images/exhibition/left_1_bg.png");
+        }
+      }
+      .box-content {
+        height: 200px;
+        .powerGeneration-label {
+          > li {
+            float: left;
+            width: 100% / 3;
+            text-align: center;
+            display: inline-block;
+          }
+        }
+      }
+    }
+    .box-card:nth-child(2) {
+      height: 339px;
+      &.center-shadow {
+        &.active {
+          background-image: url("~/assets/images/exhibition/left_2_bg.png");
+        }
+      }
+      .box-content {
+        height: 275px;
+      }
+    }
+    .box-card:nth-child(3) {
+      height: 306px;
+      &.center-shadow {
+        &.active {
+          background-image: url("~/assets/images/exhibition/left_3_bg.png");
+        }
+      }
+      .box-content {
+        height: 242px;
+        overflow: inherit;
+        .kpi-powerScale-shadow {
+          position: absolute;
+          top: 65px;
+          left: 164px;
+          width: 120px;
+          height: 120px;
+          background: rgba(5, 5, 5, 0.5);
+          border-radius: 50%;
+          display: table;
+
+          .kpi-powerScale-label {
+            content: '';
+            position: absolute;
+            top: -12.5px;
+            left: -12.5px;
+            width: 145px;
+            height: 145px;
+            background: rgba(5, 5, 5, 0.5);
+            border-radius: 50%;
+
+            p {
+              height: 80px;
+              line-height: 136px;
+              font-size: 24px;
+              color: #cdcdcd;
+              text-align: center;
+              vertical-align: bottom;
+              display: flow-root;
+            }
+            label {
+              height: 20px;
+              line-height: 20px;
+              font-size: 14px;
+              color: #7b7b7b;
+              text-align: center;
+              vertical-align: top;
+              display: grid;
+            }
+          }
+
+          &.active {
+            background-color: rgba(16, 35, 78, 0.6);
+
+            .kpi-powerScale-label {
+              background-color: rgba(16, 35, 78, 0.6);
+            }
+          }
+        }
+        .kpi-taskStatistics-status {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 138px;
+          height: 100%;
+          padding: 5% 0;
+
+          li {
+            font-size: 20px;
+            line-height: 50px;
+
+            &::before {
+              content: '';
+              width: 25px;
+              height: 18px;
+              margin: 0 8px -2px 0;
+              background-color: #909399;
+              display: inline-block;
+            }
+
+            &.done_s {
+              color: #09A8D9;
+              &::before {
+                background-color: #09A8D9;
+              }
+            }
+            &.doing_s {
+              color: #ff9933;
+              &::before {
+                background-color: #ff9933;
+              }
+            }
+            &.todo_s {
+              color: #ff3333;
+              &::before {
+                background-color: #ff3333;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .right {
+    float: right;
+    position: absolute;
+    top: 77px;
+    right: 0;
+    padding-right: 12px;
+    width: 464px;
+    height: calc(100% - 125px);
+    z-index: 2;
+
+    .box-card:nth-child(1) {
+      height: 318px;
+      &.center-shadow {
+        &.active {
+          background-image: url("~/assets/images/exhibition/right_1_bg.png");
+        }
+      }
+      .box-content {
+        position: relative;
+        .kpi-equipmentDistribution-content {
+          position: absolute;
+          top: 55px;
+          right: 0;
+          bottom: 55px;
+          width: 168px;
+
+          ul {
+            li {
+              float: left;
+              width: 50%;
+              height: 90px;
+              display: inline-block;
+
+              p {
+                font-size: 18px;
+                text-align: center;
+              }
+              i {
+                width: 45px;
+                height: 45px;
+                margin: 0 auto;
+                background: url("~/assets/images/exhibition/equipmentDistribution.png") 0 0 no-repeat;
+                display: block;
+              }
+
+              &.pvCount {
+                p {
+                  color: rgba(30, 176, 91, 1);
+                }
+                i {
+                  background-position: 0 -96px;
+                }
+              }
+              &.inverterStringCount {
+                p {
+                  color: rgba(232, 155, 45, 1);
+                }
+                i {
+                  background-position: 0 -142px;
+                }
+              }
+              &.inverterConcCount {
+                p {
+                  color: rgba(10, 159, 254, 1);
+                }
+                i {
+                  background-position: 0 -48px;
+                }
+              }
+              &.combinerBoxCount {
+                p {
+                  color: rgba(134, 222, 252, 1);
+                }
+                i {
+                  background-position: 0 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .box-card:nth-child(2) {
+      height: 338px;
+      &.center-shadow {
+        &.active {
+          background-image: url("~/assets/images/exhibition/right_2_bg.png");
+        }
+      }
+      .box-content {
+        height: 273px;
+      }
+    }
+    .box-card:nth-child(3) {
+      height: 255px;
+      &.center-shadow {
+        &.active {
+          background-image: url("~/assets/images/exhibition/right_3_bg.png");
+        }
+      }
+      .box-content {
+        height: 190px;
+        .grid-content {
+          color: #ccd7e4;
+          min-height: 24px;
+          line-height: 40px;
+          text-align: center;
+          .social-contribution {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            background: url(~/assets/images/exhibition/contribution_icons.png) 0 0 no-repeat;
+            display: block;
+
+            &.coal {
+              background-position-x: 0;
+            }
+            &.co2 {
+              background-position-x: -60px;
+            }
+            &.tree-planting {
+              background-position-x: -120px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .map-path {
+    position: absolute;
+    top: 88px;
+    left: 490px;
+    height: 36px;
+    color: #f7f7f7;
+    z-index: 450;
+    > ul {
+      > li.map-path-item {
+        height: 0;
+        margin-left: -20px;
+        padding-left: 0.5em;
+        padding-right: 2px;
+        font-family: 'Glyphicons Halflings';
+        background: rgb(15, 62, 90);
+        background-clip: padding-box;
+        border-style: solid;
+        border-width: 26px 26px 10px 26px;
+        border-image: url(~/assets/images/exhibition/map_place_item_bg.png) 26 26 10 26 round;
+        display: inline-block;
+        cursor: pointer;
+
+        &.mp_selected {
+          cursor: auto;
+        }
+
+        span {
+          position: relative;
+          top: -20px;
+          height: 25px;
+          line-height: 25px;
+          display: inline-block;
+        }
+
+        &:first-child {
+          margin-left: 0;
+          margin-right: -5px;
+          padding-left: 0;
+          padding-right: 18px;
+          border-width: 26px 26px 10px 15px;
+          border-image: url(~/assets/images/exhibition/map_place_bg.png) 26 26 10 15 repeat;
+
+          span {
+            left: 15px;
+          }
+
+          &::before {
+            content: "\E61F";
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 20px;
+            height: 24px;
+            font-size: 15pt;
+            margin-right: 8px;
+            font-family: element-icons !important;
+          }
+        }
+      }
+    }
+  }
+
+  .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+
+    .center-map {
+      width: 100%;
+      height: 100%;
+      border: 0 solid #285e6f;
+      border-radius: 50%;
+      z-index: 500;
+
+      & /deep/ .activeArea {
+        position: absolute;
+        left: 482px;
+        right: 482px;
+        top: 148px;
+        bottom: 100px;
+      }
+
+      & /deep/ .domain-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        .domain-wrapper {
+          width: 50px;
+          height: 50px;
+          opacity: 1;
+          cursor: pointer;
+          margin: 0 auto;
+          position: relative;
+          -webkit-border-radius: 50%;
+          border-radius: 50%;
+          color: #ffffff;
+          background-color: rgba(255, 180, 0, 0.78);
+          box-shadow: 0 0 10px rgba(255, 180, 0, 0.78);
+          text-shadow: 0 2px 5px #fff;
+          .title {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            span {
+              font-size: 16px;
+              display: inline-block;
+              text-align: center;
+              white-space: nowrap;
+            }
+          }
+          .glow {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 0px;
+            height: 0px;
+            background: #ff9600;
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
+            //border: 15px solid #ff4a50;
+            -webkit-animation: glowKeyFrame 5s ease-out infinite both;
+            animation: glowKeyFrame 5s ease-out infinite both;
+          }
+
+          @keyframes glowKeyFrame {
+            0% {
+              width: 0px;
+              height: 0px;
+              opacity: 0.8;
+              top: 25px;
+              left: 25px;
+            }
+            100% {
+              top: -25px;
+              left: -25px;
+              width: 100px;
+              height: 100px;
+              opacity: 0;
+            }
+          }
+        }
+      }
+
+      /*地图弹窗风格设置 start*/
+      & /deep/ .ids-popupInfoWindow {
+        a.leaflet-popup-close-button {
+          top: 24px;
+          right: 20px;
+          width: 24px;
+          height: 24px;
+          padding: 4px;
+          color: #f7f7f7;
+          border: 1px solid #f7f7f7;
+          border-radius: 50%;
+        }
+        .leaflet-popup-content-wrapper {
+          width: 660px;
+          height: 520px;
+          border-radius: 0;
+          box-shadow: none;
+          background: url("~/assets/images/exhibition/popupWindow_bg.png") 3px 0 no-repeat;
+          .popup-custom-station-container {
+            position: relative;
+            width: 620px;
+            min-width: 120px;
+            .popup-title {
+              height: 28px;
+              color: #f7f7f7;
+            }
+          }
+        }
+        .leaflet-popup-tip-container {
+          width: 38px;
+          height: 48px;
+          margin-top: -32px;
+          .leaflet-popup-tip {
+            width: 100%;
+            height: 100%;
+            box-shadow: none;
+            background: url("~/assets/images/exhibition/popupWindow_p.png") center no-repeat;
+            transform: none;
+          }
+        }
+      }
+      & /deep/ .leaflet-tooltip {
+        border-color: rgba(22, 120, 192, 0.7);
+        background: rgba(16, 35, 78, .7);
+        color: @mainBackground;
+        margin: -1px;
+        &.leaflet-tooltip-left::before {
+          border-left-color: rgba(16, 35, 78, .8);
+        }
+        &.leaflet-tooltip-right::before {
+          border-right-color: rgba(16, 35, 78, .8);
+        }
+      }
+      & /deep/ .leaflet-label {
+        border-color: #0a9ffe;
+        background: rgba(16, 35, 78, .8);
+        color: @mainBackground;
+        width: 128px;
+        left: -77px;
+        span {
+          .txt-ellipsis();
+          display: block;
+        }
+        &.leaflet-label-left::before {
+          border-left-color: rgba(16, 35, 78, .5);
+        }
+        &.leaflet-label-right::before {
+          border-right-color: rgba(16, 35, 78, .5);
+        }
+      }
+    }
+  }
+
+  .bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+
+    &.center-shadow {
+      &.active {
+        background-image: url("~/assets/images/exhibition/bottom_bg.png");
+      }
+    }
+
+    .bottom-content {
+      width: 100%;
+      height: 50px;
+      margin: 0 auto !important;
+      border-top: 1px solid #00a0e9;
+      z-index: 1;
+
+      &.no-border {
+        border: none;
+      }
+
+      .bottom-grid-content {
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+
+        .label {
+          margin: 0 8px;
+          font-size: 16px;
+          color: #f7f7f7;
+        }
+        .value {
+          font-size: 20px;
+          line-height: 32px;
+          color: #0A9FFE;
+        }
+        .unit {
+          font-size: 16px;
+          color: #00a0e9;
+        }
+        i {
+          position: relative;
+          top: 4px;
+          width: 20px;
+          height: 20px;
+          margin: 2px;
+          background: url("~/assets/images/exhibition/bottom_arrow.png") 0 0 no-repeat;
+          display: inline-block;
+
+          &.up {
+            background-position: 0 0;
+          }
+          &.down {
+            background-position: -20px 0;
+          }
+        }
+      }
+    }
+  }
+}

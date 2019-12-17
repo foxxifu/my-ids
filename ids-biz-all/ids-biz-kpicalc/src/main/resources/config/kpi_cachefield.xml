@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cacheroot>
+    <cachenode pkfield="dev_id" validcheck="true">
+        <tables>
+            <value>ids_inverter_string_data_t</value>
+            <value>ids_inverter_conc_data_t</value>
+        </tables>
+        <field fieldname="day_capacity" cachetype="array" comment="日发电量">
+            <kv member="time,value" score="time"/>
+            <range ge="0"/>
+        </field>
+        <field fieldname="active_power" cachetype="array" comment="峰值功率">
+            <kv member="time,value" score="value"/>
+            <range ge="0"/>
+        </field>
+        <field fieldname="mppt_power" cachetype="array" comment="直流输入功率">
+            <kv member="time,value" score="value"/>
+            <range ge="0"/>
+        </field>
+    </cachenode>
+
+    <cachenode pkfield="dev_id" validcheck="true">
+        <tables>
+            <value>ids_meter_data_t</value>
+        </tables>
+        <field fieldname="active_capacity" cachetype="array" comment="正向有功电度">
+            <kv member="time,value" score="time"></kv>
+            <range ge="0"></range>
+        </field>
+        <field fieldname="reverse_active_cap" cachetype="array" comment="反向有功电度">
+            <kv member="time,value" score="time"></kv>
+            <range ge="0"></range>
+        </field>
+    </cachenode>
+
+    <cachenode pkfield="dev_id" validcheck="true">
+        <tables>
+            <value>ids_emi_data_t</value>
+        </tables>
+        <field fieldname="temperature" cachetype="single" comment="温度">
+            <kv member="str:temperature" score="value"></kv>
+        </field>
+        <field fieldname="pv_temperature" cachetype="single" comment="pv温度">
+            <kv member="str:pv_temperature" score="value"></kv>
+        </field>
+        <field fieldname="wind_speed" cachetype="single" comment="风速">
+            <kv member="str:wind_speed" score="value"></kv>
+        </field>
+        <field fieldname="irradiation_intensity" cachetype="single" comment="辐照强度">
+            <kv member="str:irradiation_intensity" score="value"></kv>
+            <range ge="0"></range>
+        </field>
+        <field fieldname="horiz_total_irradiation" cachetype="single" comment="水平辐照量">
+            <kv member="str:horiz_total_irradiation" score="value"></kv>
+            <range ge="0"></range>
+        </field>
+    </cachenode>
+
+    <cachenode pkfield="device_id">
+        <tables>
+            <value>ids_kpi_hour_inverter_t</value>
+        </tables>
+        <field fieldname="product_power" fieldKey="productPower" cachetype="single" comment="总发电量">
+            <kv member="str:product_power" score="value"></kv>
+        </field>
+        <field fieldname="aop_num_zero" fieldKey="aopNumZero" cachetype="single" comment="aop=0个数">
+            <kv member="str:aop_num_zero" score="value"></kv>
+        </field>
+        <field fieldname="aop_num_one" fieldKey="aopNumOne" cachetype="single" comment="aop=1个数">
+            <kv member="str:aop_num_one" score="value"></kv>
+        </field>
+        <field fieldname="aoc_conn_num" fieldKey="aocConnNum" cachetype="single" comment="aoc有效连接数">
+            <kv member="str:aoc_conn_num" score="value"></kv>
+        </field>
+        <field fieldname="peak_power" fieldKey="peakPower" cachetype="single" comment="峰值功率">
+            <kv member="str:peak_power" score="value"></kv>
+        </field>
+        <field fieldname="efficiency" fieldKey="efficiency" cachetype="single" comment="转换效率">
+            <kv member="str:efficiency" score="value"></kv>
+        </field>
+    </cachenode>
+
+    <cachenode pkfield="device_id">
+        <tables>
+            <value>ids_kpi_day_inverter_t</value>
+            <value>ids_kpi_month_inverter_t</value>
+            <value>ids_kpi_year_inverter_t</value>
+        </tables>
+        <field fieldname="product_power" fieldKey="productPower" cachetype="single" comment="总发电量">
+            <kv member="str:product_power" score="value"></kv>
+        </field>
+        <field fieldname="peak_power" fieldKey="peakPower" cachetype="single" comment="峰值功率">
+            <kv member="str:peak_power" score="value"></kv>
+        </field>
+        <field fieldname="efficiency" fieldKey="efficiency" cachetype="single" comment="转换效率">
+            <kv member="str:efficiency" score="value"></kv>
+        </field>
+    </cachenode>
+
+    <cachenode pkfield="device_id" >
+        <tables>
+            <value>ids_kpi_hour_meter_t</value>
+            <value>ids_kpi_day_meter_t</value>
+            <value>ids_kpi_month_meter_t</value>
+            <value>ids_kpi_year_meter_t</value>
+        </tables>
+        <field fieldname="ongrid_power" fieldKey="ongridPower" cachetype="single" comment="上网电量">
+            <kv member="str:ongrid_power" score="value"></kv>
+        </field>
+        <field fieldname="buy_power" fieldKey="buyPower" cachetype="single" comment="用电量">
+            <kv member="str:buy_power" score="value"></kv>
+        </field>
+    </cachenode>
+
+    <cachenode pkfield="device_id">
+        <tables>
+            <value>ids_kpi_hour_emi_t</value>
+        </tables>
+        <field fieldname="temperature" fieldKey="temperature" cachetype="single" comment="温度">
+            <kv member="str:temperature" score="value"></kv>
+        </field>
+        <field fieldname="pv_temperature" fieldKey="pvTemperature" cachetype="single" comment="pv温度">
+            <kv member="str:pv_temperature" score="value"></kv>
+        </field>
+        <field fieldname="wind_speed" fieldKey="windSpeed" cachetype="single" comment="风速">
+            <kv member="str:wind_speed" score="value"></kv>
+        </field>
+        <field fieldname="total_radiant" fieldKey="totalRadiant" cachetype="single" comment="总辐射量">
+            <kv member="str:radiant_total" score="value"></kv>
+        </field>
+        <field fieldname="max_radiant_point" fieldKey="maxRadiantPoint" cachetype="single" comment="最大瞬时辐射">
+            <kv member="str:max_radiant_line" score="value"></kv>
+        </field>
+        <field fieldname="min_radiant_point" fieldKey="minRadiantPoint" cachetype="single" comment="最小瞬时辐射">
+            <kv member="str:min_radiant_line" score="value"></kv>
+        </field>
+        <field fieldname="horiz_radiant" fieldKey="horizRadiant" cachetype="single" comment="水平辐照量">
+            <kv member="str:horiz_radiant_total" score="value"></kv>
+        </field>
+    </cachenode>
+    
+    <cachenode>
+        <tables>
+            <value>ids_kpi_hour_station_t</value>
+        </tables>
+        <field fieldname="product_power" cachetype="single" comment="总发电量">
+            <kv member="str:product_power" score="value"></kv>
+        </field>
+        <field fieldname="radiation_intensity" cachetype="single" comment="总辐照量">
+            <kv member="str:radiation_intensity" score="value"></kv>
+        </field>
+        <field fieldname="theory_power" cachetype="single" comment="理论发电量">
+            <kv member="str:theory_power" score="value"></kv>
+        </field>
+        <field fieldname="ongrid_power" cachetype="single" comment="上网电量">
+            <kv member="str:ongrid_power" score="value"></kv>
+        </field>
+        <field fieldname="buy_power" cachetype="single" comment="网馈电量">
+            <kv member="str:buy_power" score="value"></kv>
+        </field>
+        <field fieldname="power_profit" cachetype="single" comment="收益">
+            <kv member="str:power_profit" score="value"></kv>
+        </field>
+    </cachenode>
+
+    <cachenode>
+        <tables>
+            <value>ids_kpi_day_station_t</value>
+            <value>ids_kpi_month_station_t</value>
+            <value>ids_kpi_year_station_t</value>
+        </tables>
+        <field fieldname="radiation_intensity" cachetype="single" comment="总辐照量">
+            <kv member="str:radiation_intensity" score="value"></kv>
+        </field>
+        <field fieldname="theory_power" cachetype="single" comment="理论发电量">
+            <kv member="str:theory_power" score="value"></kv>
+        </field>
+        <field fieldname="product_power" cachetype="single" comment="总发电量">
+            <kv member="str:product_power" score="value"></kv>
+        </field>
+        <field fieldname="power_profit" cachetype="single" comment="收益">
+            <kv member="str:powerProfit" score="value"></kv>
+        </field>
+        <field fieldname="ongrid_power" cachetype="single" comment="上网电量">
+            <kv member="str:ongrid_power" score="value"></kv>
+        </field>
+        <field fieldname="buy_power" cachetype="single" comment="网馈电量">
+            <kv member="str:buy_power" score="value"></kv>
+        </field>
+        <field fieldname="self_use_power" cachetype="single" comment="自发自用电量">
+            <kv member="str:self_use_power" score="value"></kv>
+        </field>
+        <field fieldname="consume_power" cachetype="single" comment="综合用电量">
+            <kv member="str:consume_power" score="value"></kv>
+        </field>
+        <field fieldname="equivalent_hour" cachetype="single" comment="等效利用小时数">
+            <kv member="str:equivalent_hour" score="value"></kv>
+        </field>
+        <field fieldname="co2_reduction" cachetype="single" comment="二氧化碳减排量">
+            <kv member="str:co2_reduction" score="value"></kv>
+        </field>
+        <field fieldname="coal_reduction" cachetype="single" comment="减少煤燃烧量">
+            <kv member="str:coal_reduction" score="value"></kv>
+        </field>
+        <field fieldname="tree_reduction" cachetype="single" comment="减少树砍伐量">
+            <kv member="str:tree_reduction" score="value"></kv>
+        </field>
+    </cachenode>
+</cacheroot>

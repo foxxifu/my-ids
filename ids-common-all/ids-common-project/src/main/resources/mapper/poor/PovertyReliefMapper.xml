@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.poor.PovertyReliefMapper">
+  <resultMap id="defectResultMap" type="com.interest.ids.common.project.bean.sm.PovertyReliefObjectT">
+        <id column="id" property="id"/>
+        <id column="user_name" property="userName"/>
+        <id column="gender" property="gender"/>
+        <id column="county" property="county"/>
+        <id column="detail_addr" property="detailAddr"/>
+        <id column="contact_phone" property="contactPhone"/>
+        <id column="station_code" property="stationCode"/>
+        <id column="poverty_status" property="povertyStatus"/>
+        <id column="create_user_id" property="createUserId"/>
+        <id column="create_time" property="createTime"/>
+        <id column="modify_user_id" property="modifyUserId"/>
+        <id column="modify_time" property="modifyTime"/>
+        <id column="poverty_addr_code" property="povertyAddrCode"/>
+        <id column="station_name" property="stationName"/>
+   </resultMap>
+  <sql id="Base_Column_List">
+    id,user_name,gender,county,detail_addr,contact_phone,station_code,poverty_status,
+    create_user_id,create_time,modify_user_id,modify_time,poverty_addr_code
+  </sql>
+  <!--新建扶贫用户  -->
+  <insert id="insertPovertyRelief" parameterType="com.interest.ids.common.project.bean.sm.PovertyReliefObjectT">
+  	insert into ids_poverty_relief_object_t (user_name,gender,county,detail_addr,contact_phone,station_code,poverty_status,create_user_id,create_time,modify_user_id,modify_time,poverty_addr_code)
+  	values(#{userName},#{gender},#{county},#{detailAddr},#{contactPhone},#{stationCode},#{povertyStatus},#{createUserId},#{createTime},#{modifyUserId},#{modifyTime},#{povertyAddrCode})
+  </insert>
+  
+  <!--批量导入扶贫用户  -->
+  <insert id="insertPovertyReliefByCollection" parameterType="com.interest.ids.common.project.bean.sm.PovertyReliefObjectT">
+  	insert into ids_poverty_relief_object_t (user_name,gender,county,detail_addr,contact_phone,station_code,poverty_status,create_user_id,create_time,modify_user_id,modify_time,poverty_addr_code)
+  	values
+  	<foreach collection="list" item="aid" separator=",">
+  		(
+  			#{aid.userName},
+  			#{aid.gender},
+  			#{aid.county},
+  			#{aid.detailAddr},
+  			#{aid.contactPhone},
+  			#{aid.stationCode},
+  			#{aid.povertyStatus},
+  			#{aid.createUserId},
+  			#{aid.createTime},
+  			#{aid.modifyUserId},
+  			#{aid.modifyTime},
+  			#{aid.povertyAddrCode}
+  		)
+  	</foreach>
+  </insert>
+  
+  <!-- 根据id查询用户 -->
+  <select id="selectPovertyReliefById" parameterType="java.lang.Long" resultMap="defectResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from ids_poverty_relief_object_t where id = #{value}
+  </select>
+  <!-- 根据id修改 -->
+  <update id="updatePovertyReliefById" parameterType="com.interest.ids.common.project.bean.sm.PovertyReliefObjectT">
+  	update ids_poverty_relief_object_t 
+  	<set>
+  		<if test="userName != null and userName != ''">
+  			user_name = #{userName},
+  		</if>
+  		<if test="gender != null">
+  			gender = #{gender},
+  		</if>
+  		<if test="county != null and county != ''">
+  			county = #{county},
+  		</if>
+  		<if test="povertyAddrCode != null and povertyAddrCode != ''">
+  			poverty_addr_code = #{povertyAddrCode},
+  		</if>
+  		<if test="detailAddr != null and detailAddr != ''">
+  			detail_addr = #{detailAddr},
+  		</if>
+  		<if test="contactPhone != null and contactPhone != ''">
+  			contact_phone = #{contactPhone},
+  		</if>
+  		<if test="stationCode != null and stationCode != ''">
+  			station_code = #{stationCode},
+  		</if>
+  		<if test="povertyStatus != null">
+  			poverty_status = #{povertyStatus},
+  		</if>
+  		<if test="createUserId != null">
+  			create_user_id = #{createUserId},
+  		</if>
+  		<if test="createTime != null">
+  			create_time = #{createTime},
+  		</if>
+  		<if test="modifyUserId != null">
+  			modify_user_id = #{modifyUserId},
+  		</if>
+  		<if test="modifyTime != null">
+  			modify_time = #{modifyTime}
+  		</if>
+  	</set>
+  	where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据id删除 -->
+  <delete id="deletePovertyReliefById" parameterType="java.lang.Long">
+  	delete from ids_poverty_relief_object_t where id = #{value}
+  </delete>
+  
+  <!-- 批量删除 -->
+  <delete id="deletePovertyReliefByIds" parameterType="java.lang.Long">
+  	delete from ids_poverty_relief_object_t where id in
+  	<foreach collection="array" item="it" open="(" close=")" separator=",">
+  		#{it}
+  	</foreach>
+  </delete>
+  
+  <!-- 导出 -->
+  <select id="exportPovertyRelief" parameterType="java.lang.Long" resultMap="defectResultMap">
+  	select 
+  		aid.*,station.station_name
+  	from 
+  		ids_poverty_relief_object_t aid,
+  		ids_station_info_t station
+  	where 
+  		 aid.station_code = station.station_code
+	<if test="array.length > 0">
+		and aid.id in 
+		<foreach collection="array" item="it" open="(" close=")" separator=",">
+			#{it}
+		</foreach>
+	</if>
+  </select>
+  
+  <!-- 根据任意条件查询 -->
+  <select id="selectPovertyReliefByCondition" parameterType="com.interest.ids.common.project.bean.sm.QueryPovertyRelief" resultMap="defectResultMap">
+  	select 
+  		aid.*,station.station_name
+  	from 
+  		ids_poverty_relief_object_t aid,
+  		ids_station_info_t station
+  	<where>
+  		and aid.station_code = station.station_code
+  		<if test="povertyRelief.userName != null and povertyRelief.userName != ''">
+  			and aid.user_name like concat('%',#{povertyRelief.userName},'%')
+  		</if>
+  		<if test="povertyRelief.county != null and povertyRelief.county != ''">
+  			and aid.county = #{povertyRelief.county}
+  		</if>
+  		<if test="povertyRelief.contactPhone != null and povertyRelief.contactPhone !=''">
+  			and aid.contact_phone = #{povertyRelief.contactPhone}
+  		</if>
+  		<if test="povertyRelief.povertyStatus != null and povertyRelief.povertyStatus != -1">
+  			and aid.poverty_status = #{povertyRelief.povertyStatus}
+  		</if>
+  		<if test="type_ != 'system' and type_ != 'enterprise'">
+  			and aid.station_code in (select station_code from ids_sm_user_station_t where user_id = #{userId})
+  		</if>
+  		<if test="type_ == 'enterprise'">
+  			and station.enterprise_id = (select enterprise_id from ids_sm_user_info_t where id = #{userId})
+  		</if>
+  	</where>
+    limit #{page.start},#{page.pageSize}
+  </select>
+  
+  <!-- 统计总条数 -->
+  <select id="selectAllCount" parameterType="com.interest.ids.common.project.bean.sm.QueryPovertyRelief" resultType="java.lang.Integer">
+  	select count(id) from ids_poverty_relief_object_t
+    <where>
+  		<if test="povertyRelief.userName != null and povertyRelief.userName != ''">
+  			and user_name like concat('%',#{povertyRelief.userName},'%')
+  		</if>
+  		<if test="povertyRelief.county != null and povertyRelief.county != ''">
+  			and county = #{povertyRelief.county}
+  		</if>
+  		<if test="povertyRelief.contactPhone != null and povertyRelief.contactPhone !=''">
+  			and contact_phone = #{povertyRelief.contactPhone}
+  		</if>
+  		<if test="povertyRelief.povertyStatus != null and povertyRelief.povertyStatus != -1">
+  			and poverty_status = #{povertyRelief.povertyStatus}
+  		</if>
+  		<if test="type_ != 'system'">
+  			and station_code in (select station_code from ids_sm_user_station_t where user_id = #{userId})
+  		</if>
+  	</where>
+  </select>
+  
+  <!-- 分页 -->
+  <select id="selectPovertyReliefByPage" parameterType="com.interest.ids.common.project.bean.sm.Page" resultMap="defectResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+	from ids_poverty_relief_object_t
+	limit #{start},#{pageSize}
+  </select>
+</mapper>

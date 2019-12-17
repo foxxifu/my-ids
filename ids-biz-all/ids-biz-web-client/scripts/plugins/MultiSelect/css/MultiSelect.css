@@ -1,0 +1,32 @@
+.MultiSelect {
+    padding: 0px;
+}
+
+.MultiSelect li {
+    padding: 2px 0;
+    font-size: 10pt;
+}
+
+.MultiSelect li:hover {
+    background-color: #1e90ff;
+}
+
+.MultiSelect li a:hover {
+    text-decoration: blink;
+}
+
+.MultiSelect li a {
+    cursor: default;
+}
+
+.ztree li a.curSelectedNode {
+    background-color: transparent;
+    border: 1px transparent solid;
+    border-left: 0px;
+    border-right: 0px;
+    opacity: 1;
+}
+
+.MultiSelect li span.button.chk {
+    margin-left: 5px;
+}

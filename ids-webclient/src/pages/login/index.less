@@ -1,0 +1,185 @@
+@import (once) '~@/assets/css/lib';
+
+.login {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-width: 660px;
+  min-height: 660px;
+  color: #FFFFFF;
+  background: #2d3a4b url('~/assets/images/login/bg.jpg') center / cover no-repeat;
+  overflow: hidden;
+
+  .login-top {
+    height: 20%;
+    .switch-language {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+
+      select {
+        background-color: #C8CAC5;
+      }
+    }
+  }
+
+  .login-main {
+    margin: 0 auto;
+
+    .logo {
+      position: relative;
+      width: 660px;
+      height: 100px;
+      line-height: 100px;
+      margin: 0 auto 20px;
+      text-align: center;
+      //padding: 10px 0 10px 92px;
+      padding: 10px 0;
+      font-size: 36px;
+      letter-spacing: 0.04em;
+      color: #FFFFFF;
+
+      //&::after {
+      //  // content: url("~/assets/images/login/login_title_top.png");
+      //  // position: absolute;
+      //  // top: -18px;
+      //  // left: 280px;
+      //  // width: 40px;
+      //  // height: 38px;
+      //  content: url("~/assets/images/logo.png");
+      //  position: absolute;
+      //  top: 16px;
+      //  left: 128px;
+      //  width: 40px;
+      //  height: 38px;
+      //}
+
+      img {
+        position: relative;
+        top: 20%;
+        margin: 0 10px;
+      }
+    }
+
+    .login-form {
+      position: relative;
+      left: 2px;
+      width: 590px;
+      height: 360px;
+      margin: 0 auto;
+      background: url('~/assets/images/login/login_form_bg.png') center no-repeat;
+
+      &::before {
+        content: url("~/assets/images/login/login_form_top.png");
+        position: absolute;
+        top: -27px;
+        right: 18px;
+        width: 115px;
+        height: 32px;
+      }
+      &::after {
+        content: url("~/assets/images/login/login_form_light.png");
+        position: absolute;
+        top: -101px;
+        left: 72px;
+        width: 445px;
+        height: 105px;
+      }
+
+      .form-item-content {
+        padding: 30px 110px 0;
+        .el-form-item {
+          width: 100%;
+          height: 65px;
+          padding: 20px 10px;
+          margin: 20px auto;
+          line-height: 40px;
+          background-color: transparent;
+          color: #979797;
+          border-bottom: 1px solid #DFDFDF;
+
+          label {
+            float: left;
+            width: 95px;
+            height: 40px;
+            font-size: 18px;
+            text-align: right;
+            color: #979797;
+
+            //&.userIcon {
+            //  letter-spacing: 0.1em;
+            //}
+            //&.pwdIcon {
+            //  letter-spacing: 0.65em;
+            //}
+          }
+
+          .el-input {
+            width: 255px;
+            height: 40px;
+          }
+          .el-input /deep/ input {
+            float: left;
+            width: 255px;
+            height: 40px;
+            font-size: 14pt;
+            color: #676767;
+            background: transparent;
+            padding: 0 0 0 12px;
+            border: none;
+            border-radius: 0 8px 8px 0;
+          }
+        }
+      }
+
+      .login-buttons {
+        width: 578px;
+        margin: 62px auto 0 4px;
+
+        .login-btn {
+          display: block;
+          width: 100%;
+          height: 100px;
+          line-height: 56px;
+          font-size: 24px;
+          // letter-spacing: 0.68em;
+          text-align: center;
+          color: #ffffff;
+          background: url("~/assets/images/login/login_form_button.png") 0 0 no-repeat;
+          border: none;
+          border-radius: 0;
+          transition: none;
+
+          &:active, &:hover {
+            background-position: 0 -113px;
+          }
+          &:active {
+            background-position: 0 -226px;
+          }
+        }
+      }
+    }
+
+    .login-form-bottom {
+    }
+  }
+
+  .login-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    font-size: 14px;
+    line-height: 60px;
+    color: #FFFFFF;
+    text-align: center;
+    background: transparent;
+    border-top: 0 solid #014236;
+    /deep/ a {
+      color: #FFFFFF;
+      &:hover {
+        color: #FEFEFE;
+      }
+    }
+  }
+}

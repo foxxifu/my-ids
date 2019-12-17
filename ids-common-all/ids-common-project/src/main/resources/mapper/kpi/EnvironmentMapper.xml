@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.kpi.EnvironmentMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.Environment" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="collect_time" property="collectTime" jdbcType="BIGINT" />
+    <id column="dev_id" property="deviceId" jdbcType="BIGINT" />
+    <id column="station_code" property="stationCode" jdbcType="CHAR" />
+    <result column="valid" property="valid" jdbcType="VARCHAR" />
+    <result column="dev_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="temperature" property="temperature" jdbcType="DECIMAL" />
+    <result column="pv_temperature" property="pvTemperature" jdbcType="DECIMAL" />
+    <result column="wind_speed" property="windSpeed" jdbcType="DECIMAL" />
+    <result column="wind_direction" property="windDirection" jdbcType="DECIMAL" />
+    <result column="total_irradiation" property="totalIrradiation" jdbcType="DECIMAL" />
+    <result column="irradiation_intensity" property="irradiationIntensity" jdbcType="DECIMAL" />
+    <result column="horiz_irradiation_intensity" property="horizIrradiationIntensity" jdbcType="DECIMAL" />
+    <result column="horiz_total_irradiation" property="horizTotalIrradiation" jdbcType="DECIMAL" />
+  </resultMap>
+</mapper>

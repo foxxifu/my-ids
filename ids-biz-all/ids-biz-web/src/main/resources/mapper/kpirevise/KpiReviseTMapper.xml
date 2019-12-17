@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.biz.web.dataintegrity.dao.KpiReviseTMapper">
+
+	<!-- 保存修正数据 -->
+	<insert id="insert" parameterType="com.interest.ids.common.project.bean.sm.KpiReviseT">
+		insert into ids_kpi_revise_t 
+		(station_name,station_code,kpi_key,revise_type,replace_value,time_dim,revise_date,offset_value,ratio_value,old_value,enterprise_id) 
+		values (#{stationName},#{stationCode},#{kpiKey},#{reviseType},#{replaceValue},#{timeDim},#{reviseDate},#{offsetValue},#{ratioValue},#{oldValue},#{enterpriseId})
+	</insert>
+	
+	<!-- 根据id查询修正数据 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="com.interest.ids.common.project.bean.sm.KpiReviseT">
+		select * from ids_kpi_revise_t where id = #{value}
+	</select>
+	
+	<!--修改  -->
+	<update id="updateByPrimaryKey" parameterType="com.interest.ids.common.project.bean.sm.KpiReviseT">
+		update ids_kpi_revise_t set 
+		station_name=#{stationName},station_code=#{stationCode}, revise_type=#{reviseType},replace_value=#{replaceValue},
+		time_dim=#{timeDim},revise_date=#{reviseDate},offset_value=#{offsetValue},ratio_value=#{ratioValue},old_value=#{oldValue},
+		revise_status=#{reviseStatus}
+		where id = #{id}
+	</update>
+    <select id="getAllKpiReviseTCount" parameterType="com.interest.ids.common.project.bean.sm.KpiReviseT" resultType="java.lang.Integer">
+    	<choose>
+    		<when test="type_ == 'system'">
+    			select 
+		    		count(id) from 
+		    	ids_kpi_revise_t rev where 1 = 1
+    		</when>
+    		<when test="type_ == 'enterprise'">
+    			select 
+		    		count(id) from 
+		    	ids_kpi_revise_t rev
+		    	where 
+		    		rev.enterprise_id = #{enterpriseId}
+    		</when>
+    		<otherwise>
+    			select 
+    				count(rev.id) 
+    			from 
+    				ids_kpi_revise_t rev,
+    				ids_station_info_t station,
+    				ids_sm_user_station_t userstation
+    			where 
+    				station.station_name = rev.station_name
+    				and station.station_code = userstation.station_code
+    				and userstation.user_id = #{userId}
+    		</otherwise>
+    	</choose>
+    	<if test="null != stationName and stationName != ''">
+    		and rev.station_name like concat('%',#{stationName},'%')
+    	</if>
+    	<if test="null != reviseType and reviseType != '-1'">
+    		and rev.revise_type = #{reviseType}
+    	</if>
+    </select>
+    
+    <resultMap type="com.interest.ids.common.project.bean.sm.KpiReviseT" id="basicResultMap">
+    	<id column="id" property="id"/>
+    	<result column="station_name" property="stationName"/>
+    	<result column="station_code" property="stationCode"/>
+    	<result column="kpi_key" property="kpiKey"/>
+    	<result column="revise_type" property="reviseType"/>
+    	<result column="replace_value" property="replaceValue"/>
+    	<result column="time_dim" property="timeDim"/>
+    	<result column="revise_date" property="reviseDate"/>
+    	<result column="offset_value" property="offsetValue"/>
+    	<result column="ratio_value" property="ratioValue"/>
+    	<result column="old_value" property="oldValue"/>
+    	<result column="enterprise_id" property="enterpriseId"/>
+    	<result column="revise_status" property="reviseStatus"/>
+    </resultMap>
+    
+    <select id="getKpiReviseTByCondtion" parameterType="com.interest.ids.common.project.bean.sm.KpiReviseT" resultMap="basicResultMap">
+		<choose>
+			<when test="type_ == 'system'">
+				select rev.* from ids_kpi_revise_t rev where 1 = 1
+			</when>
+			<when test="type_ == 'enterprise'">
+    			select
+    				rev.* 
+		    	from 
+		    		ids_kpi_revise_t rev
+		    	where 
+		    		rev.enterprise_id = #{enterpriseId}
+    		</when>
+    		<otherwise>
+    			select 
+    				rev.*
+    			from 
+    				ids_kpi_revise_t rev,
+    				ids_station_info_t station,
+    				ids_sm_user_station_t userstation
+    			where 
+    				station.station_name = rev.station_name
+    				and station.station_code = userstation.station_code
+    				and userstation.user_id = #{userId}
+    		</otherwise>
+		</choose>
+		<if test="null != stationName and stationName != ''">
+    		and rev.station_name like concat('%',#{stationName},'%')
+    	</if>
+    	<if test="null != reviseType and reviseType != '-1'">
+    		and rev.revise_type = #{reviseType}
+    	</if>
+    	limit #{start},#{pageSize}
+    </select>
+    
+    <select id="selectReviseByUserAndStatus" resultMap="basicResultMap">
+    	select rev.* from ids_kpi_revise_t rev
+    	<where>
+    		<choose>
+    			<when test="reviseIds != null and reviseIds.size > 0">
+    				rev.id in 
+    				<foreach collection="reviseIds" item="id" open="(" separator="," close=")">
+    					#{id}
+    				</foreach>
+    			</when>
+    			<when test="userType == 'system'">
+					rev.revise_status = #{reviseStatus}
+				</when>
+				<when test="userType == 'enterprise'">
+    				rev.revise_status = #{reviseStatus} and rev.enterprise_id = #{enterpriseId}
+    			</when>
+    			<otherwise>
+	    			rev.revise_status = #{reviseStatus} and rev.station_code in (
+	    				select station_code from ids_sm_user_station_t
+	    				where user_id = #{userId}
+	    			)
+    			</otherwise>
+    		</choose>
+    	</where>
+    </select>
+    
+    <!--  -->
+    <select id="getKpiReviseTByCondition" parameterType="com.interest.ids.common.project.bean.sm.KpiReviseT" resultMap="basicResultMap">
+    	select 
+    		* 
+    	from 
+    		ids_kpi_revise_t
+    	where 
+    		station_code = #{stationCode}
+    		and kpi_key = #{kpiKey}
+    		and time_dim = #{timeDim}
+    		and revise_type = #{reviseType}
+    		and revise_date = #{reviseDate}
+    </select>
+</mapper>

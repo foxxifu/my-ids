@@ -1,0 +1,215 @@
+@import "../node_modules/bootstrap/less/mixins.less";
+
+/* ==========================================================================
+   全局 mixins
+   ========================================================================== */
+
+/*
+定义圆角
+@radius 圆角大小
+*/
+.round(@radius:4px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+/*
+盒子阴影
+@right_left 右边阴影为正数 左边负数
+@bottom_top 下边阴影为正数 上边负数
+@box  阴影大小
+@box_color 阴影颜色
+*/
+.box-shadow(@right_left:5px,@bottom_top:5px,@box :5px,@box_color:#b6ebf7) {
+  box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+}
+
+/*
+文字阴影,可以指定多组阴影
+@right_left1 右边阴影为正数 左边负数
+@bottom_top1 下边阴影为正数 上边负数
+@text  阴影大小
+@text_color 阴影颜色
+*/
+.text-shadow(@right_left1:5px,@bottom_top1:5px,@text :5px,@tetx_color:#b6ebf7) {
+  text-shadow: @arguments;
+}
+
+/*
+透明度 或渐变 1为不透明 0透明
+css3 rgba(110, 142, 185, .4)!important;前三个是颜色值 后一个是透明值
+用来兼容所有浏览器
+*/
+.rgba(@r: 0, @g: 0, @b: 0, @a: 0.5) {
+  @c: rgba(@r, @g, @b, @a);
+  @c2: argb(@c);
+  /* 支持 IE9 IE8 IE7 （不包括 IE6） */
+  filter: ~"progid: DXImageTransform .Microsoft .gradient(enabled = 'true', startColorstr = '@{c2}', endColorstr = '@{c2}')";
+  background-color: @c;
+  :root & {
+    filter: none;
+  }
+}
+
+/*
+列布局
+@c1 列数
+@c2 列宽
+@c3 列间距
+@c4 边框样式
+*/
+.column(@c1:3,@c2:310px,@c3:10px,@c4:1px solid #ccc) {
+  column-count: @c1;
+  column-width: @c2;
+  column-gap: @c3;
+  column-rule: @c4;
+  -webkit-column-count: @c1;
+  -webkit-column-width: @c2;
+  -webkit-column-gap: @c3;
+  -webkit-column-rule: @c4;
+  -moz-column-count: @c1;
+  -moz-column-width: @c2;
+  -moz-column-gap: @c3;
+  -moz-column-rule: @c4;
+}
+
+/*背景渐变
+@start  渐变开始颜色
+@end  结束颜色
+*/
+/*
+ * 线性渐变
+ */
+.liner-gradient(@angle: top; @colors: #00b3ee 0%, #7a43b6 50%, #073357 100%) {
+  background: linear-gradient(@angle, @colors);
+  background: -o-linear-gradient(@angle, @colors);
+  background: -moz-linear-gradient(@angle, @colors);
+  background: -webkit-linear-gradient(@angle, @colors);
+}
+
+/*
+ * 径向渐变
+ */
+.radial-gradient(@angle:top; @colors:#6FD8E7, #073357) {
+  background: radial-gradient(@angle, @colors); /* 标准的语法 */
+  background: -o-radial-gradient(@angle, @colors); /* Opera 11.6 - 12.0 */
+  background: -moz-radial-gradient(@angle, @colors); /* Firefox 3.6 - 15 */
+  background: -webkit-radial-gradient(@angle, @colors); /* Safari 5.1 - 6.0 */
+}
+
+/*改变背景图片的大小
+@w <length> || <percentage> 宽度
+@h <length> || <percentage> 高度
+*/
+.background-size(@w: 100%, @h: 100%) {
+  /*Mozilla*/
+  -moz-background-size: @w @h;
+  /*Webkit*/
+  -webkit-background-size: @w @h;
+  /*Presto*/
+  -o-background-size: @w @h;
+  /*W3c标准*/
+  background-size: @w @h;
+}
+
+/*
+画轮廓 就是内部框
+@outline 样式
+@outline1 间距 负数在内部
+*/
+.outline(@outline:1px solid #699,@outline1:-10px) {
+  outline: @outline;
+  outline-offset: @outline1;
+}
+
+/*
+旋转角度
+@ro定义度数
+IE不支持 滤镜支持0，1，2，3
+*/
+.rotate(@ro :30deg) {
+  transform: rotate(@ro);
+  -webkit-transform: rotate(@ro);
+  -moz-transform: rotate(@ro);
+  -o-transform: rotate(@ro);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+/*
+菱形旋转角度
+@x横向缩放比例
+@y纵向缩放比例
+*/
+.skew(@roX :30deg,@roY :30deg) {
+  transform: skew(@roX, @roY);
+  -webkit-transform: skew(@roX, @roY);
+  -moz-transform: skew(@roX, @roY);
+  -o-transform: skew(@roX, @roY);
+  -ms-transform: skew(@roX, @roY);
+}
+
+/*
+放大缩小
+@x横向缩放比例
+@y纵向缩放比例
+*/
+.scale(@x :1.2,@y :1.2) {
+  transform: scale(@x, @y);
+  -webkit-transform: scale(@x, @y);
+  -moz-transform: scale(@x, @y);
+  -o-transform: scale(@x, @y);
+  -ms-transform: scale(@x, @y);
+}
+
+/*
+移动距离
+@x横向移动距离
+@y纵向移动距离
+*/
+.translate(@x :80px,@y :80px) {
+  transform: translate(@x, @y);
+  -webkit-transform: translate(@x, @y);
+  -moz-transform: translate(@x, @y);
+  -o-transform: translate(@x, @y);
+  -ms-transform: translate(@x, @y);
+}
+
+/*
+综合上面4种变化,效果看下面的过度动画
+@rotate
+@scale
+@skew
+@translate
+*/
+.transform(@rotate :360deg,@scaleX :1,@scaleY :1,@skewX :0deg,@skewY :0deg,@translateX :100px,@translateY :0px) {
+  transform: rotate(@rotate) scale(@scaleX, @scaleY) skew(@skewX, @skewY) translate(@translateX, @translateY);
+  -webkit-transform: rotate(@rotate) scale(@scaleX, @scaleY) skew(@skewX, @skewY) translate(@translateX, @translateY);
+  -moz-transform: rotate(@rotate) scale(@scaleX, @scaleY) skew(@skewX, @skewY) translate(@translateX, @translateY);
+  -o-transform: rotate(@rotate) scale(@scaleX, @scaleY) skew(@skewX, @skewY) translate(@translateX, @translateY);
+  -ms-transform: rotate(@rotate) scale(@scaleX, @scaleY) skew(@skewX, @skewY) translate(@translateX, @translateY);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+/*
+过度动画
+width是css属性
+2s过度时间 0s是开始时间
+ease-in进入
+*/
+.transition(@t :width 2s ease-in 0s) {
+  transition: @t;
+  -moz-transition: @t;
+  -o-transition: @t;
+  -webkit-transition: @t;
+}
+
+/*
+不规则图形
+ */
+.clipPath(@path :0 0, 704px 0, 722px 32px, 1214px 32px, 1230px 0, 100% 0, 100% 100%, 0 100%;) {
+  clip-path: polygon(@path);
+  -webkit-clip-path: polygon(@path);
+}

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.AuthorizeMMapper">
+
+    <!-- 插入权限 -->
+    <insert id="insertAuthorizeM"
+        parameterType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        insert into ids_sm_auth_t (auth_name,description)
+        values(#{auth_name},#{description})
+    </insert>
+
+    <!-- 根据id查询权限 -->
+    <select id="selectAuthorizeMById" parameterType="java.lang.Long"
+        resultType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        select id,auth_name,description from ids_sm_auth_t where id = #{value}
+    </select>
+
+    <!-- 根据id删除权限 -->
+    <delete id="deleteAuthorizeMById" parameterType="java.lang.Long">
+        delete from ids_sm_auth_t where id = #{value}
+    </delete>
+
+    <!-- 根据id更新权限 -->
+    <update id="updateAuthorizeMById"
+        parameterType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        update ids_sm_auth_t
+        <set>
+            <if test="auth_name != null and auth_name !=''">
+                auth_name = #{auth_name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description!=''">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 根据角色id查询所有的权限/角色和权限的一对多关系 -->
+    <select id="selectAuthByRoleId" parameterType="java.lang.Long"
+        resultType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        <choose>
+            <when test="value == 1">
+                select id,auth_name,description from ids_sm_auth_t
+            </when>
+            <otherwise>
+                select auth.id id,auth.auth_name auth_name,auth.description description 
+                from ids_sm_auth_t auth,ids_sm_role_auth_t role_auth 
+                where auth.id = role_auth.auth_id and role_auth.role_id = #{value}
+            </otherwise>
+        </choose>
+    </select>
+    <!-- 根据用户id查询用户的所有权限 -->
+    <select id="selectAuthByUserId" parameterType="java.lang.Long"
+        resultType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        select auth.id,auth.auth_name,auth.description from ids_sm_user_auth_t
+        user_auth,ids_sm_auth_t auth where auth.id = user_auth.auth_id
+        and user_auth.user_id = #{value}
+    </select>
+
+    <!-- 查询所有的权限 -->
+    <select id="selectAllAuthorizeM"
+        resultType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        select id,auth_name,description from ids_sm_auth_t
+    </select>
+    
+    <!-- 查询用户的所有权限 -->
+    <select id="selectUserAuthorize" parameterType="java.lang.Long" resultType="com.interest.ids.common.project.bean.sm.AuthorizeM">
+        select * from ids_sm_auth_t auth,ids_sm_user_auth_t user_auth
+        where auth.id = user_auth.auth_id and user_auth.user_id = #{value}
+    </select>
+</mapper>

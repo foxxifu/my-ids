@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.alarm.WorkFlowTaskMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.alarm.WorkFlowTaskM" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="pre_task_id" property="preTaskId" jdbcType="VARCHAR" />
+    <result column="proc_id" property="procId" jdbcType="VARCHAR" />
+    <result column="task_start_time" property="taskStartTime" jdbcType="BIGINT" />
+    <result column="task_end_time" property="taskEndTime" jdbcType="BIGINT" />
+    <result column="task_state" property="taskState" jdbcType="VARCHAR" />
+    <result column="task_content" property="taskContent" jdbcType="VARCHAR" />
+    <result column="transferor_name" property="transferorName" jdbcType="VARCHAR" />
+    <result column="assignee_name" property="assigneeName" jdbcType="VARCHAR" />
+    <result column="op_state" property="opState" jdbcType="VARCHAR" />
+    <result column="op_desc" property="opDesc" jdbcType="VARCHAR" />
+    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+    <result column="file_id" property="fileId" jdbcType="VARCHAR" />
+    <result column="original_name" property="originalName"/>
+    <result column="file_ext" property="fileExt"/>
+  </resultMap>
+  
+  <resultMap type="java.util.Map" id="currentUserMap">
+    <result column="proc_id" property="procId"/>
+    <result column="user_id" property="userId"/>
+    <result column="login_name" property="loginName"/>
+    <result column="dev_alias" property="devAlias"/>
+  </resultMap>
+  <resultMap type="com.interest.ids.common.project.bean.alarm.WorkFlowDefectDto" id="conditionTask">
+    <result column="task_id" property="taskId"/>
+    <result column="task_start_time" property="taskStartTime"/>
+    <result column="task_content" property="taskContent"/>
+    <result column="station_name" property="stationName"/>
+    <result column="description" property="description"/>
+    <result column="defect_id" property="defectId"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, task_id, pre_task_id, proc_id, task_start_time, task_end_time, 
+    task_state, task_content, transferor_name, assignee_name, op_state, 
+    op_desc, station_code, enterprise_id,file_id
+  </sql>
+  
+  <!-- 插入一个任务 -->
+  <insert id="insertWorkFlowTaskM" parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowTaskM">
+    insert into ids_workflow_task_t (task_id, pre_task_id, proc_id, task_start_time, task_end_time, 
+    task_state, task_content, transferor_name, assignee_name, op_state, 
+    op_desc, station_code, enterprise_id,file_id)
+    values
+    (
+        #{taskId},#{preTaskId},#{procId},
+        #{taskStartTime},#{taskEndTime},#{taskState},#{taskContent},
+        #{transferorName},#{assigneeName},
+        #{opState},#{opDesc},#{stationCode},#{enterpriseId},#{fileId}
+    )
+  </insert>
+  
+  <!-- 根据id查询当前任务 -->
+  <select id="selectWorkFlowTaskMById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"></include>
+    from ids_workflow_task_t
+    where id = #{value}
+  </select>
+  
+  <!-- 根据任务id查询当前任务 -->
+  <select id="selectWorkFlowTaskMByTaskId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"></include>
+    from ids_workflow_task_t
+    where task_id = #{value}
+  </select>
+  
+  <!-- 根据上一部任务id查询上一部任务 -->
+  <select id="selectPrevWorkFlowTaskMById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"></include>
+    from ids_workflow_task_t
+    where task_id = #{value}
+  </select>
+  
+  <!--  查询历史记录 -->
+  <select id="selectWorkFlowTaskMByStationCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"></include>
+    from ids_workflow_task_t
+    where station_code = #{value}
+  </select>
+  
+  <!-- 更新任务 -->
+  <update id="updateWorkFlowTaskM" parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowTaskM">
+    update ids_workflow_task_t
+    <set >
+      <if test="preTaskId != null and preTaskId !=''" >
+        pre_task_id = #{preTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStartTime != null" >
+        task_start_time = #{taskStartTime,jdbcType=BIGINT},
+      </if>
+      <if test="taskEndTime != null" >
+        task_end_time = #{taskEndTime,jdbcType=BIGINT},
+      </if>
+      <if test="taskState != null and taskState != ''" >
+        task_state = #{taskState,jdbcType=VARCHAR},
+      </if>
+      <if test="taskContent != null and taskContent != ''" >
+        task_content = #{taskContent,jdbcType=VARCHAR},
+      </if>
+      <if test="transferorName != null and transferorName != ''" >
+        transferor_name = #{transferorName,jdbcType=VARCHAR},
+      </if>
+      <if test="assigneeName != null and assigneeName != ''" >
+        assignee_name = #{assigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="opState != null and opState != ''" >
+        op_state = #{opState,jdbcType=VARCHAR},
+      </if>
+      <if test="opDesc != null and opDesc != ''" >
+        op_desc = #{opDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="stationCode != null and stationCode != ''" >
+        station_code = #{stationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+      </if>
+      <if test="fileId != null" >
+        file_id = #{fileId}
+      </if>
+    </set>
+    where task_id = (select current_task_id from ids_workflow_process_t where proc_id = #{procId})
+  </update>
+  
+  <!-- 根据进度id查询所有的任务按照task_start_time升序 -->
+  <select id="selectPrevTaskMByProcId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    	task.*,file_manager.original_name,file_manager.file_ext
+    from 
+    	ids_workflow_task_t task
+    left join ids_file_manager_t file_manager 
+    	on task.file_id = file_manager.file_id 
+	where proc_id = #{value}
+    order by task_start_time asc
+  </select>
+  
+  <!-- 根据当前的任务id查询当前的任务的处理人的id -->
+  <select id="selectWorkFlowTaskDealingId" parameterType="Object[]" resultMap="currentUserMap">
+    select  
+        process.proc_id proc_id,task_user.user_id user_id,user.login_name login_name,dev.dev_alias dev_alias
+    from 
+        ids_workflow_task_user_t task_user,
+        ids_workflow_task_t task,
+        ids_workflow_process_t process,
+        ids_sm_user_info_t user,
+        ids_workflow_defect_t defect,
+        ids_dev_info_t dev
+    where 
+        process.current_task_id = task.task_id 
+        and task.task_id = task_user.task_id 
+        and task_user.user_id = user.id
+        and process.proc_id = defect.proc_id
+        and defect.dev_id = dev.id
+        and process.proc_id in
+        <foreach collection="array" item="i" open="(" close=")" separator=",">
+            #{i}
+        </foreach>
+  </select>
+  
+  <!-- 根据条件查询任务 -->
+  <select id="selectTaskByCondition" parameterType="com.interest.ids.common.project.bean.alarm.QueryWorkFlowDefect" 
+  resultMap="conditionTask">
+    select 
+        DISTINCT task.task_id task_id,
+        task.task_start_time task_start_time,
+        task.task_content task_content, 
+        defect.station_name station_name,
+        defect.description description,
+        defect.defect_id defect_id
+    from 
+        ids_workflow_task_t task,
+        ids_workflow_task_user_t task_user,
+        ids_workflow_defect_t defect
+    where 
+        task.task_id = task_user.task_id
+        and task.proc_id=defect.proc_id
+        and task_user.user_id = #{defect.userId}
+        <if test="null != defect.taskState and defect.taskState != ''">
+            and task.task_state = #{defect.taskState}
+        </if>
+        <if test="defect.defectName != null and defect.defectName != ''">
+            and defect.defect_name like concat('%', #{defect.defectName}, '%')
+	    </if>
+	    <if test="defect.startFindTime != null">
+	        and defect.start_time <![CDATA[ >= ]]>
+	        #{defect.startFindTime}
+	   	</if>
+	    
+	    <if test="defect.endFindTime != null">
+	        and defect.start_time <![CDATA[ <= ]]>
+	        #{defect.endFindTime}
+	    </if>
+  </select>
+</mapper>

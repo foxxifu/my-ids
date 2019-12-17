@@ -1,0 +1,121 @@
+@import (once, reference) '~@/assets/css/lib';
+
+.el-menu--collapse {
+  width: 51px;
+}
+
+.el-icon-nav {
+  width: 28px;
+  height: 28px;
+  background: url("~/assets/images/layout/settings_icons.png") 0 0 no-repeat;
+  display: inline-block;
+
+  &::before {
+    content: '' !important;
+  }
+
+  &.icon-enterpriseManage {
+    background-position-y: -60px;
+  }
+  &.icon-personRightsManager {
+    background-position-y: -90px;
+  }
+  &.icon-dataIntegrity {
+    background-position-y: -120px;
+  }
+  &.icon-stationManage {
+    background-position-y: -150px;
+  }
+  &.icon-paramConfig {
+    background-position-y: -180px;
+  }
+  &.icon-voucherManage {
+    background-position-y: -210px;
+  }
+  &.icon-licenceManage {
+    background-position-y: -240px;
+  }
+  &.icon-systemParam {
+    background-position-y: -270px;
+  }
+}
+
+.el-menu {
+  border: none;
+  .el-menu-item {
+    padding: 0 10px !important;
+    border-left: 4px solid transparent;
+    border-bottom: 1px solid #095a7d;
+
+    &:hover, &:focus {
+      border-left: 4px solid transparent;
+      background-color: transparent !important;
+    }
+
+    /deep/ .el-tooltip {
+      padding: 0 12px 0 8px !important
+    }
+
+    &.is-active {
+      color: #00FFFF !important;
+      background-color: #2789bd !important;
+      border-left: 4px solid #00ffff;
+      i {
+        background-position-x: -30px;
+      }
+      /deep/ .el-submenu__title {
+        background-color: #116096 !important;
+        i {
+          background-position-x: -30px;
+        }
+      }
+    }
+  }
+}
+
+.el-submenu {
+  /deep/ .el-submenu__title {
+    height: 72px;
+    line-height: 72px;
+    padding: 0 12px 0 8px !important;
+    border-left: 4px solid #196d9a;
+    border-bottom: 1px solid #095a7d;
+    &:hover, &:focus {
+      background-color: transparent !important;
+    }
+  }
+  /deep/ .el-menu {
+    background-color: #00a0e9 !important;
+    .el-menu-item {
+      &.is-active {
+        color: #00FFFF !important;
+        background-color: #116096 !important;
+        border-left: none !important;
+        i {
+          background-position-x: -30px;
+        }
+      }
+    }
+    &.el-menu--inline {
+      .el-menu-item {
+        padding-left: 42px !important;
+        background-color: #055681 !important;
+
+        &.is-active {
+          background-color: #196d9a !important;
+        }
+      }
+    }
+  }
+  &.is-active {
+    /deep/ .el-submenu__title {
+      color: #00ffff !important;
+      background-color: #2789bd !important;
+      border-left: 4px solid #00ffff;
+      border-bottom: 1px solid #095a7d;
+      i {
+        background-position-x: -30px;
+      }
+    }
+  }
+}

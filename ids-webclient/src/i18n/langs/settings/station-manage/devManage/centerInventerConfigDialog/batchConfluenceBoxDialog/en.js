@@ -1,0 +1,27 @@
+export default {
+  batchCon: {
+    batchSelectCon: 'Detailed configuration of centralized inverters - Batch selection of combiner boxes',
+    devName: 'Equipment Name',
+    numSN: 'SN',
+    devType: 'Equipment Type',
+    conBox: 'Combiner Box',
+    devVersion: 'Equipment Version',
+    devSN: 'Equipment SN',
+    allSelect: 'Select all',
+    add: 'Add',
+    selectEqc: 'Selected Equipment:',
+    allDel: 'Remove all',
+    dragToMove: 'Drag to move the order',
+    remove: 'Remove',
+    sureChoose: 'Confirm selection',
+    noDevMove: 'No equipment can be removed',
+    sureMoveChooseDev: 'Confirm to remove all the selected equipment?',
+    tip: 'Warning',
+    cancelMove: 'Canceled remove',
+    addDev: 'The equipment has been added',
+    noDev: 'No equipment information',
+    noNeedAdd: 'All equipment for the current page have been added; no further additions are required',
+    noChooseDev: 'No equipment information was selected',
+    sureChooseNum: 'Confirm using the selected data? The previous selection will be replaced after the selection.',
+  }
+}

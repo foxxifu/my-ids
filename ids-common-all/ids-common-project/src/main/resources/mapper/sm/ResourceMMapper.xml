@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.ResourceMMapper">
+    <resultMap id="BaseResultMap"
+        type="com.interest.ids.common.project.bean.sm.ResourceM">
+        <!-- WARNING - @mbggenerated This element is automatically generated 
+            by MyBatis Generator, do not modify. -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="resource_key" jdbcType="VARCHAR"
+            property="resourceKey" />
+        <result column="auth_id" jdbcType="BIGINT" property="authId" />
+        <result column="resource_name" jdbcType="VARCHAR"
+            property="resourceName" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="auth_url" jdbcType="VARCHAR" property="authUrl" />
+        <result column="request_type" jdbcType="VARCHAR"
+            property="requestType" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, resource_key, auth_id, resource_name, description, auth_url,
+        request_type
+    </sql>
+
+    <!-- 添加新的资源 -->
+    <insert id="insertResourceM"
+        parameterType="com.interest.ids.common.project.bean.sm.ResourceM">
+        insert into ids_sm_resource_info_t (resource_key, auth_id, resource_name,
+        description, auth_url, request_type)
+        values(#{resourceKey},#{authId},#{resourceName},#{description},#{authUrl},#{requestType})
+    </insert>
+
+    <select id="selectResourceMById" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select id,resource_key, auth_id, resource_name, description, auth_url,
+        request_type from ids_sm_resource_info_t where id = #{value}
+    </select>
+
+    <delete id="deleteResourceMById" parameterType="java.lang.Long">
+        delete from ids_sm_resource_info_t where id = #{value}
+    </delete>
+
+    <update id="updateResourceByid" parameterType="java.lang.Long">
+        update ids_sm_resource_info_t
+        <set>
+            <if test="resourceKey != null">
+                resource_key = #{resourceKey,jdbcType=VARCHAR},
+            </if>
+            <if test="authId != null">
+                auth_id = #{authId,jdbcType=BIGINT},
+            </if>
+            <if test="resourceName != null">
+                resource_name = #{resourceName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="authUrl != null">
+                auth_url = #{authUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="requestType != null">
+                request_type = #{requestType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 权限和资源的一对多的关联关系/根据权限id查询所有的资源 -->
+    <select id="selectResourceMsByAuthorizeId" parameterType="java.lang.Long"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_resource_info_t where auth_id = #{value}
+    </select>
+
+    <select id="selectResourceMByConditions"
+        parameterType="com.interest.ids.common.project.bean.sm.ResourceM"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ids_sm_resource_info_t
+        <where>
+            <if test="resourceKey != null">
+                and resource_key = #{resourceKey,jdbcType=VARCHAR}
+            </if>
+            <if test="authId != null">
+                and auth_id = #{authId,jdbcType=BIGINT}
+            </if>
+            <if test="resourceName != null">
+                and resource_name = #{resourceName,jdbcType=VARCHAR}
+            </if>
+            <if test="description != null">
+                and description = #{description,jdbcType=VARCHAR}
+            </if>
+            <if test="authUrl != null">
+                and auth_url = #{authUrl,jdbcType=VARCHAR}
+            </if>
+            <if test="requestType != null">
+                and request_type = #{requestType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据用户id查询所有的资源 -->
+    <select id="selectAllResourceMByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        	resource.id id, 
+        	resource.auth_id auth_id, 
+        	resource.resource_name resource_name, 
+        	resource.auth_url auth_url,
+        	resource.request_type request_type
+        from 
+        	ids_sm_resource_info_t resource,
+        	ids_sm_user_role_t user_role,
+        	ids_sm_role_auth_t role_auth
+        where 
+        	user_role.role_id = role_auth.role_id
+        	and role_auth.auth_id = resource.auth_id
+        	and user_role.user_id = #{value}
+    </select>
+</mapper>

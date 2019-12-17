@@ -1,0 +1,341 @@
+@import (once) '~@/assets/css/variables';
+
+.home {
+  .show-text-style {
+    color: @lightblue;
+    font-size: 24px;
+    &.blackColor {
+      color: @black;
+    }
+  }
+  .show-title-style {
+    font-size: 16px;
+    color: @text-regular;
+  }
+  .unitStyle {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: @mainColor
+  }
+  .yearPowerChart { // no del
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -173px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 50%;
+      left: 25%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -280px 41px;
+    }
+  }
+  .yearIncomeChart { // not del
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -173px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 50%;
+      left: 25%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -118px 49px;
+    }
+  }
+  .dayIncomeChart { // not del
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -16px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 54%;
+      left: 23%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -9px 36px;
+    }
+  }
+  .dayPowerChart, .totalPowerChart { // not del
+    margin: 0 auto;
+    width: 158px;
+    height: 135px;
+    background: url('~/assets/images/home/home_bg.png') no-repeat -16px -337px;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 50%;
+      left: 25%;
+      height: 90%;
+      background: url('~/assets/images/home/home_bg.png') no-repeat -206px 24px;
+    }
+  }
+  .pvModules {
+    width: 97px;
+    height: 85px;
+    background: url('~/assets/images/station/u252.png') no-repeat;
+    background-size: 100%;
+    margin: auto;
+  }
+  .icon{
+    display: inline-block;
+    width: 23px;
+    height: 20px;
+    background: url('~/assets/images/station/u86.png') no-repeat;
+    background-size: 100%;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  .input {
+    width: 97px;
+    height: 9px;
+    background: url('~/assets/images/station/u858.png') no-repeat;
+    background-size: 100%;
+    position: relative;
+    top: 36px;
+  }
+  .groupSeriesInverter {
+    width: 113px;
+    height: 73px;
+    background: url('~/assets/images/station/u258.png') no-repeat;
+    background-size: 100%;
+    margin: 12px auto 0px auto;
+  }
+  .output {
+    width: 97px;
+    height: 9px;
+    background: url('~/assets/images/station/u858.png') no-repeat;
+    background-size: 100%;
+    position: relative;
+    top: 36px;
+  }
+  .meter {
+    width: 88px;
+    height: 88px;
+    background: url('~/assets/images/station/u860.png') no-repeat;
+    background-size: 100%;
+    margin: auto;
+  }
+  .onGridPower {
+    width: 97px;
+    height: 9px;
+    background: url('~/assets/images/station/u858.png') no-repeat;
+    background-size: 100%;
+    position: relative;
+    top: 36px;
+  }
+  .powerGrid {
+    width: 89px;
+    height: 107px;
+    background: url('~/assets/images/station/u864.png') no-repeat;
+    background-size: 100%;
+    margin: auto;
+  }
+  .name{
+    text-align: center;
+    margin-top: 5px;
+  }
+  .powerStationDescIcon{
+    width: 18px;
+    height: 23px;
+    background: url('~/assets/images/station/u854.png') no-repeat;
+    background-size: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .powerStationPic{
+    width: 100%;
+    height: 142px;
+    background: url('~/assets/images/station/station.png') no-repeat;
+    background-size: 100%;
+  }
+  .weather1{
+    width: 29px;
+    height: 29px;
+    background: url('~/assets/images/station/u910.png') no-repeat;
+    background-size: 100%;
+  }
+
+  /*.powerAndIncomeIcon{
+    width: 17px;
+    height: 28px;
+    background: url('~/assets/images/station/u167.png') no-repeat;
+    background-size: 100%;
+
+  }*/
+
+  .contributionDetail {
+    font-size: 16px;
+    line-height: 16px;
+  }
+
+  .powerMonitoringIcon{
+
+  }
+
+  .contributionIcon{
+
+  }
+
+  height: 100%;
+
+  .my-contribution{
+    background: #222;
+    height: 70px;
+    width: 86px;
+    min-width: 66px;
+    display: block;
+    margin: 0 auto;
+    background: url('~/assets/images/home/home_bg.png') no-repeat;
+    &.coal{
+      background-position: -121px -129px;
+    }
+    &.co2{
+      background-position: -12px -129px;
+    }
+    &.tree-planting{
+      background-position: -227px -129px;
+    }
+  }
+  // 展示具体echart图形等的两行的数据的样式
+  .content-show-row{
+    height: ~'calc(50% - 116px)';
+    min-height: 300px;
+    .content-show-row-title{
+      margin-bottom: 10px;
+      div.content-head {
+        background: url('~/assets/images/home/line1.png') no-repeat 0px 18px;
+        height: 34px;
+        width: 100%;
+        font-size: 18px;
+        padding-left: 10px;
+      }
+    }
+    .station-des-title-text{
+      font-size: 16px;
+      color: #17A6C6;
+      padding-bottom: 5px;
+    }
+    .station-des-text{
+      padding: 2px 0px;
+      width:78px;
+      font-size: 14px;
+      color: #666;
+    }
+    .station-des-text-val{
+      padding: 2px 0px;
+      width:~'calc(100% - 90px)' ;
+      font-size: 14px;
+      color: #666;
+    }
+    i.dev-power-state {
+      position: absolute;
+      display: block;
+      top:0;
+      left: 0;
+      width: 192px;
+      height: 130px;
+      &.dev-power-modules{
+        background: url('~/assets/images/station/modules.png') no-repeat;
+        z-index: 4;
+      }
+      &.dev-power-inverter{
+        background: url('~/assets/images/station/inverter.png') no-repeat 55px 0;
+        z-index: 6;
+        left: 30%;
+      }
+      &.dev-power-electricMeter{
+        background: url('~/assets/images/station/electricMeter.png') no-repeat 55px 0;
+        z-index: 6;
+        left: 56.5%;
+      }
+      &.dev-power-grid{
+        background: url('~/assets/images/station/grid.png') no-repeat;
+        height: 160px;
+        top:-30px;
+        z-index: 4;
+        left: 85%;
+      }
+      .dev-power-inner-text{
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        font-style: normal;
+        left: 0;
+        bottom: -30px;
+        font-size: 16px;
+        color: #333;
+      }
+    }
+    i.dev-power-arraw{
+      position: absolute;
+      display: block;
+      z-index: 5;
+      width: ~'calc(100% - 271px)';
+      height: 26px;
+      left: 122px;
+      top: 63px;
+      background: url('~/assets/images/station/arraw.png') repeat-x;
+      &.arraw-running{ // 进行动画
+        animation: bgRound 30s infinite linear;
+      }
+    }
+    div.dev-power-div {
+      // position: absolute;
+      // top: 10px;
+      text-align: center;
+      &.dev-power-in{
+        // left: 21%;
+      }
+      &.dev-power-out{
+        // left: 47.5%;
+      }
+      &.dev-power-inline{
+        left: 75.5%;
+      }
+    }
+  }
+  // home 页面的tab标签的样式修改 开始 ========》
+  /deep/ .el-tabs__nav {
+    margin-left: 20px;
+  }
+  /deep/ .el-tabs__item{
+    width: 130px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(51, 51, 51, .5);
+    &.is-active{
+      color: #333;
+      font-weight: bold;
+    }
+  }
+  /deep/ .el-tabs__active-bar{
+    width: 130px;
+    border-radius: 3px;
+    height: 5px;
+    background-color: #09A8D9;
+  }
+  // home 页面的tab标签的样式修改 结束 《========
+}
+/*背景图片的动画*/
+@keyframes bgRound {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: calc(100%);
+  }
+}

@@ -1,0 +1,47 @@
+@import (once) '~@/assets/css/variables';
+
+.regionSetting {
+  height: 100%;
+  /deep/ .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+
+  /deep/ .el-tree-node__content{
+    height: 35px;
+  }
+
+  /deep/ .el-tree-node__content:hover {
+    background-color: #ebf8fc;
+  }
+
+  /deep/ .el-tree {
+    padding: 20px 10px;
+    height: calc(100% - 81px);
+    border: 1px solid #cae7ef;
+  }
+
+  /deep/ .domainForm{
+    /deep/ .el-form-item{
+      margin-bottom: 0px;
+    }
+    /deep/ .el-table .cell{
+      overflow: visible;
+    }
+
+    /deep/ .self-is-required:after{
+      content: '*';
+      color: #f56c6c;
+      margin-right: 4px;
+    }
+  }
+
+}
+
+
+
+

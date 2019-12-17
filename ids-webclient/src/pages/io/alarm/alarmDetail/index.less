@@ -1,0 +1,28 @@
+.alarm-detail{
+  .table-row{
+    td.name-label,td.val-label{
+      color: #000;
+      padding: 12px 5px;
+      border: 1px solid #dedede;
+      &.last-label{
+        border-right: 1px solid #dedede;
+      }
+      &.name-label {
+        background-color: rgba(200,200,200,0.3);
+        vertical-align: middle; // 垂直居中
+      }
+    }
+    &:last-child > td{
+      border-bottom: 1px solid #dedede;
+    }
+  }
+  .text-color-red{
+    color: #f00;
+  }
+  .text-color-blue{
+    color: #09f;
+  }
+  .text-color-green{
+    color: #af4;
+  }
+}

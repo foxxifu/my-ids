@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.kpi.KpiInverterHourMapper">
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.KpiInverterHourM">
+    <id column="collect_time" jdbcType="BIGINT" property="collectTime" />
+    <id column="station_code" jdbcType="VARCHAR" property="stationCode" />
+    <id column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="dev_name" jdbcType="VARCHAR" property="devName" />
+    <result column="inverter_type" jdbcType="TINYINT" property="inverterType" />
+    <result column="product_power" jdbcType="DECIMAL" property="productPower" />
+    <result column="total_power" jdbcType="DECIMAL" property="totalPower" />
+    <result column="peak_power" jdbcType="DECIMAL" property="peakPower"/>
+    <result column="efficiency" jdbcType="DECIMAL" property="efficiency"/>
+    <result column="aoc_conn_num" jdbcType="CHAR" property="aocConnNum" />
+    <result column="aop_num_zero" jdbcType="CHAR" property="aopNumZero" />
+    <result column="aop_num_one" jdbcType="CHAR" property="aopNumOne" />
+    <result column="statistics_time" jdbcType="BIGINT" property="statisticsTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    collect_time, station_code, device_id, dev_name, inverter_type, product_power,total_power,
+    peak_power, efficiency, aoc_conn_num, aop_num_zero, aop_num_one, statistics_time
+  </sql>
+
+  <insert id="insertList" parameterType="java.util.List">
+    insert into ids_kpi_hour_inverter_t(
+      <include refid="Base_Column_List"/>
+    ) values
+      <foreach collection="list" item="item" separator=",">
+        (
+          #{item.collectTime}, #{item.stationCode}, #{item.deviceId}, #{item.devName},
+          #{item.inverterType}, #{item.productPower}, #{item.totalPower}, #{item.peakPower},#{item.efficiency},
+          #{item.aocConnNum}, #{item.aopNumZero},#{item.aopNumOne}, #{item.statisticsTime}
+        )
+      </foreach>
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="com.interest.ids.common.project.bean.KpiBaseModel" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ids_kpi_hour_inverter_t
+    where collect_time = #{collectTime,jdbcType=BIGINT}
+      and station_code = #{stationCode,jdbcType=VARCHAR}
+      and device_id = #{deviceId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+    delete from ids_kpi_hour_inverter_t
+    where collect_time in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.collectTime}
+    </foreach>
+    and station_code in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.stationCode}
+    </foreach>
+    and device_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item.deviceId}
+    </foreach>
+  </delete>
+
+</mapper>

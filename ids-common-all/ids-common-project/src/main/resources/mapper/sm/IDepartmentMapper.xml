@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.sm.IDepartmentMapper">
+	<resultMap type="com.interest.ids.common.project.bean.sm.Department" id="basicResultMap">
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="order_" property="order_"/>
+		<result column="enterprise_id" property="enterpriseId"/>
+		<result column="parent_id" property="parentId"/>
+	</resultMap>
+
+	<resultMap type="java.util.Map" id="enterMap">
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+	</resultMap>
+   <!-- 插入 -->
+   <insert id="insertDepartment" parameterType="com.interest.ids.common.project.bean.sm.Department">
+   	insert into ids_sm_department_t(name,`order_`,enterprise_id,parent_id) values (#{name},#{order_},#{enterpriseId},#{parentId})
+   </insert>
+   
+   <!-- 查询最大的order -->
+   <select id="getMaxOrder" resultType="java.lang.Integer">
+   	select max(order_) from ids_sm_department_t
+   </select>
+   
+   <!-- 根据id查询order -->
+   <select id="getOrderById" parameterType="java.lang.Long" resultType="java.lang.Integer">
+   	select order_ from ids_sm_department_t where id = #{value}
+   </select>
+   
+   <!-- 根据order和向上向下查询id -->
+   <select id="getDepartmentIds" parameterType="java.util.Map" resultType="java.lang.Long">
+   		select 
+   			id 
+   		from ids_sm_department_t
+   		<if test="type == 'great'">
+   			where order_ >= #{order_}
+   		</if>
+   		<if test="type == 'less'">
+   			where order_ > #{order_}
+   		</if>
+   </select>
+   
+   <!-- 更新order -->
+   <update id="updateDepartment" parameterType="java.util.Map">
+   		update 
+   			ids_sm_department_t 
+   		<if test="type == 'great'">
+   			set order_ = (order_ + 1)
+   		</if>
+   		<if test="type == 'less'">
+   			set order_ = (order_ + 2)
+   		</if>
+   		<if test="parentId != null">
+   			set parent_id = #{parentId}
+   		</if>
+   		where id in 
+   		<foreach collection="ids" item="item" open="(" close=")" separator=",">
+   			#{item}
+   		</foreach>
+   </update>
+   
+   <!-- 统计子部门的个数 -->
+   <select id="countSubDepartment" parameterType="java.lang.Long" resultType="java.lang.Integer">
+   		select count(id) from ids_sm_department_t where parent_id = #{value}
+   </select>
+   
+   <!-- 根据id删除部门 -->
+   <delete id="deleteDepartment" parameterType="java.lang.Long">
+   		delete from ids_sm_department_t where id = #{value}
+   </delete>
+   
+   <!-- 查询企业的部门树-懒加载 -->
+   <select id="getDepartmentByParentId" parameterType="com.interest.ids.common.project.bean.sm.Department" resultMap="basicResultMap">
+   		select * from ids_sm_department_t
+   		<where>
+   			<if test="enterpriseId != null">
+   				enterprise_id = #{enterpriseId} 
+   			</if>
+   			<if test="parentId != null">
+   				and parent_id = #{parentId}
+   			</if>
+   		</where>
+			order by `order_`
+   </select>
+   
+   <!-- 查询企业的数据 -->
+   <select id="getEnterpriseById" parameterType="java.lang.Long" resultMap="enterMap">
+   		select id,name from ids_sm_enterprise_info_t where id = #{value}
+   </select>
+   
+   <!-- 根据id查询部门 -->
+   <select id="getDepartmentId" parameterType="java.lang.Long" resultMap="basicResultMap">
+   		select * from ids_sm_department_t where id = #{value}
+   </select>
+   
+   <!-- 通过id更新部门 -->
+   <update id="updateDepartmentById" parameterType="com.interest.ids.common.project.bean.sm.Department">
+   		update ids_sm_department_t 
+   		<set>
+   			<if test="parentId != null">
+   				 parent_id = #{parentId},
+   			</if>
+   			<if test="order_ != null">
+   				order_ = #{order_}
+   			</if>
+   		</set>
+   		where id = #{id}
+   </update>
+   
+   <!--根据order和parentId查询上一个部门  -->
+   <select id="getBeforeDepartment" resultMap="basicResultMap">
+   		select * from ids_sm_department_t
+   		where 
+   			parent_id = #{0}
+   		and
+   			order_ <![CDATA[<]]>#{1}
+   		order by order_ desc
+   		limit 0,1
+   </select>
+   
+   <!-- 获取下一个部门 -->
+   <select id="getAfterDepartment" resultMap="basicResultMap">
+   		select * from ids_sm_department_t
+   		where 
+   			parent_id = #{0}
+   		and
+   			order_ <![CDATA[>]]> #{1}
+   		order by order_
+   		limit 0,1
+   </select>
+   
+   <select id="countDepartByEnterpriseId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+   		select count(*) from  ids_sm_department_t where enterprise_id = #{value}
+   </select>
+   
+   <!-- 根据用户查询用户所在的部门 -->
+   <select id="getDepartmentByUserId" parameterType="java.lang.Long" resultMap="basicResultMap">
+   		select 
+   			department.*
+   		from 
+   			ids_sm_department_t department,
+   			user_department user_department
+   		where 
+   			department.id = user_department.department_id
+   			and user_department.user_id = #{value}
+   </select>
+</mapper>

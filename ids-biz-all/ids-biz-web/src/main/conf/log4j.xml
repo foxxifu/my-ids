@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- dao 开发环境log BufferedIO 设置缓冲 BufferSize 设置缓冲区大小 512b 不设置默认为8k MaxBackupIndex 
+	文件最大备份数量 根据具体的应用 这些值有待调整 -->
+<log4j:configuration threshold="debug">
+
+	<!-- web工程日志配置 -->
+	<logger name="com.interest.ids.biz.web">
+		<level value="info" />
+		<appender-ref ref="bizWeb" />
+	</logger>
+	<appender name="bizWeb" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="BufferedIO" value="false" />
+		<param name="MaxFileSize" value="20MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<param name="File" value="${log_biz}/bizWeb.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+	<!--  app的日志信息 -->
+	<logger name="com.interest.ids.biz.app">
+		<level value="info" />
+		<appender-ref ref="bizAppWeb" />
+	</logger>
+	<appender name="bizAppWeb" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="BufferedIO" value="false" />
+		<param name="MaxFileSize" value="20MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<param name="File" value="${log_biz}/appBizWeb.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- 计算模块日志配置 -->
+	<logger name="com.interest.ids.biz.kpicalc">
+		<level value="info" />
+		<appender-ref ref="bizKpiCalc" />
+	</logger>
+	<appender name="bizKpiCalc" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="BufferedIO" value="false" />
+		<param name="MaxFileSize" value="20MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<param name="File" value="${log_biz}/bizKpiCalc.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- 用户模块日志配置 -->
+	<logger name="com.interest.ids.biz.authorize">
+		<level value="info" />
+		<appender-ref ref="bizAuthorize" />
+	</logger>
+	<appender name="bizAuthorize" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="BufferedIO" value="false" />
+		<param name="MaxFileSize" value="20MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<param name="File" value="${log_biz}/bizAuthorize.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- 数据模块日志配置 -->
+	<logger name="com.interest.ids.biz.data">
+		<level value="info" />
+		<appender-ref ref="bizData" />
+	</logger>
+	<appender name="bizData" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="BufferedIO" value="false" />
+		<param name="MaxFileSize" value="20MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<param name="File" value="${log_biz}/bizData.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+	<logger name="com.interest.ids.biz.kpicalc.realtimekpi.job.handler">
+		<level value="info" />
+		<appender-ref ref="calcLogs" />
+	</logger>
+	<appender name="calcLogs" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="BufferedIO" value="false" />
+		<param name="MaxFileSize" value="20MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<param name="File" value="${log_biz}/calcLogs.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+
+	<!-- 打印控制台信息，开发模式开启-->
+	<!-- <appender name="Screen" class="org.apache.log4j.ConsoleAppender">
+		<param name="Threshold" value="DEBUG" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t %p [%c{1}] %L %m%n" />
+		</layout>
+	</appender>
+	<logger name="com">
+		<level value="debug" />
+		<appender-ref ref="Screen" />
+	</logger>
+	<logger name="org">
+		<level value="INFO" />
+		<appender-ref ref="Screen" />
+	</logger>
+	<logger name="org.eclipse.jetty">
+		<level value="INFO" />
+		<appender-ref ref="server" />
+	</logger> -->
+
+</log4j:configuration>

@@ -1,0 +1,13 @@
+<project name="ChangeVersion" default="replace">
+	<target name="usage">
+		<echo message="replace: change file to right version"/>
+	</target>
+	<target name="replace">
+		<echo message="replace: change file to right version"/>
+		<replace dir="../" summary="true" token="IDS_V2_0_20190401_T" value="IDS_V2_0_20190830_1">
+			<include name="**/pom.xml"/>
+			<include name="**/version.xml"/>
+			<include name="**/*.properties"/>
+		</replace>
+	</target>
+</project>

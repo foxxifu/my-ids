@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.kpi.InverterConcMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.kpi.InverterConc" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="collect_time" property="collectTime" jdbcType="BIGINT" />
+    <id column="device_id" property="deviceId" jdbcType="BIGINT" />
+    <id column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="dev_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="inverter_state" property="inverterState" jdbcType="INTEGER" />
+    <result column="valid" property="valid" jdbcType="VARCHAR" />
+    <result column="day_capacity" property="dayCapacity" jdbcType="DECIMAL" />
+    <result column="total_capacity" property="totalCapacity" jdbcType="DECIMAL" />
+    <result column="temperature" property="temperature" jdbcType="DECIMAL" />
+    <result column="center_u" property="centerU" jdbcType="DECIMAL" />
+    <result column="center_i" property="centerI" jdbcType="DECIMAL" />
+    <result column="center_i_1" property="centerI1" jdbcType="DECIMAL" />
+    <result column="center_i_2" property="centerI2" jdbcType="DECIMAL" />
+    <result column="center_i_3" property="centerI3" jdbcType="DECIMAL" />
+    <result column="center_i_4" property="centerI4" jdbcType="DECIMAL" />
+    <result column="center_i_5" property="centerI5" jdbcType="DECIMAL" />
+    <result column="center_i_6" property="centerI6" jdbcType="DECIMAL" />
+    <result column="center_i_7" property="centerI7" jdbcType="DECIMAL" />
+    <result column="center_i_8" property="centerI8" jdbcType="DECIMAL" />
+    <result column="center_i_9" property="centerI9" jdbcType="DECIMAL" />
+    <result column="center_i_10" property="centerI10" jdbcType="DECIMAL" />
+    <result column="mppt_power" property="mpptPower" jdbcType="DECIMAL" />
+    <result column="a_u" property="aU" jdbcType="DECIMAL" />
+    <result column="b_u" property="bU" jdbcType="DECIMAL" />
+    <result column="c_u" property="cU" jdbcType="DECIMAL" />
+    <result column="a_i" property="aI" jdbcType="DECIMAL" />
+    <result column="b_i" property="bI" jdbcType="DECIMAL" />
+    <result column="c_i" property="cI" jdbcType="DECIMAL" />
+    <result column="power_factor" property="powerFactor" jdbcType="DECIMAL" />
+    <result column="grid_frequency" property="gridFrequency" jdbcType="DECIMAL" />
+    <result column="active_power" property="activePower" jdbcType="DECIMAL" />
+    <result column="reactive_power" property="reactivePower" jdbcType="DECIMAL" />
+    <result column="on_time" property="onTime" jdbcType="BIGINT" />
+    <result column="off_time" property="offTime" jdbcType="BIGINT" />
+    <result column="aop" property="aop" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="DECIMAL" />
+    <result column="ext2" property="ext2" jdbcType="DECIMAL" />
+    <result column="ext_str_1" property="extStr1" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.ids.common.project.mapper.analysis.AnalysisAlarmMapper" >
+  <resultMap id="BaseResultMap" type="com.interest.ids.common.project.bean.analysis.AnalysisAlarm" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dev_id" property="deviceId" jdbcType="BIGINT" />
+    <result column="station_id" property="stationId" jdbcType="CHAR" />
+    <result column="device_code" property="deviceCode" jdbcType="VARCHAR" />
+    <result column="alarm_id" property="alarmId" jdbcType="TINYINT" />
+    <result column="alarm_pv_num" property="alarmPvNum" jdbcType="INTEGER" />
+    <result column="alarm_name" property="alarmName" jdbcType="VARCHAR" />
+    <result column="dev_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="dev_type_id" property="devTypeId" jdbcType="INTEGER" />
+    <result column="dev_type_name" property="devTypeName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="happen_time" property="happenTime" jdbcType="BIGINT" />
+    <result column="deal_time" property="dealTime" jdbcType="BIGINT" />
+    <result column="recovered_time" property="recoveredTime" jdbcType="BIGINT" />
+    <result column="alarm_state" property="alarmState" jdbcType="TINYINT" />
+    <result column="relate_table" property="relateTable" jdbcType="VARCHAR" />
+    <result column="relate_keyId" property="relateKeyid" jdbcType="BIGINT" />
+    <result column="esn_code" property="esnCode" jdbcType="CHAR" />
+    <result column="model_version_id" property="modelVersionId" jdbcType="BIGINT" />
+    <result column="model_version_name" property="modelVersionName" jdbcType="VARCHAR" />
+    <result column="repair_suggestion" property="repairSuggestion" jdbcType="VARCHAR" />
+    <result column="severity_id" property="severityId" jdbcType="TINYINT" />
+    <result column="alarm_location" property="alarmLocation" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <update id="updateAlarm" parameterType="java.util.Map">
+    	update 
+    		ids_analysis_alarm_t 
+    	set 
+    		alarm_state = #{statusId}
+    	<if test="null != confirmTime">
+    		,deal_time=#{confirmTime}
+    	</if>
+    	 where id in (${ids})
+    </update>
+    <!-- 恢复监控电站的告警  -->
+    <update id="updateRecoverAlarm">
+    	UPDATE 
+    		ids_analysis_alarm_t 
+    	SET 
+    		recovered_time = #{recoveredTime},
+    		alarm_state = '6'
+    	WHERE station_id = #{stationId} AND alarm_id = #{alarmId}
+    </update>
+</mapper>

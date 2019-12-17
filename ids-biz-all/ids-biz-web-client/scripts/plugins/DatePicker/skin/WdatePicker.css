@@ -1,0 +1,14 @@
+.Wdate {
+    padding-right: 36px !important;
+    cursor: pointer !important;
+    border: 1px solid #999;
+    box-sizing: content-box;
+    background: #fff url(./datePicker2.png) center right no-repeat;
+}
+.wdateIcon{
+	background: #fff url(./datePicker2.png) center right no-repeat;
+}
+.WdateFmtErr {
+    font-weight: bold;
+    color: red;
+}

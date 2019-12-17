@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.interest.ids.commoninterface.dao.alarm.WorkFlowProcessMapper">
+ <resultMap id="ProcessResultMap" type="com.interest.ids.common.project.bean.alarm.WorkFlowProcessM" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="proc_id" property="procId" jdbcType="VARCHAR" />
+    <result column="proc_state" property="procState" jdbcType="VARCHAR" />
+    <result column="busi_state" property="busiState" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="BIGINT" />
+    <result column="end_time" property="endTime" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+    <result column="proc_ins_id" property="procInsId" jdbcType="VARCHAR" />
+    <result column="proc_name" property="procName" jdbcType="VARCHAR" />
+    <result column="proc_desc" property="procDesc" jdbcType="VARCHAR" />
+    <result column="current_task_id" property="currentTaskId" jdbcType="VARCHAR" />
+    <result column="current_task_assignee" property="currentTaskAssignee" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Process_Column_List" >
+    id, proc_id, proc_state, busi_state, start_time, end_time, update_time, 
+    proc_ins_id, proc_name, proc_desc, current_task_id, current_task_assignee, create_user, 
+    station_code, enterprise_id
+  </sql>
+  
+  <!-- 根据id查询进度 -->
+  <select id="selectWorkFlowProcessMById" parameterType="java.lang.Long" resultMap="ProcessResultMap" >
+    select 
+    <include refid="Base_Process_Column_List"></include>
+    from ids_workflow_process_t
+    where id = #{value}
+  </select>
+  
+  <!-- 根据进度id查询进度 -->
+  <select id="selectWorkFlowProcessMByProcId" parameterType="java.lang.String" resultMap="ProcessResultMap">
+    select 
+    <include refid="Base_Process_Column_List"></include>
+    from ids_workflow_process_t
+    where proc_id = #{value}
+  </select>
+  
+  <!-- 插入进度 -->
+  <insert id="insertWorkFlowProcess" parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowProcessM">
+    insert into ids_workflow_process_t (proc_id, proc_state, busi_state, start_time, end_time, update_time, 
+    proc_ins_id, proc_name, proc_desc, current_task_id, current_task_assignee, create_user, 
+    station_code, enterprise_id)
+    values
+    (
+        #{procId},#{procState},#{busiState},
+        #{startTime},#{endTime},#{updateTime},#{procInsId},
+        #{procName},#{procDesc},#{currentTaskId},#{currentTaskAssignee},
+        #{createUser},#{stationCode},#{enterpriseId}
+    )
+  </insert>
+  
+  <!-- 修改一个进度 -->
+  <update id="updateWorkFlowProcess" parameterType="com.interest.ids.common.project.bean.alarm.WorkFlowProcessM">
+    update ids_workflow_process_t
+    <set >
+      <if test="procState != null" >
+        proc_state = #{procState,jdbcType=VARCHAR},
+      </if>
+      <if test="busiState != null" >
+        busi_state = #{busiState,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=BIGINT},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="procInsId != null" >
+        proc_ins_id = #{procInsId,jdbcType=VARCHAR},
+      </if>
+      <if test="procName != null" >
+        proc_name = #{procName,jdbcType=VARCHAR},
+      </if>
+      <if test="procDesc != null" >
+        proc_desc = #{procDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="currentTaskId != null" >
+        current_task_id = #{currentTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentTaskAssignee != null" >
+        current_task_assignee = #{currentTaskAssignee,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="stationCode != null" >
+        station_code = #{stationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where proc_id = #{procId}
+  </update>
+  
+  <!--查询当前处理人  -->
+  <select id="selectCurrentAssignee" parameterType="java.lang.String" resultType="java.lang.String">
+    select current_task_assignee from ids_workflow_process_t where proc_id = #{value}
+  </select>
+</mapper>
