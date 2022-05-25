@@ -16,13 +16,13 @@
     </modules>
 
     <properties>
-        <!-- spring版本�? -->
-        <spring.version>4.2.5.RELEASE</spring.version>
-        <!-- mybatis版本�? -->
+        <!-- springç‰ˆæœ¬å? -->
+        <spring.version>5.2.22.RELEASE</spring.version>
+        <!-- mybatisç‰ˆæœ¬å? -->
         <mybatis.version>3.4.4</mybatis.version>
         <mybatis-spring.version>1.3.0</mybatis-spring.version>
         <tk-mybatis.version>3.4.4</tk-mybatis.version>
-        <!-- log4j日志文件管理包版�? -->
+        <!-- log4jæ—¥å¿—æ–‡ä»¶ç®¡ç†åŒ…ç‰ˆæœ? -->
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
     </properties>
@@ -32,10 +32,10 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
-            <!-- 表示�?发的时�?�引入，发布的时候不会加载此�? -->
+            <!-- è¡¨ç¤ºå¼?å‘çš„æ—¶å?™å¼•å…¥ï¼Œå‘å¸ƒçš„æ—¶å€™ä¸ä¼šåŠ è½½æ­¤åŒ? -->
             <scope>test</scope>
         </dependency>
-        <!-- spring核心�? -->
+        <!-- springæ ¸å¿ƒåŒ? -->
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -142,13 +142,13 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <!-- mybatis核心�? -->
+        <!-- mybatisæ ¸å¿ƒåŒ? -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>${mybatis.version}</version>
         </dependency>
-        <!-- mybatis/spring�? -->
+        <!-- mybatis/springåŒ? -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
@@ -159,38 +159,38 @@
             <artifactId>pagehelper</artifactId>
             <version>5.1.2</version>
         </dependency>
-        <!--通用Mapper-->
+        <!--é€šç”¨Mapper-->
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper</artifactId>
             <version>${tk-mybatis.version}</version>
         </dependency>
-        <!-- 导入Mysql数据库链接jar�? -->
+        <!-- å¯¼å…¥Mysqlæ•°æ®åº“é“¾æŽ¥jaråŒ? -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.30</version>
         </dependency>
-        <!-- 导入dbcp的jar包，用来在applicationContext.xml中配置数据库 -->
+        <!-- å¯¼å…¥dbcpçš„jaråŒ…ï¼Œç”¨æ¥åœ¨applicationContext.xmlä¸­é…ç½®æ•°æ®åº“ -->
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.2.2</version>
         </dependency>
-        <!-- JSTL标签�? -->
+        <!-- JSTLæ ‡ç­¾ç±? -->
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-        <!-- 日志文件管理�? -->
+        <!-- æ—¥å¿—æ–‡ä»¶ç®¡ç†åŒ? -->
         <!-- log start -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
         </dependency>
-        <!-- 格式化对象，方便输出日志 -->
+        <!-- æ ¼å¼åŒ–å¯¹è±¡ï¼Œæ–¹ä¾¿è¾“å‡ºæ—¥å¿— -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -243,13 +243,13 @@
             <version>${slf4j.version}</version>
         </dependency>
         <!-- log end -->
-        <!-- 映入JSON -->
+        <!-- æ˜ å…¥JSON -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
-        <!-- 上传组件�? -->
+        <!-- ä¸Šä¼ ç»„ä»¶åŒ? -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -504,7 +504,7 @@
         </plugins>
     </reporting>
 
-    <!--指定Nexus的插件仓�?-->
+    <!--æŒ‡å®šNexusçš„æ’ä»¶ä»“åº?-->
     <repositories>
         <repository>
             <id>PublicRepositories</id>
@@ -536,12 +536,12 @@
     <distributionManagement>
         <repository>
             <uniqueVersion>true</uniqueVersion>
-            <id>releases</id><!--这个ID�?要与你的release仓库的Repository ID�?�?-->
+            <id>releases</id><!--è¿™ä¸ªIDéœ?è¦ä¸Žä½ çš„releaseä»“åº“çš„Repository IDä¸?è‡?-->
             <url>http://192.168.2.3:8099/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
-            <id>snapshots</id><!--这个ID�?要与你的snapshots仓库的Repository ID�?�?-->
+            <id>snapshots</id><!--è¿™ä¸ªIDéœ?è¦ä¸Žä½ çš„snapshotsä»“åº“çš„Repository IDä¸?è‡?-->
             <url>http://192.168.2.3:8099/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
